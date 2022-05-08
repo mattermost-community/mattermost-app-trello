@@ -2,7 +2,7 @@
   "name": "mattermost-app-trello",
   "version": "1.0.0",
   "description": "Plugin to connect with the Trello service through the Mattermost platform",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist node_modules",
