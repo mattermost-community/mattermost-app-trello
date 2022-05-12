@@ -9,7 +9,7 @@ export const getHelpBinding = (): AppBinding => {
         label: 'help',
         description: 'Show Trello Help',
         icon: TrelloIcon,
-        form: {fields: []},
+        form: {title: 'title', submit_buttons: 'test', fields: []},
         call: {
             path: Routes.App.BindingPathHelp,
             expand: {

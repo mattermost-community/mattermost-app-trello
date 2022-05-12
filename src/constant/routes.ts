@@ -2,7 +2,8 @@ const AppPaths = {
   ManifestPath: '/manifest.json',
   BindingsPath: '/bindings',
 
-  BindingPathHelp: '/help'
+  BindingPathHelp: '/help',
+  BindingPathTest: '/test'
 }
 
 export const Routes = {

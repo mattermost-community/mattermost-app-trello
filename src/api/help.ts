@@ -17,7 +17,7 @@ export const getHelp = async (request: Request, response: Response) => {
 
 function getHeader(): string {
     const homepageURL = manifest.homepage_url;
-    return h4(`OpsGenie [(GitHub Link)](${homepageURL})`);
+    return h4(`Trello [(GitHub Link)](${homepageURL})`);
 }
 
 function getCommands(): string {
