@@ -11,7 +11,7 @@ router.get(Routes.App.ManifestPath, cManifest.getManifest);
 router.post(Routes.App.BindingsPath, cBindings.getBindings);
 
 router.post(`${Routes.App.BindingPathHelp}/submit`, cHelp.getHelp);
-router.post(`${Routes.App.BindingPathTest}/submit`, cTest.getAdd);
+router.post(`${Routes.App.BindingPathAdd}/submit`, cTest.getAdd);
 
 const staticRouter = express.Router();
 staticRouter.use(express.static('static'));

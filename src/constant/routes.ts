@@ -3,7 +3,7 @@ const AppPaths = {
   BindingsPath: '/bindings',
 
   BindingPathHelp: '/help',
-  BindingPathTest: '/test'
+  BindingPathAdd: '/add'
 }
 
 export const Routes = {
