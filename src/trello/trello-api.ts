@@ -29,7 +29,7 @@ export const trelloApi = {
     return data;
   },
   sendCreateCardRequest: async (args: { listId: string; cardName: string }) => {
-    const response = await fetch(`${config.TRELLO.URL}cards?idList=627adae68d4b706522205e7b&key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}&name=${args.cardName}`, {
+    const response = await fetch(`${config.TRELLO.URL}cards?idList=${args.listId}&key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}&name=${args.cardName}`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json'

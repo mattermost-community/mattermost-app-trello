@@ -3,7 +3,7 @@ import {Routes} from '../constant';
 import * as cManifest from './manifest';
 import * as cBindings from './bindings';
 import * as cHelp from './help';
-import * as cTest from './add';
+import * as cAdd from './add';
 
 const router: Router = express.Router();
 
@@ -11,7 +11,8 @@ router.get(Routes.App.ManifestPath, cManifest.getManifest);
 router.post(Routes.App.BindingsPath, cBindings.getBindings);
 
 router.post(`${Routes.App.BindingPathHelp}/submit`, cHelp.getHelp);
-router.post(`${Routes.App.BindingPathAdd}/submit`, cTest.getAdd);
+router.post(`${Routes.App.BindingPathAdd}/submit`, cAdd.getAdd);
+router.post(`${Routes.App.BindingPathNew}/submit`, cAdd.getAdd);
 
 const staticRouter = express.Router();
 staticRouter.use(express.static('static'));

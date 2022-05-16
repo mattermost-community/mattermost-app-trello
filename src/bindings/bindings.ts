@@ -18,3 +18,37 @@ export const getHelpBinding = (): AppBinding => {
         },
     };
 };
+
+export const getAddBinding = (): AppBinding => {
+    return {
+        app_id: manifest.app_id,
+        location: Locations.Help,
+        label: 'add',
+        description: 'Add a new Card To Board',
+        icon: TrelloIcon,
+        form: {title: 'title', submit_buttons: 'test', fields: []},
+        call: {
+            path: Routes.App.BindingPathAdd,
+            expand: {
+                acting_user: AppExpandLevels.EXPAND_SUMMARY,
+            },
+        },
+    };
+}
+
+export const getNewBinding = (): AppBinding => {
+    return {
+        app_id: manifest.app_id,
+        location: Locations.Help,
+        label: 'add',
+        description: 'Add a new Card To Board',
+        icon: TrelloIcon,
+        form: {title: 'title', submit_buttons: 'test', fields: []},
+        call: {
+            path: Routes.App.BindingPathAdd,
+            expand: {
+                acting_user: AppExpandLevels.EXPAND_SUMMARY,
+            },
+        },
+    };
+}
