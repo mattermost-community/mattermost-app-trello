@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     APP: {
-        PORT: 3000,
-        HOST: 'http://172.20.64.1'
+        PORT: 4002,
+        HOST: 'http://172.18.176.1'
     },
     TRELLO: {
         URL: 'https://api.trello.com/1/',

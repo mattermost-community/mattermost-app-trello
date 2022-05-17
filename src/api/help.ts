@@ -5,6 +5,7 @@ import {newOKCallResponseWithMarkdown} from "../utils/call-responses";
 import {AppCallResponse} from "../types";
 
 export const getHelp = async (request: Request, response: Response) => {
+    console.log('hello help')
     const helpText = [
         getHeader(),
         getCommands(),
@@ -12,7 +13,11 @@ export const getHelp = async (request: Request, response: Response) => {
     ].join('');
     const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
 
-    response.json(callResponse);
+    //response.json(callResponse);
+    response.json({
+        Type: 'ok',
+        Text: 'testing response'
+    });
 };
 
 function getHeader(): string {
@@ -36,7 +41,7 @@ function getPostText(): string {
     return `${joinLines(
         h5('Post Menu Options'),
         textLine('click the (...) on a post'),
-        addBullet('Create OpsGenie Incidence'),
+        addBullet('Create Trello Incidence'),
     )}\n`;
 }
 

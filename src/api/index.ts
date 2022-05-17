@@ -10,9 +10,9 @@ const router: Router = express.Router();
 router.get(Routes.App.ManifestPath, cManifest.getManifest);
 router.post(Routes.App.BindingsPath, cBindings.getBindings);
 
-router.post(`${Routes.App.BindingPathHelp}/submit`, cHelp.getHelp);
-router.post(`${Routes.App.BindingPathAdd}/submit`, cAdd.getAdd);
-router.post(`${Routes.App.BindingPathNew}/submit`, cAdd.getAdd);
+router.post(`${Routes.App.BindingPathHelp}`, cHelp.getHelp);
+router.post(`${Routes.App.BindingPathAdd}`, cAdd.getAdd);
+router.post(`${Routes.App.BindingPathNew}`, cAdd.getAdd);
 
 const staticRouter = express.Router();
 staticRouter.use(express.static('static'));
