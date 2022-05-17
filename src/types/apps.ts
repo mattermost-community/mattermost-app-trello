@@ -12,11 +12,11 @@ export type AppModalState = {
 }
 
 export type AppsState = {
+  location: string;
   bindings: AppBinding[];
 };
 
 export type AppBinding = {
-  app_id: string;
   location?: string;
   icon?: string;
 
@@ -34,12 +34,6 @@ export type AppBinding = {
 
   // Description is the (optional) extended help.ts text, used in modals and autocomplete
   description?: string;
-
-  role_id?: string;
-  depends_on_team?: boolean;
-  depends_on_channel?: boolean;
-  depends_on_user?: boolean;
-  depends_on_post?: boolean;
 
   // A Binding is either to a Call, or is a "container" for other locations -
   // i.e. menu sub-items or subcommands.
@@ -72,7 +66,7 @@ export type AppCallResponseType = string;
 
 export type AppCallResponse<Res = unknown> = {
   type: AppCallResponseType;
-  markdown?: string;
+  text?: string;
   data?: Res;
   error?: string;
   navigate_to_url?: string;

@@ -1,8 +1,7 @@
-import {AppBinding} from '../types';
+import {AppBinding, AppsState} from '../types';
 import {AppBindingLocations, CommandTrigger, TrelloIcon, Commands} from '../constant';
-import manifest from '../manifest.json';
 
-export const newCommandBindings = (bindings: AppBinding[]): any => {
+export const newCommandBindings = (bindings: AppBinding[]): AppsState => {
     return {
         location: AppBindingLocations.COMMAND,
         bindings: [

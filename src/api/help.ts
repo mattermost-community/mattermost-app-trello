@@ -8,21 +8,19 @@ export const getHelp = async (request: Request, response: Response) => {
     console.log('hello help')
     const helpText = [
         getHeader(),
-        getCommands(),
-        getPostText(),
+        getCommands()
     ].join('');
     const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
 
-    //response.json(callResponse);
-    response.json({
+    response.json(callResponse);
+    /*response.json({
         Type: 'ok',
         Text: 'testing response'
-    });
+    });*/
 };
 
 function getHeader(): string {
-    const homepageURL = manifest.homepage_url;
-    return h4(`Trello [(GitHub Link)](${homepageURL})`);
+    return h5(`Mattermost Trello Plugin - Slash Command Help`);
 }
 
 function getCommands(): string {
@@ -31,9 +29,11 @@ function getCommands(): string {
 }
 
 function getUserCommands(): string {
+    const homepageUrl: string = manifest.homepage_url;
     return `${joinLines(
-        h5('User Commands'),
-        addBulletSlashCommand('help'),
+        addBulletSlashCommand('help', `Launch the Jira plugin command line help syntax, check out the [documentation](${homepageUrl}).`),
+        addBulletSlashCommand('add', `Create a new Trello Card on a board`),
+        addBulletSlashCommand('new', `Create a new Trello Card on a board`),
     )}\n`;
 }
 
@@ -49,8 +49,8 @@ function addBullet(text: string): string {
     return `* ${text}`;
 }
 
-function addBulletSlashCommand(text: string): string {
-    return `* \`/${CommandTrigger} ${text}\``;
+function addBulletSlashCommand(text: string, description: string): string {
+    return `* \`/${CommandTrigger} ${text}\` - ${description}`;
 }
 
 function h5(text: string): string {
