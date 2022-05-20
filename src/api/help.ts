@@ -13,10 +13,6 @@ export const getHelp = async (request: Request, response: Response) => {
     const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
 
     response.json(callResponse);
-    /*response.json({
-        Type: 'ok',
-        Text: 'testing response'
-    });*/
 };
 
 function getHeader(): string {

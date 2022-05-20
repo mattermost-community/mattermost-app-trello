@@ -1,44 +1,18 @@
 import fetch from 'node-fetch';
 import config from '../config';
+import { httpModule } from '../http/http-module';
 
 export const trelloApi = {
   getListByBoard: async (boardId: string) => {
-    const response = await fetch(`${config.TRELLO.URL}boards/${boardId}/lists?key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-    
-    const data = await response.json();
-  
-    console.log(data);
-    return data;
+    return await httpModule.get(`${config.TRELLO.URL}boards/${boardId}/lists?key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}`);
   },
   searchBoardByName: async (boardName: string) => {
-    const response = await fetch(`${config.TRELLO.URL}search?modelTypes=boards&query=${boardName}&key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-    
-    const data = await response.json();
-  
-    console.log(data);
-    return data;
+    return await httpModule.get(`${config.TRELLO.URL}search?modelTypes=boards&query=${boardName}&key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}`);
+  },
+  searchBoardsInOrganization: async () => {
+    return await httpModule.get(`${config.TRELLO.URL}organizations/60c99e3ff7a1801bb8ac7f36/boards?key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}`)
   },
   sendCreateCardRequest: async (args: { listId: string; cardName: string }) => {
-    const response = await fetch(`${config.TRELLO.URL}cards?idList=${args.listId}&key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}&name=${args.cardName}`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-    
-    const data = await response.json();
-  
-    console.log(data);
-    return data;
+    return await httpModule.post(`${config.TRELLO.URL}cards?idList=${args.listId}&key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}&name=${args.cardName}`);
   }
 };

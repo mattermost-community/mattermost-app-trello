@@ -73,6 +73,7 @@ export type AppCallResponse<Res = unknown> = {
   use_external_browser?: boolean;
   call?: AppCall;
   form?: AppForm;
+  props?: any;
 };
 
 export type AppContext = {
@@ -80,12 +81,13 @@ export type AppContext = {
   location?: string;
   acting_user_id?: string;
   user_id?: string;
-  channel_id?: string;
+  channel: { id: string };
   team_id?: string;
   post_id?: string;
   root_id?: string;
   props?: AppContextProps;
   user_agent?: string;
+  bot_access_token?: string;
 };
 
 export type AppContextProps = {
@@ -193,4 +195,38 @@ export type FormResponseData = {
 
 export type AppLookupResponse = {
   items: AppSelectOption[];
+}
+
+export type AppAttachmentActionIntegration = {
+  url: string;
+  context: any;
+}
+
+export type AppAttachmentActionOptions = { 
+  text: string; 
+  value: string;
+}
+
+export type AppAttachmentAction = {
+  id: string;
+  name: string;
+  integration: AppAttachmentActionIntegration;
+  options?: AppAttachmentActionOptions[];
+  type: string;
+}
+
+export type AppPostMessageAttachment = {
+  pretext?: string;
+  text?: string;
+  actions?: AppAttachmentAction[];
+}
+
+export type AppPostMessageProps = {
+  attachments: AppPostMessageAttachment[];
+}
+
+export type AppPostMessage = {
+  channel_id: string;
+  message: string;
+  props: AppPostMessageProps;
 }

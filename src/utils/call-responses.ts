@@ -1,6 +1,6 @@
 import {Request} from 'express';
 import {AppCallResponse, AppForm} from '../types';
-import {AppCallResponseTypes} from '../constant';
+import {AppCallResponseTypes, TrelloIcon} from '../constant';
 
 export type FieldValidationErrors = {[name: string]: string};
 
@@ -21,7 +21,8 @@ export function newOKCallResponse(): AppCallResponse {
 export function newOKCallResponseWithMarkdown(markdown: string): AppCallResponse {
     return {
         type: AppCallResponseTypes.OK,
-        text: markdown,
+        //text: markdown,
+        data: [{ label: 'test 1',  value: 'test1' }, { label: 'test 2',  value: 'test2' }]
     };
 }
 

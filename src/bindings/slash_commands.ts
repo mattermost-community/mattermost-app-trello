@@ -6,6 +6,8 @@ import {newCommandBindings} from '../utils/bindings';
 export const getCommandBindings = (): AppsState => {
     const bindings: AppBinding[] = [];
 
+    console.log(JSON.stringify(getNewBinding()))
+
     bindings.push(getHelpBinding());
     bindings.push(getAddBinding());
     bindings.push(getNewBinding());
