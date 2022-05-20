@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import config from '../config';
 import { httpModule } from '../http/http-module';
 

@@ -21,8 +21,7 @@ export function newOKCallResponse(): AppCallResponse {
 export function newOKCallResponseWithMarkdown(markdown: string): AppCallResponse {
     return {
         type: AppCallResponseTypes.OK,
-        //text: markdown,
-        data: [{ label: 'test 1',  value: 'test1' }, { label: 'test 2',  value: 'test2' }]
+        text: markdown,
     };
 }
 
