@@ -33,7 +33,23 @@ export const listSelect = async (request: Request, response: Response) => {
         }]
   }}
 
+  const hookMessage = {
+      text: 'New card created from Hook',
+      attachments: [
+        {
+            author_icon: 'https://trello-members.s3.amazonaws.com/627ad9bcc8aeeb621b7dfd71/cd2acddb9dcc091de7f73b9200f4c4cf/30.png',
+            author_name: 'jose lopez',
+            author_link: 'https://trello.com/joselopez864',
+            title: resultTrello.name,
+            title_link: resultTrello.url,
+            text: `Card ${cardName} added to board`,
+        }]
+    }
+
   const result = await mattermostApi.postMessage(message, token, mattermostUrl);
+
+  const hookResult = await mattermostApi.postToHook(hookMessage, 'jzyjmiwcdiya3go11ndobsewne', mattermostUrl)
+  console.log(hookResult);
 
 }
 

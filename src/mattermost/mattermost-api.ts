@@ -8,5 +8,10 @@ export const mattermostApi = {
     if (mattermost_url.includes('localhost')) mattermost_url = mattermost_url.replace('localhost', '[::1]');
 
     return await httpModule.post(`${mattermost_url}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.PostsPath}`, message, token);
+  },
+  postToHook: async (message: any, hookToken: string, mattermost_url: string) => {
+    if (mattermost_url.includes('localhost')) mattermost_url = mattermost_url.replace('localhost', '[::1]');
+
+    return await httpModule.post(`${mattermost_url}/hooks/${hookToken}`, message);
   }
 }
