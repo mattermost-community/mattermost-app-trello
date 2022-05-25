@@ -1,3 +1,4 @@
+import { UserProfile } from "mattermost-redux/types/users";
 import { StoredOauthUserToken } from "../utils/ZDTypes";
 
 export type AppManifest = {
@@ -24,6 +25,17 @@ export type Oauth2App = {
   connect_url?: string;
   complete_url?: string;
   user?: StoredOauthUserToken
+}
+
+export type ExpandedOauth2App = AppContext & {
+  oauth2: Oauth2App,
+}
+
+export type ExpandedBotActingUser = AppContext & {
+  acting_user: UserProfile,
+  acting_user_access_token: string
+  bot_user_id: string,
+  bot_access_token: string,
 }
 
 export type AppBinding = {
@@ -98,6 +110,7 @@ export type AppContext = {
   props?: AppContextProps;
   user_agent?: string;
   bot_access_token?: string;
+  mattermost_site_url?: string;
 };
 
 export type AppContextProps = {
@@ -127,7 +140,7 @@ export type AppForm = {
   submit_buttons?: string;
   cancel_button?: boolean;
   submit_on_cancel?: boolean;
-  fields: AppField[];
+  fields?: AppField[];
   call?: AppCall;
   depends_on?: string[];
 };
@@ -240,3 +253,19 @@ export type AppPostMessage = {
   message: string;
   props: AppPostMessageProps;
 }
+
+export type ExpandedBot = AppContext & {
+  bot_user_id: string,
+  bot_access_token: string,
+}
+
+export type ExpandedActingUserAccessToken = AppContext & {
+  acting_user_access_token: string
+}
+
+export type AppCallRequestWithValues = AppCall & {
+  values: AppCallValues
+  context: AppContext
+}
+
+export type CtxExpandedBotActingUserAccessToken = ExpandedActingUserAccessToken & ExpandedBot

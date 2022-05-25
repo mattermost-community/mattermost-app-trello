@@ -9,7 +9,10 @@ const AppPaths = {
   BindingPathHelp: '/help',
   BindingPathAdd: '/add',
   BindingPathNew: '/new',
-  BindingPathLink: '/link'
+  BindingPathLink: '/link',
+  BindingPathConfigure: '/configure',
+  
+  CallPathConfigOpenForm: '/config/open-form',
 }
 
 const MattermostPaths = {
@@ -23,6 +26,6 @@ const TrelloPaths = {
 
 export const Routes = {
   App: AppPaths,
-  Mattermost:  MattermostPaths
+  Mattermost:  MattermostPaths,
 };
 

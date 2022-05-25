@@ -10,3 +10,19 @@ export function getManifest(request: Request, response: Response): void {
 
     response.json(m);
 }
+
+function getPort(): number {
+    return Number(process.env.PORT) || config.APP.PORT;
+}
+
+export function getHTTPPath(): string {
+    return `${config.APP.HOST}:${getPort()}`;
+}
+
+export function getManifestData(): Manifest {
+    const m: Manifest = manifest;
+
+    m.http.root_url = getHTTPPath();
+
+    return m;
+}

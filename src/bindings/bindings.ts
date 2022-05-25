@@ -1,6 +1,7 @@
 import {AppBinding, AppsState} from '../types';
 import manifest from '../manifest.json';
 import {AppExpandLevels, Locations, TrelloIcon, Routes, Commands} from '../constant';
+import { getManifestData } from '../api/manifest';
 
 export const getHelpBinding = (): any => {
     return {
@@ -128,3 +129,41 @@ export const getLinkBinding = (): any => {
             },
     }
 }
+
+export const getConfigureBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.CONFIGURE,
+        description: 'Configure the installed Trello account',
+        hint: '[form]',
+        form: {
+            title: 'This is a form',
+            icon: TrelloIcon,
+            fields: [
+                {
+                    type: 'text',
+                    name: 'workspace',
+                    is_required: true,
+                    position: 1
+                }
+            ],
+            submit: {
+                path: Routes.App.BindingPathLink,
+                expand: {
+                    app: AppExpandLevels.EXPAND_ALL,
+                    acting_user: AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    channel: AppExpandLevels.EXPAND_ALL,
+                    post: AppExpandLevels.EXPAND_ALL,
+                    root_post: AppExpandLevels.EXPAND_ALL,
+                    team: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_ALL,
+                    oauth2_app: AppExpandLevels.EXPAND_ALL,
+                    oauth2_user: AppExpandLevels.EXPAND_ALL,
+                    locale: AppExpandLevels.EXPAND_ALL
+                }
+            }
+        },
+    }
+};

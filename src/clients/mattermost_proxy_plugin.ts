@@ -11,8 +11,8 @@ import {
     PathAPI, 
     Routes
 } from '../utils';
+import { getManifestData } from '../api/manifest';
 
-import {getManifest} from '../manifest';
 
 export interface AppsClient {
     kvSet(key: string, value: any): Promise<void>;
@@ -99,11 +99,11 @@ class AppsClientImpl implements AppsClient {
     }
 
     oauth2AppPath(): string {
-        return this.apiPath(Routes.MM.PathOAuth2App) + '/' + getManifest().app_id;
+        return this.apiPath(Routes.MM.PathOAuth2App) + '/' + getManifestData().app_id;
     }
 
     oauth2UserPath(): string {
-        return this.apiPath(Routes.MM.PathOAuth2User) + '/' + getManifest().app_id;
+        return this.apiPath(Routes.MM.PathOAuth2User) + '/' + getManifestData().app_id;
     }
 
     apiPath(p: string): string {

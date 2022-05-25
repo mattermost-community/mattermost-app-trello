@@ -6,6 +6,7 @@ import * as cHelp from './help';
 import * as cAdd from './add';
 import * as cLink from './link';
 import * as cInstall from './install';
+//import { fOpenZendeskConfigForm } from './configure';
 
 const router: Router = express.Router();
 
@@ -22,6 +23,7 @@ router.post(`${Routes.App.BindingPathLink}`, cLink.getLink);
 // ACTIONS
 router.post(`${Routes.App.BoardSelectPath}`, cAdd.boardListSelect)
 router.post(`${Routes.App.ListSelectPath}`, cAdd.listSelect)
+//router.post(`${Routes.App.CallPathConfigOpenForm}`, fOpenZendeskConfigForm);
 
 const staticRouter = express.Router();
 staticRouter.use(express.static('static'));
