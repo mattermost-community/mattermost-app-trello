@@ -1,6 +1,6 @@
 import {AppBinding, AppsState} from '../types';
 
-import {getHelpBinding, getAddBinding, getNewBinding } from './bindings';
+import {getHelpBinding, getAddBinding, getNewBinding, getLinkBinding } from './bindings';
 import {newCommandBindings} from '../utils/bindings';
 
 export const getCommandBindings = (): AppsState => {
@@ -11,6 +11,7 @@ export const getCommandBindings = (): AppsState => {
     bindings.push(getHelpBinding());
     bindings.push(getAddBinding());
     bindings.push(getNewBinding());
+    bindings.push(getLinkBinding());
     return newCommandBindings(bindings);
 };
 

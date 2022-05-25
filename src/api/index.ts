@@ -4,6 +4,7 @@ import * as cManifest from './manifest';
 import * as cBindings from './bindings';
 import * as cHelp from './help';
 import * as cAdd from './add';
+import * as cLink from './link';
 import * as cInstall from './install';
 
 const router: Router = express.Router();
@@ -16,6 +17,7 @@ router.post(Routes.App.InstallPath, cInstall.getInstall);
 router.post(`${Routes.App.BindingPathHelp}`, cHelp.getHelp);
 router.post(`${Routes.App.BindingPathAdd}`, cAdd.getAdd);
 router.post(`${Routes.App.BindingPathNew}`, cAdd.getAdd);
+router.post(`${Routes.App.BindingPathLink}`, cLink.getLink);
 
 // ACTIONS
 router.post(`${Routes.App.BoardSelectPath}`, cAdd.boardListSelect)

@@ -53,19 +53,25 @@ export const getNewBinding = (): any => {
         label: Commands.NEW,
         description: 'Add a new Card To Board',
         hint: '[form]',
-        //bindings: [{
-        //    label: 'new',
             form: {
                 title: 'This is a form',
                 icon: TrelloIcon,
                 fields: [
                     {
                         type: 'text',
-                        name: 'name'
+                        name: 'name',
+                        is_required: true,
+                        position: 1
+                    },
+                    {
+                        type: 'text',
+                        name: 'board',
+                        is_required: false,
+                        position: 2
                     }
                 ],
                 submit: {
-                    path: '/new',
+                    path: Routes.App.BindingPathLink,
                     expand: {
                         app: AppExpandLevels.EXPAND_ALL,
                         acting_user: AppExpandLevels.EXPAND_ALL,
@@ -82,51 +88,43 @@ export const getNewBinding = (): any => {
                     }
                 }
             },
-        //}]
     }
-    /*return {
-        location: '/command',
-        bindings: [
-            {
-                icon: TrelloIcon,
-                label: Commands.NEW,
-                description: 'Add a new Card To Board',
-                hint: '[form]',
-                bindings: [{
-                    label: 'new',
-                    form: {
-                        title: 'This is a form',
-                        icon: TrelloIcon,
-                        fields: [
-                            {
-                                type: 'text',
-                                name: 'name'
-                            }
-                        ],
-                        submit: {
-                            path: '/new',
-                            expand: {
-                                acting_user_access_token: 'all'
-                            }
-                        }
-                    },
-                }]
-            }
-        ]
-    }*/
-    /*return {
-        label: Commands.NEW,
-        description: 'Add a new Card To Board',
+}
+
+export const getLinkBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.LINK,
+        description: 'Link current channel to a trello workspace',
         hint: '[form]',
-        form: {
-            title: 'Add a new Card to Board',
-            icon: TrelloIcon,
-            submit: {
-                path: Routes.App.BindingPathNew,
-                expand: {
-                    acting_user_access_token: AppExpandLevels.EXPAND_ALL
+            form: {
+                title: 'This is a form',
+                icon: TrelloIcon,
+                fields: [
+                    {
+                        type: 'text',
+                        name: 'workspace',
+                        is_required: true,
+                        position: 1
+                    }
+                ],
+                submit: {
+                    path: Routes.App.BindingPathLink,
+                    expand: {
+                        app: AppExpandLevels.EXPAND_ALL,
+                        acting_user: AppExpandLevels.EXPAND_ALL,
+                        acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                        admin_access_token: AppExpandLevels.EXPAND_ALL,
+                        channel: AppExpandLevels.EXPAND_ALL,
+                        post: AppExpandLevels.EXPAND_ALL,
+                        root_post: AppExpandLevels.EXPAND_ALL,
+                        team: AppExpandLevels.EXPAND_ALL,
+                        user: AppExpandLevels.EXPAND_ALL,
+                        oauth2_app: AppExpandLevels.EXPAND_ALL,
+                        oauth2_user: AppExpandLevels.EXPAND_ALL,
+                        locale: AppExpandLevels.EXPAND_ALL
+                    }
                 }
-            }
-        }
-    };*/
+            },
+    }
 }

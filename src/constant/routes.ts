@@ -9,6 +9,7 @@ const AppPaths = {
   BindingPathHelp: '/help',
   BindingPathAdd: '/add',
   BindingPathNew: '/new',
+  BindingPathLink: '/link'
 }
 
 const MattermostPaths = {

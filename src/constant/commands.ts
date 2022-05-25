@@ -1,5 +1,6 @@
 export const Commands = {
   HELP: 'help',
   ADD: 'add',
-  NEW: 'new'
+  NEW: 'new',
+  LINK: 'link'
 }
