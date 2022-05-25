@@ -1,3 +1,5 @@
+import { StoredOauthUserToken } from "../utils/ZDTypes";
+
 export type AppManifest = {
   app_id: string;
   display_name: string;
@@ -15,6 +17,14 @@ export type AppsState = {
   location: string;
   bindings: AppBinding[];
 };
+
+export type Oauth2App = {
+  client_id: string;
+  client_secret: string;
+  connect_url?: string;
+  complete_url?: string;
+  user?: StoredOauthUserToken
+}
 
 export type AppBinding = {
   location?: string;

@@ -1,0 +1,1 @@
+export {newConfigStore} from './config';
