@@ -65,12 +65,12 @@ class FormFields extends BaseFormFields {
    // buildFields adds fields to list of viewable proxy app fields
    async buildFields(): Promise<void> {
       this.storeValues = await this.configStore.getValues();
-      this.addZDUrlField();
-      this.addZDClientIDField();
-      this.addZDClientSecretField();
+      this.addTrelloWeebhokField();
+      this.addTrelloApiKeyField();
+      this.addTrelloTokenField();
    }
 
-   addZDUrlField(): void {
+   addTrelloWeebhokField(): void {
       const f: AppField = {
          type: AppFieldTypes.TEXT,
          name: 'trello_webhook',
@@ -83,24 +83,24 @@ class FormFields extends BaseFormFields {
       this.builder.addField(f);
    }
 
-   addZDClientIDField(): void {
+   addTrelloApiKeyField(): void {
       const f: AppField = {
          type: AppFieldTypes.TEXT,
          name: 'trello_apikey',
          modal_label: 'API Key',
-         value: this.OauthValues.client_id,
+         value: this.storeValues.trello_apikey,
          description: 'Developer API Key obtained from Trello `https://trello.com/app-key`',
          is_required: true,
       };
       this.builder.addField(f);
    }
-   addZDClientSecretField(): void {
+   addTrelloTokenField(): void {
       const f: AppField = {
          type: AppFieldTypes.TEXT,
          subtype: 'password',
          name: 'trello_oauth_access_token',
          modal_label: 'API Token',
-         value: this.OauthValues.client_secret,
+         value: this.storeValues.trello_oauth_access_token,
          description: 'Developer API Token obtained from Trello `https://trello.com/app-key`',
          is_required: true,
       };

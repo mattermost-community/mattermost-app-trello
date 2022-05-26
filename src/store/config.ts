@@ -31,9 +31,9 @@ class ConfigStoreImpl implements ConfigStore {
     async getValues(): Promise<AppConfigStore> {
         const config = await this.ppClient.kvGet(StoreKeys.config);
         if (config) {
-            //this.storeData.zd_url = config.zd_url || '';
-            this.storeData.trello_apikey = config.zd_target_id || '';
-            this.storeData.trello_oauth_access_token = config.zd_oauth_access_token || '';
+            this.storeData.trello_webhook = config.trello_webhook || '';
+            this.storeData.trello_apikey = config.trello_apikey || '';
+            this.storeData.trello_oauth_access_token = config.trello_oauth_access_token || '';
         }
         return this.storeData;
     }
