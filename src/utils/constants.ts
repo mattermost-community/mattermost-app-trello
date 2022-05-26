@@ -26,41 +26,23 @@ const ZDPaths = {
     APIVersion: '/api/v2',
 };
 
-// Routes to the Zendesk App Instance
-const AppPaths = {
-    ManifestPath: '/manifest.json',
-    InstallPath: '/install',
-
-    OAuthCompletePath: '/oauth2/complete',
-    OAuthConnectPath: '/oauth2/connect',
-    SubscribeIncomingWebhookPath: '/webhook/webhook-target',
-
-    // Binding routes are accessed via a location call
-    BindingsPath: '/bindings',
-
-    // Ticket Creation
-    CallPathTicketOpenForm: '/ticket/open-form',
-    CallPathTicketSubmitOrUpdateForm: '/ticket/submit-or-update',
-
-    // Subscriptions
-    CallPathSubsOpenForm: '/subscriptions/open-form',
-    CallPathSubsSubmitOrUpdateForm: '/subscriptions/submit-or-update',
-
-    // Zendesk Configuration
-    CallPathConfigOpenForm: '/config/open-form',
-    CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
-
-    BindingPathConnect: '/connect',
-    BindingPathDisconnect: '/disconnect',
-    BindingPathTargetCreate: '/target-create',
-    BindingPathHelp: '/help',
-    BindingPathMe: '/me',
+const TrelloPaths = {
+    OAuthGetRequestToken: '/OAuthGetRequestToken',
+    OAuthAuthorizeToken: '/OAuthAuthorizeToken',
+    OAuthGetAccessToken: '/OAuthGetAccessToken',
+    OAuthAuthorizationURI: '/oauth/authorizations/new',
+    OAuthAccessTokenURI: '/oauth/tokens',
+    TicketPathPrefix: '/agent/tickets',
+    AccessURI: '/access/unauthenticated',
+    APIVersion: '/api/v2',
+    getMembers: 'members/me'
 };
+
 
 export const Routes = {
     ZD: ZDPaths,
     MM: MMPaths,
-    App: AppPaths,
+    TP: TrelloPaths
 };
 
 export const Locations = {

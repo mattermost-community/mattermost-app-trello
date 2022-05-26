@@ -5,10 +5,10 @@ import Client4 from 'mattermost-redux/client/client4.js';
 import { ExpandedBotActingUser, ExpandedOauth2App, Oauth2App } from '../types/apps';
 import { newMMClient } from '../clients';
 import { MMClientOptions } from '../clients/mattermost';
-import { Routes } from '../utils';
 import { BaseFormFields } from '../utils/base_form_fields';
 import { ZendeskIcon } from '../utils/constants';
 import { AppConfigStore, ConfigStore, newConfigStore } from '../store/config';
+import { Routes, TrelloIcon } from '../constant/index';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
@@ -24,11 +24,11 @@ export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppFor
    const fields = await formFields.getConfigFields();
 
    const form: AppForm = {
-      title: 'Configure Zendesk',
-      header: 'Configure the Zendesk app with the following information.',
-      icon: ZendeskIcon,
+      title: 'Configure Trello',
+      header: 'Configure the Trello app with the following information.',
+      icon: TrelloIcon,
       fields,
-      call: {
+      submit: {
          path: Routes.App.CallPathConfigSubmitOrUpdateForm,
       },
    };
@@ -50,9 +50,9 @@ class FormFields extends BaseFormFields {
          client_secret: context.oauth2.client_secret,
       };
       this.storeValues = {
-         zd_url: '',
-         zd_oauth_access_token: '',
-         zd_target_id: '',
+         trello_apikey: '',
+         trello_oauth_access_token: '',
+         trello_webhook: ''
       };
    }
 
@@ -73,11 +73,11 @@ class FormFields extends BaseFormFields {
    addZDUrlField(): void {
       const f: AppField = {
          type: AppFieldTypes.TEXT,
-         name: 'zd_url',
+         name: 'trello_webhook',
          label: 'URL',
-         value: this.storeValues.zd_url,
-         hint: 'Ex. https://yourhost.zendesk.com',
-         description: 'Base URL of the zendesk account',
+         value: this.storeValues.trello_webhook,
+         hint: 'Ex. https://yourhost.trello.com',
+         description: 'Base URL of the Trello webhook configuration',
          is_required: true,
       };
       this.builder.addField(f);
@@ -86,10 +86,10 @@ class FormFields extends BaseFormFields {
    addZDClientIDField(): void {
       const f: AppField = {
          type: AppFieldTypes.TEXT,
-         name: 'zd_client_id',
-         modal_label: 'Client ID',
+         name: 'trello_apikey',
+         modal_label: 'API Key',
          value: this.OauthValues.client_id,
-         description: 'Client ID obtained from Zendesk Oauth client Unique Identifier',
+         description: 'Developer API Key obtained from Trello `https://trello.com/app-key`',
          is_required: true,
       };
       this.builder.addField(f);
@@ -98,10 +98,10 @@ class FormFields extends BaseFormFields {
       const f: AppField = {
          type: AppFieldTypes.TEXT,
          subtype: 'password',
-         name: 'zd_client_secret',
-         modal_label: 'Client Secret',
+         name: 'trello_oauth_access_token',
+         modal_label: 'API Token',
          value: this.OauthValues.client_secret,
-         description: 'Client Secret obtained from Zendesk Oauth client secret',
+         description: 'Developer API Token obtained from Trello `https://trello.com/app-key`',
          is_required: true,
       };
       this.builder.addField(f);

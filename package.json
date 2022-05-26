@@ -21,10 +21,12 @@
     "body-parser": "^1.20.0",
     "client-oauth2": "^4.3.3",
     "express": "^4.18.1",
+    "fetch": "^1.1.0",
     "mattermost-redux": "github:mattermost/mattermost-redux#5fa256e1f5ae6ba237a276e35ec23a4c1f73af7b",
     "node-fetch": "^2.6.6",
     "node-zendesk": "^2.2.0",
-    "ts-node": "^10.7.0"
+    "ts-node": "^10.7.0",
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",

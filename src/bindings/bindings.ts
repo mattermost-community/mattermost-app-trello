@@ -135,20 +135,11 @@ export const getConfigureBinding = (): any => {
         icon: TrelloIcon,
         label: Commands.CONFIGURE,
         description: 'Configure the installed Trello account',
-        hint: '[form]',
         form: {
-            title: 'This is a form',
+            title: "Show Trello Help Title",
             icon: TrelloIcon,
-            fields: [
-                {
-                    type: 'text',
-                    name: 'workspace',
-                    is_required: true,
-                    position: 1
-                }
-            ],
             submit: {
-                path: Routes.App.BindingPathLink,
+                path: Routes.App.CallPathConfigOpenForm,
                 expand: {
                     app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
@@ -164,6 +155,6 @@ export const getConfigureBinding = (): any => {
                     locale: AppExpandLevels.EXPAND_ALL
                 }
             }
-        },
+        }
     }
 };

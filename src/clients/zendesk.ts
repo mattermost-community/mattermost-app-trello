@@ -68,7 +68,7 @@ export const newZDClient = async (zdOptions: ZDClientOptions): Promise<ZDClient>
         throw new Error('Failed to get oauth2 user access_token');
     }
     const config = await newConfigStore(zdOptions.botAccessToken, zdOptions.mattermostSiteUrl).getValues();
-    const remoteUri = config.zd_url + Routes.ZD.APIVersion;
+    const remoteUri = config.trello_webhook + Routes.ZD.APIVersion;
     const options: ClientOptions = {
         username: '',
         token,

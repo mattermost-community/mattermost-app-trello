@@ -13,6 +13,7 @@ const AppPaths = {
   BindingPathConfigure: '/configure',
   
   CallPathConfigOpenForm: '/config/open-form',
+  CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
 }
 
 const MattermostPaths = {

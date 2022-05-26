@@ -5,9 +5,9 @@ import {AppsClient, newAppsClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 export type AppConfigStore = {
-    zd_url: string;
-    zd_target_id: string;
-    zd_oauth_access_token: string;
+    trello_apikey: string;
+    trello_oauth_access_token: string;
+    trello_webhook: string;
 }
 
 export interface ConfigStore {
@@ -31,9 +31,9 @@ class ConfigStoreImpl implements ConfigStore {
     async getValues(): Promise<AppConfigStore> {
         const config = await this.ppClient.kvGet(StoreKeys.config);
         if (config) {
-            this.storeData.zd_url = config.zd_url || '';
-            this.storeData.zd_target_id = config.zd_target_id || '';
-            this.storeData.zd_oauth_access_token = config.zd_oauth_access_token || '';
+            //this.storeData.zd_url = config.zd_url || '';
+            this.storeData.trello_apikey = config.zd_target_id || '';
+            this.storeData.trello_oauth_access_token = config.zd_oauth_access_token || '';
         }
         return this.storeData;
     }
