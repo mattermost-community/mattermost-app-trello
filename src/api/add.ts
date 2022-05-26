@@ -5,6 +5,7 @@ import { trelloApi } from '../trello/trello-api';
 import { mattermostApi } from '../mattermost/mattermost-api';
 import config from '../config';
 import {Routes} from '../constant';
+import { getHTTPPath } from './manifest';
 
 export const listSelect = async (request: Request, response: Response) => {
   const listId = request.body.context.selected_option
@@ -85,7 +86,7 @@ export const boardListSelect = async (request: Request, response: Response) => {
                     id: "message",
                     name: "Select an option...",
                     integration: {
-                      url: `${config.APP.HOST}:${config.APP.PORT}${Routes.App.ListSelectPath}`,
+                      url: `${getHTTPPath()}${Routes.App.ListSelectPath}`,
                       context: {
                         action: "do_something",
                         token: token,
@@ -158,7 +159,7 @@ async function addCommand(call: AppCallRequest, body: any, token: string) {
                     id: "message",
                     name: "Select an option...",
                     integration: {
-                      url: `${config.APP.HOST}:${config.APP.PORT}${Routes.App.BoardSelectPath}`,
+                      url: `${getHTTPPath()}${Routes.App.BoardSelectPath}`,
                       context: {
                         action: "do_something",
                         token: token,
