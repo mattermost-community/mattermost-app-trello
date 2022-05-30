@@ -1,6 +1,8 @@
 import {Request, Response} from 'express';
 import {newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from "../utils/call-responses";
 import { AppCallRequest, AppCallResponse } from "../types";
+import { KVStoreClient, ConfigStoreProps, KVStoreOptions } from '../clients/kvstore';
+import config from '../config';
 
 export const getLink = async (request: Request, response: Response) => {
   console.log(request)
@@ -11,6 +13,23 @@ export const getLink = async (request: Request, response: Response) => {
   callResponse = newOKCallResponseWithMarkdown(result);
 
   try {
+    const kvOptions: KVStoreOptions = {
+      mattermostUrl: config.MATTERMOST.URL,
+      accessToken: bot_token
+    }
+
+    const kvClient: KVStoreClient = new KVStoreClient(kvOptions);
+    const props: ConfigStoreProps = {
+      trello_apikey: config.TRELLO.API_KEY
+    }
+    /*const kvRes = await kvClient.kvSet('config', props);
+    console.log('afterkv')
+    console.log(kvRes);*/
+
+    const kvRes2 = await kvClient.kvGet('config');
+    console.log("KV GET")
+    console.log(kvRes2);
+
     result = await linkCommand(call, request.body, bot_token);
     callResponse = newOKCallResponseWithMarkdown(result);
 

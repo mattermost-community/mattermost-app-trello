@@ -20,9 +20,12 @@ import fetch from "node-fetch";
 
 // fOpenTrelloConfigForm opens a new configuration form
 export const fOpenTrelloConfigForm: CallResponseHandler = async (req, res) => {
+   console.log("configure trello account")
    let callResponse: AppCallResponse;
    try {
+      console.log(1)
       const form = await newZendeskConfigForm(req.body);
+      console.log(2)
       callResponse = newFormCallResponse(form);
       res.json(callResponse);
    } catch (error: any) {
@@ -34,14 +37,14 @@ export const fOpenTrelloConfigForm: CallResponseHandler = async (req, res) => {
 export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (req, res) => {
    const call: AppCallRequestWithValues = req.body;
    const context = call.context as CtxExpandedBotActingUserAccessToken;
-   const url = baseUrlFromContext(call.context.mattermost_site_url || '');
+   const url = baseUrlFromContext(config.MATTERMOST.URL/*call.context.mattermost_site_url || ''*/);
    const values = call.values as AppConfigStore;
 
    let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Trello configuration');
    try {
       const ppClient = newAppsClient(context.acting_user_access_token, url);
       await ppClient.storeOauth2App(values.trello_apikey, values.trello_oauth_access_token);
-      const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url || '');
+      const configStore = newConfigStore(context.bot_access_token, config.MATTERMOST.URL/*context.mattermost_site_url || ''*/);
       const cValues = await configStore.getValues();
       
       // Using a simple /\/+$/ fails CodeQL check - Polynomial regular expression used on uncontrolled data.

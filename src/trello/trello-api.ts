@@ -12,6 +12,6 @@ export const trelloApi = {
     return await httpModule.get(`${config.TRELLO.URL}organizations/60c99e3ff7a1801bb8ac7f36/boards?key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}`)
   },
   sendCreateCardRequest: async (args: { listId: string; cardName: string }) => {
-    return await httpModule.post(`${config.TRELLO.URL}cards?idList=${args.listId}&key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}&name=${args.cardName}`);
+    return await httpModule.post(`${config.TRELLO.URL}cards?idList=${args.listId}&name=${args.cardName}&key=${config.TRELLO.API_KEY}&token=${config.TRELLO.TOKEN}`);
   }
 };

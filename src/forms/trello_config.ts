@@ -9,17 +9,18 @@ import { BaseFormFields } from '../utils/base_form_fields';
 import { ZendeskIcon } from '../utils/constants';
 import { AppConfigStore, ConfigStore, newConfigStore } from '../store/config';
 import { Routes, TrelloIcon } from '../constant/index';
+import config from '../config'
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
    const context = call.context as ExpandedBotActingUser;
    const mmOptions: MMClientOptions = {
-      mattermostSiteURL: context.mattermost_site_url || '',
+      mattermostSiteURL: config.MATTERMOST.URL,//context.mattermost_site_url || '',
       actingUserAccessToken: context.acting_user_access_token,
       botAccessToken: context.bot_access_token,
    };
    const mmClient = newMMClient(mmOptions).asActingUser();
-   const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url || '');
+   const configStore = newConfigStore(context.bot_access_token, config.MATTERMOST.URL/*context.mattermost_site_url*/ || '');
    const formFields = new FormFields(call, configStore, mmClient);
    const fields = await formFields.getConfigFields();
 

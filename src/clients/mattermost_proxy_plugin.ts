@@ -67,6 +67,8 @@ class AppsClientImpl implements AppsClient {
         const options = this.getFetchOptions('post');
         options.body = JSON.stringify(value);
         const fetchedValue = await fetch(url, options);
+        console.log('doAPIPost fetched value')
+        console.log(fetchedValue);
         return fetchedValue;
     }
 

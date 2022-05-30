@@ -1,10 +1,10 @@
 import {Request, Response} from 'express';
 import {newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from "../utils/call-responses";
 import {AppAttachmentActionOptions, AppCallRequest, AppCallResponse, AppPostMessage} from "../types";
-import { trelloApi } from '../trello/trello-api';
 import { mattermostApi } from '../mattermost/mattermost-api';
 import config from '../config';
 import {Routes} from '../constant';
+import { TrelloClient, TrelloOptions } from '../clients/trello';
 
 export const listSelect = async (request: Request, response: Response) => {
   const listId = request.body.context.selected_option
@@ -13,7 +13,14 @@ export const listSelect = async (request: Request, response: Response) => {
   const cardName = request.body.context.cardName
   const mattermostUrl = request.body.context.mattermostUrl
 
-  const resultTrello = await trelloApi.sendCreateCardRequest({ cardName: cardName, listId })
+  //const resultTrello = await trelloApi.sendCreateCardRequest({ cardName: cardName, listId })
+  const trelloOptions: TrelloOptions = {
+    apiKey: config.TRELLO.API_KEY,
+    token: config.TRELLO.TOKEN,
+  }
+
+  const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
+  const resultTrello = await trelloClient.sendCreateCardRequest(listId, cardName);
 
   console.log(resultTrello);
   console.log(resultTrello.badges.attachmentsByType.trello)
@@ -61,7 +68,18 @@ export const boardListSelect = async (request: Request, response: Response) => {
   const cardName = request.body.context.cardName
   const mattermostUrl = request.body.context.mattermostUrl
   
-  const lists = await trelloApi.getListByBoard(boardId)
+  //const lists = await trelloApi.getListByBoard(boardId)
+
+  const trelloOptions: TrelloOptions = {
+    apiKey: config.TRELLO.API_KEY,
+    token: config.TRELLO.TOKEN,
+  }
+
+  const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
+  const lists = await trelloClient.getListByBoard(boardId);
+  console.log('testing the client')
+
+  console.log(lists);
 
   const selectOptions: {value: string, text: string}[] = [];
     lists.forEach((o: any) => {
@@ -131,10 +149,18 @@ async function addCommand(call: AppCallRequest, body: any, token: string) {
   console.log('ADD COMMAND')
   console.log(mattermostUrl)
 
-  const board = await trelloApi.searchBoardByName(boardName);
+  // const board = await trelloApi.searchBoardByName(boardName);
+  const trelloOptions: TrelloOptions = {
+    apiKey: config.TRELLO.API_KEY,
+    token: config.TRELLO.TOKEN,
+  }
+
+  const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
+  const board = await trelloClient.searchBoardByName(boardName);
+
   console.log(board.boards.length)
   if (board.boards.length < 1) {
-    const organizations = await trelloApi.searchBoardsInOrganization();
+    const organizations = await trelloClient.searchBoardsInOrganization();
 
     const selectOptions: AppAttachmentActionOptions[] = [];
     organizations.forEach((o: any) => {
@@ -181,11 +207,11 @@ async function addCommand(call: AppCallRequest, body: any, token: string) {
   }
     //return `board ${boardName} not found`;
 
-  const lists = await trelloApi.getListByBoard(board.boards[0].id)
+  const lists = await trelloClient.getListByBoard(board.boards[0].id)
 
   if (lists.length < 1)
     return `board ${boardName} has no list`;
 
-  const result = await trelloApi.sendCreateCardRequest({ cardName: cardName, listId: lists[0].id })
+  const result = await trelloClient.sendCreateCardRequest(lists[0].id, cardName)
   return JSON.stringify(result);
 }

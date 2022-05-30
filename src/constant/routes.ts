@@ -1,3 +1,9 @@
+export const AppsPluginName = 'com.mattermost.apps';
+
+const PathsVariable = {
+  Identifier: ':IDENTIFIER'
+}
+
 const AppPaths = {
   ManifestPath: '/manifest.json',
   BindingsPath: '/bindings',
@@ -17,8 +23,13 @@ const AppPaths = {
 }
 
 const MattermostPaths = {
+  PathKV: '/kv',
   PostsPath: '/posts',
-  ApiVersionV4: '/api/v4'
+  PostPath: `/posts/${PathsVariable.Identifier}`,
+  UserPath: `/users/${PathsVariable.Identifier}`,
+  DialogsOpenPath: '/actions/dialogs/open',
+  ApiVersionV4: '/api/v4',
+  ApiVersionV1: '/api/v1',
 }
 
 const TrelloPaths = {
@@ -26,6 +37,7 @@ const TrelloPaths = {
 }
 
 export const Routes = {
+  PathsVariable,
   App: AppPaths,
   Mattermost:  MattermostPaths,
 };

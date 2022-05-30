@@ -72,7 +72,7 @@ export const getNewBinding = (): any => {
                     }
                 ],
                 submit: {
-                    path: Routes.App.BindingPathLink,
+                    path: Routes.App.BindingPathNew,
                     expand: {
                         app: AppExpandLevels.EXPAND_ALL,
                         acting_user: AppExpandLevels.EXPAND_ALL,
