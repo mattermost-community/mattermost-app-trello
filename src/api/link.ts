@@ -1,8 +1,9 @@
 import {Request, Response} from 'express';
-import {newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from "../utils/call-responses";
+import {newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from "../utils/call-responses";
 import { AppCallRequest, AppCallResponse } from "../types";
 import { KVStoreClient, ConfigStoreProps, KVStoreOptions } from '../clients/kvstore';
 import config from '../config';
+import { cardAddFromStepOne } from '../forms/card_add'
 
 export const getLink = async (request: Request, response: Response) => {
   console.log(request)
@@ -30,9 +31,11 @@ export const getLink = async (request: Request, response: Response) => {
     console.log("KV GET")
     console.log(kvRes2);
 
-    result = await linkCommand(call, request.body, bot_token);
-    callResponse = newOKCallResponseWithMarkdown(result);
-
+    //result = await linkCommand(call, request.body, bot_token);
+    //callResponse = newOKCallResponseWithMarkdown(result);
+    const form = await cardAddFromStepOne(call);
+    callResponse = newFormCallResponse(form);
+    response.json(callResponse);
   } catch(error: any) { 
     callResponse = newErrorCallResponseWithMessage('Unable to link form: ' + error.message);
   }

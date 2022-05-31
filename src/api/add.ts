@@ -203,7 +203,7 @@ async function addCommand(call: AppCallRequest, body: any, token: string) {
       }
 
       const result = await mattermostApi.postMessage(message, token, mattermostUrl);
-      return `board ${boardName} not found`
+      return ``
   }
     //return `board ${boardName} not found`;
 

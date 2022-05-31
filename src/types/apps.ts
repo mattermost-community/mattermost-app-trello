@@ -145,6 +145,7 @@ export type AppForm = {
   depends_on?: string[];
   form?: any;
   submit?: any;
+  submit_label?: string;
 };
 
 export type AppFormValue = string | AppSelectOption | boolean | null;

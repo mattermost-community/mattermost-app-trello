@@ -31,6 +31,19 @@ export const getHelpBinding = (): any => {
     };
 };
 
+export const getCardBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.CARD,
+        description: 'Add a new Card To Board',
+        hint: `[${Commands.NEW} | ${Commands.ADD}]`,
+        bindings: [
+            getAddBinding(),
+            getNewBinding(),
+        ]
+    }
+}
+
 export const getAddBinding = (): any => {
     return {
         label: Commands.ADD,
@@ -92,10 +105,100 @@ export const getNewBinding = (): any => {
     }
 }
 
-export const getLinkBinding = (): any => {
+export const getSubscriptionBinding = (): any => {
     return {
         icon: TrelloIcon,
-        label: Commands.LINK,
+        label: Commands.SUBSCRIPTION,
+        description: 'Link current channel to a trello workspace',
+        hint: `[${Commands.ADD} | ${Commands.LIST} | ${Commands.REMOVE}]`,
+        bindings: [
+            getAddSubBinding(),
+            getListBinding(),
+            getRemoveBinding()
+        ]
+    }
+}
+
+export const  getAddSubBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.ADD,
+        description: 'Link current channel to a trello workspace',
+        hint: '[form]',
+            form: {
+                title: 'This is a form',
+                icon: TrelloIcon,
+                fields: [
+                    {
+                        type: 'text',
+                        name: 'workspace',
+                        is_required: true,
+                        position: 1
+                    }
+                ],
+                submit: {
+                    path: Routes.App.BindingPathLink,
+                    expand: {
+                        app: AppExpandLevels.EXPAND_ALL,
+                        acting_user: AppExpandLevels.EXPAND_ALL,
+                        acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                        admin_access_token: AppExpandLevels.EXPAND_ALL,
+                        channel: AppExpandLevels.EXPAND_ALL,
+                        post: AppExpandLevels.EXPAND_ALL,
+                        root_post: AppExpandLevels.EXPAND_ALL,
+                        team: AppExpandLevels.EXPAND_ALL,
+                        user: AppExpandLevels.EXPAND_ALL,
+                        oauth2_app: AppExpandLevels.EXPAND_ALL,
+                        oauth2_user: AppExpandLevels.EXPAND_ALL,
+                        locale: AppExpandLevels.EXPAND_ALL
+                    }
+                }
+            },
+    }
+}
+
+export const  getListBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.LIST,
+        description: 'Link current channel to a trello workspace',
+        hint: '[form]',
+            form: {
+                title: 'This is a form',
+                icon: TrelloIcon,
+                fields: [
+                    {
+                        type: 'text',
+                        name: 'workspace',
+                        is_required: true,
+                        position: 1
+                    }
+                ],
+                submit: {
+                    path: Routes.App.BindingPathLink,
+                    expand: {
+                        app: AppExpandLevels.EXPAND_ALL,
+                        acting_user: AppExpandLevels.EXPAND_ALL,
+                        acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                        admin_access_token: AppExpandLevels.EXPAND_ALL,
+                        channel: AppExpandLevels.EXPAND_ALL,
+                        post: AppExpandLevels.EXPAND_ALL,
+                        root_post: AppExpandLevels.EXPAND_ALL,
+                        team: AppExpandLevels.EXPAND_ALL,
+                        user: AppExpandLevels.EXPAND_ALL,
+                        oauth2_app: AppExpandLevels.EXPAND_ALL,
+                        oauth2_user: AppExpandLevels.EXPAND_ALL,
+                        locale: AppExpandLevels.EXPAND_ALL
+                    }
+                }
+            },
+    }
+}
+
+export const  getRemoveBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.REMOVE,
         description: 'Link current channel to a trello workspace',
         hint: '[form]',
             form: {

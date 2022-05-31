@@ -8,7 +8,7 @@ export const newCommandBindings = (bindings: AppBinding[]): AppsState => {
             {
                 icon: TrelloIcon,
                 label: CommandTrigger,
-                hint: `[${Commands.HELP} | ${Commands.ADD} | ${Commands.NEW} | ${Commands.CONFIGURE}]`,
+                hint: `[${Commands.HELP} | ${Commands.CARD} | ${Commands.SUBSCRIPTION} | ${Commands.CONFIGURE}]`,
                 bindings,
             },
         ],
