@@ -35,6 +35,37 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
       submit_label: 'next',
       submit: {
           //path: Routes.App.CallPathConfigSubmit,
+          path: Routes.App.BoardSelectPath,
+          expand: {}
+      },
+  };
+  return form;
+}
+
+export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm> {
+  const mattermostUrl: string | undefined = call.context.mattermost_site_url;
+  const botAccessToken: string | undefined = call.context.bot_access_token;
+
+  const options: AppSelectOption[] = await getListOptionList('');
+
+  const form: AppForm = {
+    title: 'Create New Card',
+    header: 'Fill the form with the card information.',
+    icon: TrelloIcon,
+    fields: [
+        {
+          name: "list_select",
+          modal_label: 'Select List',
+          type: AppFieldTypes.STATIC_SELECT,
+          //description: 'Name of the card',
+          //value:  { label: '', value: ''},
+          options: options,
+          is_required: true,
+        }
+      ],
+      submit_label: 'next',
+      submit: {
+          //path: Routes.App.CallPathConfigSubmit,
           path: '/',
           expand: {}
       },
@@ -51,6 +82,22 @@ async function getBoardOptionList(): Promise<AppSelectOption[]> {
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
   const boards = await trelloClient.searchBoardsInOrganization();
+
+
+  const options: AppSelectOption[] = [...boards.map((b: any) =>  { return { label: b.name, value: b.id}})];
+
+  return options;
+}
+
+async function getListOptionList(boardId: string): Promise<AppSelectOption[]> {
+  const trelloOptions: TrelloOptions = {
+    apiKey: config.TRELLO.API_KEY,
+    token: config.TRELLO.TOKEN,
+  }
+
+  const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
+
+  const boards = await trelloClient.getListByBoard(boardId);
 
 
   const options: AppSelectOption[] = [...boards.map((b: any) =>  { return { label: b.name, value: b.id}})];
