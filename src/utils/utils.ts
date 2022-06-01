@@ -30,7 +30,7 @@ export async function tryPromiseWithMessage(p: Promise<any>, message: string): P
 
 export async function tryPromiseOpsgenieWithMessage(p: Promise<any>, message: string): Promise<any> {
     return p.catch((error) => {
-        console.log('error', error);
+        console.log('error', error.response.data);
         throw new Error(errorOpsgenieWithMessage(error.response, message));
     });
 }

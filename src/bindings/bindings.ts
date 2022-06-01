@@ -105,127 +105,110 @@ export const getSubscriptionBinding = (): any => {
     return {
         icon: TrelloIcon,
         label: Commands.SUBSCRIPTION,
-        description: 'Link current channel to a trello workspace',
+        description: 'Subscribe current channel to a Trello board',
         hint: `[${Commands.ADD} | ${Commands.LIST} | ${Commands.REMOVE}]`,
         bindings: [
             getAddSubBinding(),
-            getListBinding(),
-            getRemoveBinding()
+            getListSubBinding(),
+            getRemoveSubBinding()
         ]
     }
 }
 
-export const  getAddSubBinding = (): any => {
+export const getAddSubBinding = (): any => {
     return {
         icon: TrelloIcon,
         label: Commands.ADD,
-        description: 'Link current channel to a trello workspace',
-        hint: '[form]',
-            form: {
-                title: 'This is a form',
-                icon: TrelloIcon,
-                fields: [
-                    {
-                        type: 'text',
-                        name: 'workspace',
-                        is_required: true,
-                        position: 1
-                    }
-                ],
-                submit: {
-                    path: Routes.App.BindingPathLink,
-                    expand: {
-                        app: AppExpandLevels.EXPAND_ALL,
-                        acting_user: AppExpandLevels.EXPAND_ALL,
-                        acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                        admin_access_token: AppExpandLevels.EXPAND_ALL,
-                        channel: AppExpandLevels.EXPAND_ALL,
-                        post: AppExpandLevels.EXPAND_ALL,
-                        root_post: AppExpandLevels.EXPAND_ALL,
-                        team: AppExpandLevels.EXPAND_ALL,
-                        user: AppExpandLevels.EXPAND_ALL,
-                        oauth2_app: AppExpandLevels.EXPAND_ALL,
-                        oauth2_user: AppExpandLevels.EXPAND_ALL,
-                        locale: AppExpandLevels.EXPAND_ALL
-                    }
+        description: 'Subscribe current channel to a Trello board',
+        form: {
+            title: 'Subscribe channel to Trello board',
+            icon: TrelloIcon,
+            submit: {
+                path: Routes.App.CallSubscriptionAdd,
+                expand: {
+                    //app: AppExpandLevels.EXPAND_ALL,
+                    /*
+                    acting_user: AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    channel: AppExpandLevels.EXPAND_ALL,
+                    post: AppExpandLevels.EXPAND_ALL,
+                    root_post: AppExpandLevels.EXPAND_ALL,
+                    team: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_ALL,
+                    oauth2_app: AppExpandLevels.EXPAND_ALL,
+                    oauth2_user: AppExpandLevels.EXPAND_ALL,
+                    locale: AppExpandLevels.EXPAND_ALL
+                    */
                 }
-            },
+            }
+        }
     }
 }
 
-export const  getListBinding = (): any => {
+export const  getListSubBinding = (): any => {
     return {
         icon: TrelloIcon,
         label: Commands.LIST,
-        description: 'Link current channel to a trello workspace',
-        hint: '[form]',
-            form: {
-                title: 'This is a form',
-                icon: TrelloIcon,
-                fields: [
-                    {
-                        type: 'text',
-                        name: 'workspace',
-                        is_required: true,
-                        position: 1
-                    }
-                ],
-                submit: {
-                    path: Routes.App.BindingPathLink,
-                    expand: {
-                        app: AppExpandLevels.EXPAND_ALL,
-                        acting_user: AppExpandLevels.EXPAND_ALL,
-                        acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                        admin_access_token: AppExpandLevels.EXPAND_ALL,
-                        channel: AppExpandLevels.EXPAND_ALL,
-                        post: AppExpandLevels.EXPAND_ALL,
-                        root_post: AppExpandLevels.EXPAND_ALL,
-                        team: AppExpandLevels.EXPAND_ALL,
-                        user: AppExpandLevels.EXPAND_ALL,
-                        oauth2_app: AppExpandLevels.EXPAND_ALL,
-                        oauth2_user: AppExpandLevels.EXPAND_ALL,
-                        locale: AppExpandLevels.EXPAND_ALL
-                    }
+        description: 'Get list of Trello boards subscribed to current channel',
+        form: {
+            title: 'This is a form',
+            icon: TrelloIcon,
+            fields: [
+                {
+                    type: 'text',
+                    name: 'workspace',
+                    is_required: true,
+                    position: 1
                 }
-            },
+            ],
+            submit: {
+                path: Routes.App.BindingPathLink,
+                expand: {
+                    app: AppExpandLevels.EXPAND_ALL,
+                    acting_user: AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    channel: AppExpandLevels.EXPAND_ALL,
+                    post: AppExpandLevels.EXPAND_ALL,
+                    root_post: AppExpandLevels.EXPAND_ALL,
+                    team: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_ALL,
+                    oauth2_app: AppExpandLevels.EXPAND_ALL,
+                    oauth2_user: AppExpandLevels.EXPAND_ALL,
+                    locale: AppExpandLevels.EXPAND_ALL
+                }
+            }
+        },
     }
 }
 
-export const  getRemoveBinding = (): any => {
+export const  getRemoveSubBinding = (): any => {
     return {
         icon: TrelloIcon,
         label: Commands.REMOVE,
-        description: 'Link current channel to a trello workspace',
-        hint: '[form]',
-            form: {
-                title: 'This is a form',
-                icon: TrelloIcon,
-                fields: [
-                    {
-                        type: 'text',
-                        name: 'workspace',
-                        is_required: true,
-                        position: 1
-                    }
-                ],
-                submit: {
-                    path: Routes.App.BindingPathLink,
-                    expand: {
-                        app: AppExpandLevels.EXPAND_ALL,
-                        acting_user: AppExpandLevels.EXPAND_ALL,
-                        acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                        admin_access_token: AppExpandLevels.EXPAND_ALL,
-                        channel: AppExpandLevels.EXPAND_ALL,
-                        post: AppExpandLevels.EXPAND_ALL,
-                        root_post: AppExpandLevels.EXPAND_ALL,
-                        team: AppExpandLevels.EXPAND_ALL,
-                        user: AppExpandLevels.EXPAND_ALL,
-                        oauth2_app: AppExpandLevels.EXPAND_ALL,
-                        oauth2_user: AppExpandLevels.EXPAND_ALL,
-                        locale: AppExpandLevels.EXPAND_ALL
-                    }
+        description: 'Remove subscription from current channel',
+        form: {
+            title: 'This is a form',
+            icon: TrelloIcon,
+            submit: {
+                path: Routes.App.BindingPathLink,
+                expand: {
+                    app: AppExpandLevels.EXPAND_ALL,
+                    acting_user: AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    channel: AppExpandLevels.EXPAND_ALL,
+                    post: AppExpandLevels.EXPAND_ALL,
+                    root_post: AppExpandLevels.EXPAND_ALL,
+                    team: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_ALL,
+                    oauth2_app: AppExpandLevels.EXPAND_ALL,
+                    oauth2_user: AppExpandLevels.EXPAND_ALL,
+                    locale: AppExpandLevels.EXPAND_ALL
                 }
-            },
+            }
+        },
     }
 }
 

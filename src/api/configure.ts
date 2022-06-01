@@ -43,6 +43,7 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
    const trelloOptions: TrelloOptions = {
       apiKey: values.trello_apikey,
       token: values.trello_oauth_access_token,
+      workspace: values.trello_workspace
    }
 
    let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Trello configuration');

@@ -1,10 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
+import { getHTTPPath } from '../api/manifest';
 import config from '../config';
 import { Routes } from '../constant';
+import { tryPromiseWithMessage } from '../utils';
 
 export interface TrelloOptions {
   apiKey: string;
   token: string;
+  workspace: string;
 }
 
 export class TrelloClient {
@@ -33,7 +36,7 @@ export class TrelloClient {
   }
 
   public searchBoardsInOrganization(): Promise<any> {
-    const url: string = `${config.TRELLO.URL}organizations/60c99e3ff7a1801bb8ac7f36/boards?${this.getKeyAndTokenUrlParams()}`;
+    const url: string = `${config.TRELLO.URL}organizations/${this.config.workspace}/boards?${this.getKeyAndTokenUrlParams()}`;
     
     return axios.get(url).then((response:  AxiosResponse<any>) => response.data);
   }
@@ -47,5 +50,12 @@ export class TrelloClient {
   public validateToken(data: TrelloOptions): Promise<any> {
     const verifyURL = `${config.TRELLO.URL}${Routes.TP.getMembers}?key=${data.apiKey}&token=${data.token}`;
     return axios.get(verifyURL).then((response: AxiosResponse<any>) => response.data);
+  }
+
+  public createTrelloWebhook(callbackURL: string, idModel: string): Promise<any> {
+    callbackURL = `${getHTTPPath()}/subscription/receive-datass`;
+    const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}?callbackURL=${callbackURL}&idModel=${idModel}&${this.getKeyAndTokenUrlParams()}`;
+    return axios.post(url)
+      .then((response: AxiosResponse<any>) => response.data);
   }
 }

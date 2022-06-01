@@ -42,7 +42,7 @@ export function newFormCallResponse(form: AppForm): AppCallResponse {
 export function newErrorCallResponseWithMessage(message: string): AppCallResponse {
     return {
         type: AppCallResponseTypes.ERROR,
-        error: message,
+        text: message,
     };
 }
 

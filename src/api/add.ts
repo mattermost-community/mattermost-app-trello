@@ -50,6 +50,7 @@ export const formStepTwo = async (request: Request, response: Response) => {
   const trelloOptions: TrelloOptions = {
     apiKey: config.TRELLO.API_KEY,
     token: config.TRELLO.TOKEN,
+    workspace: config.TRELLO.WORKSPACE
   }
 
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);

@@ -6,6 +6,7 @@ import * as cHelp from './help';
 import * as cAdd from './add';
 import * as cInstall from './install';
 import * as cConfigure from './configure';
+import * as cSubscription from './subscription';
 
 const router: Router = express.Router();
 
@@ -25,6 +26,12 @@ router.post(`${Routes.App.AddFormStepTwoPath}`, cAdd.formStepTwo)
 // CONFIGURE TRELLO ACCOUNT
 router.post(`${Routes.App.CallPathConfigOpenForm}`, cConfigure.openTrelloConfigForm);
 router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, cConfigure.submitTrelloConfig);
+
+// SUBCRIPTIONS
+router.post(`${Routes.App.CallSubscriptionAdd}`, cSubscription.addSubscription);
+router.post(`${Routes.App.CallSubscriptionCreateWebhook}`, cSubscription.createTrelloWebhookSubmit);
+router.post(`${Routes.App.CallReceiveNotification}`, cSubscription.createWebohookNotification); // TEST
+router.get(`${Routes.App.CallReceiveNotification}`, cSubscription.createWebohookNotification);
 
 const staticRouter = express.Router();
 staticRouter.use(express.static('static'));

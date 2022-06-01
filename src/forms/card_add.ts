@@ -80,6 +80,7 @@ async function getBoardOptionList(): Promise<AppSelectOption[]> {
   const trelloOptions: TrelloOptions = {
     apiKey: config.TRELLO.API_KEY,
     token: config.TRELLO.TOKEN,
+    workspace: config.TRELLO.WORKSPACE
   }
 
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
@@ -96,6 +97,7 @@ async function getListOptionList(boardId: string): Promise<AppSelectOption[]> {
   const trelloOptions: TrelloOptions = {
     apiKey: config.TRELLO.API_KEY,
     token: config.TRELLO.TOKEN,
+    workspace: config.TRELLO.WORKSPACE
   }
 
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
