@@ -1,12 +1,10 @@
 import {Request, Response} from 'express';
-import {newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from "../utils/call-responses";
+import {newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from "../utils/call-responses";
 import { AppCallRequest, AppCallResponse } from "../types";
 import { KVStoreClient, ConfigStoreProps, KVStoreOptions } from '../clients/kvstore';
 import config from '../config';
-import { cardAddFromStepOne } from '../forms/card_add'
 
 export const getLink = async (request: Request, response: Response) => {
-  console.log(request)
   const call: AppCallRequest = request.body;
   const bot_token = call.context.bot_access_token?? '';
   let result = '';
@@ -27,14 +25,12 @@ export const getLink = async (request: Request, response: Response) => {
     console.log('afterkv')
     console.log(kvRes);*/
 
-    const kvRes2 = await kvClient.kvGet('config');
+    /*const kvRes2 = await kvClient.kvGet('config');
     console.log("KV GET")
-    console.log(kvRes2);
+    console.log(kvRes2);*/
 
-    //result = await linkCommand(call, request.body, bot_token);
-    //callResponse = newOKCallResponseWithMarkdown(result);
-    const form = await cardAddFromStepOne(call);
-    callResponse = newFormCallResponse(form);
+    result = await linkCommand(call, request.body, bot_token);
+    callResponse = newOKCallResponseWithMarkdown(result);
     response.json(callResponse);
   } catch(error: any) { 
     callResponse = newErrorCallResponseWithMessage('Unable to link form: ' + error.message);

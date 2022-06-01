@@ -1,6 +1,7 @@
 import axios, {AxiosResponse} from 'axios';
 import {tryPromiseWithMessage} from '../utils/utils';
 import {AppsPluginName, Routes} from '../constant';
+import config from '../config';
 
 export interface KVStoreOptions {
     mattermostUrl: string;
@@ -15,19 +16,14 @@ export class KVStoreClient {
     private readonly config: KVStoreOptions;
 
     constructor(
-        config: KVStoreOptions
+        _config: KVStoreOptions
     ) {
-        this.config = config;
+        if (config.MATTERMOST) _config.mattermostUrl = config.MATTERMOST.URL;
+        this.config = _config;
     }
 
     public kvSet(key: string, value: ConfigStoreProps): Promise<any> {
-      console.log("KEY")
-      console.log(key)
-      console.log("VALUE")
-      console.log(value)
-      console.log(this.config.accessToken)
         const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathKV}/${key}`;
-        console.log(url)
         const promise: Promise<any> = axios.post(url, value, {
             headers: {
                 Authorization: `BEARER ${this.config.accessToken}`,
