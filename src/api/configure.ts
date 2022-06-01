@@ -37,6 +37,7 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
       mattermostUrl: <string>baseUrlFromContext(config.MATTERMOST.URL),
       accessToken: <string>call.context.bot_access_token,
    };
+   
    const kvStoreClient = new KVStoreClient(options);
 
    const trelloOptions: TrelloOptions = {

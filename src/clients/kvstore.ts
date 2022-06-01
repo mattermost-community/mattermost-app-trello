@@ -11,7 +11,7 @@ export interface KVStoreOptions {
 export interface ConfigStoreProps {
     trello_apikey: string;
     trello_oauth_access_token: string;
-    trello_webhook: string;
+    trello_workspace: string;
 }
 
 export class KVStoreClient {
