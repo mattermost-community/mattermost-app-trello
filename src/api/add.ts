@@ -19,6 +19,7 @@ export const getAdd = async (request: Request, response: Response) => {
     const form = await cardAddFromStepOne(call);
     callResponse = newFormCallResponse(form);
     callResponse.call = { path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}` }
+    console.log(callResponse)
   } catch(error: any) { 
     callResponse = newErrorCallResponseWithMessage('Unable to create card form: ' + error.message);
   }
@@ -41,6 +42,7 @@ export const formStepOne = async (request: Request, response: Response) => {
 export const formStepTwo = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
   let callResponse: AppCallResponse;
+  if (!call.values?.list_select) return response.json(newErrorCallResponseWithMessage('List or Board not provided'));
   const list_id = call.values?.list_select.value;
   const card_name = call.values?.card_name;
   const mattermostUrl = call.context.mattermost_site_url ?? '' ;
