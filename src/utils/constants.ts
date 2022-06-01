@@ -161,13 +161,4 @@ FieldValidation[FieldTypes.Regex] = {
     RegexError: 'Regex field not valid',
 };
 
-export const ZDRoles = {
-    admin: 'admin',
-    agent: 'agent',
-};
-
-// MappedZDNames are field names that need to be remapped before sending as a field name for the app modal.
-export const MappedZDNames: any = { };
-MappedZDNames[FieldTypes.TicketType] = 'type';
-
 export const SystemFields = ['subject'];
