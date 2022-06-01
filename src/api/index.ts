@@ -6,7 +6,7 @@ import * as cHelp from './help';
 import * as cAdd from './add';
 import * as cLink from './link';
 import * as cInstall from './install';
-import { fOpenTrelloConfigForm, fSubmitOrUpdateZendeskConfigSubmit } from './configure';
+import { openTrelloConfigForm, submitTrelloConfig } from './configure';
 
 const router: Router = express.Router();
 
@@ -27,8 +27,8 @@ router.post(`${Routes.App.AddFormStepOnePath}`, cAdd.formStepOne)
 router.post(`${Routes.App.AddFormStepTwoPath}`, cAdd.formStepTwo)
 
 // CONFIGURE TRELLO ACCOUNT
-router.post(`${Routes.App.CallPathConfigOpenForm}`, fOpenTrelloConfigForm);
-router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, fSubmitOrUpdateZendeskConfigSubmit);
+router.post(`${Routes.App.CallPathConfigOpenForm}`, openTrelloConfigForm);
+router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, submitTrelloConfig);
 
 const staticRouter = express.Router();
 staticRouter.use(express.static('static'));

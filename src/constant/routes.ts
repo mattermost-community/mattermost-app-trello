@@ -37,12 +37,21 @@ const MattermostPaths = {
 }
 
 const TrelloPaths = {
-
-}
+  OAuthGetRequestToken: '/OAuthGetRequestToken',
+  OAuthAuthorizeToken: '/OAuthAuthorizeToken',
+  OAuthGetAccessToken: '/OAuthGetAccessToken',
+  OAuthAuthorizationURI: '/oauth/authorizations/new',
+  OAuthAccessTokenURI: '/oauth/tokens',
+  TicketPathPrefix: '/agent/tickets',
+  AccessURI: '/access/unauthenticated',
+  APIVersion: '/api/v2',
+  getMembers: 'members/me'
+};
 
 export const Routes = {
   PathsVariable,
   App: AppPaths,
-  Mattermost:  MattermostPaths,
+  Mattermost: MattermostPaths,
+  TP: TrelloPaths
 };
 

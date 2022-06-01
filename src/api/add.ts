@@ -1,7 +1,6 @@
 import {Request, Response} from 'express';
 import {newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from "../utils/call-responses";
 import { AppCallRequest, AppCallResponse } from "../types";
-import { mattermostApi } from '../mattermost/mattermost-api';
 import config from '../config';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { cardAddFromStepOne, cardAddFromStepTwo } from '../forms/card_add';
@@ -65,7 +64,6 @@ export const formStepTwo = async (request: Request, response: Response) => {
             text: `Card ${card_name} added to board`,
         }]
     }
-    //  await mattermostApi.postToHook(hookMessage, 'jzyjmiwcdiya3go11ndobsewne', mattermostUrl)
     const mattermostOptions: MattermostOptions = {
       accessToken: bot_token,
       mattermostUrl: mattermostUrl
