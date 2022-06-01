@@ -9,7 +9,7 @@ export function isFieldValueSelected(field: AppField): boolean {
 }
 
 export function baseUrlFromContext(mattermostSiteUrl: string): string {
-    return mattermostSiteUrl || 'http://localhost:8065';
+    return mattermostSiteUrl || 'http://localhost:8066';
 }
 
 export function replace(value: string, searchValue: string, replaceValue: string): string {

@@ -19,7 +19,9 @@ export const getLink = async (request: Request, response: Response) => {
 
     const kvClient: KVStoreClient = new KVStoreClient(kvOptions);
     const props: ConfigStoreProps = {
-      trello_apikey: config.TRELLO.API_KEY
+      trello_apikey: config.TRELLO.API_KEY,
+      trello_oauth_access_token: '',
+      trello_webhook: ''
     }
     /*const kvRes = await kvClient.kvSet('config', props);
     console.log('afterkv')

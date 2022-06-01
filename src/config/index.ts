@@ -9,6 +9,6 @@ export default {
         TOKEN: '75b6cf735be5e1449e70a26965550815971e8d55ea7d26efeaea18f1f2167a01'
     },
     MATTERMOST: {
-        URL: 'http://[::1]:8065'
+        URL: 'http://[::1]:8066'
     }
 }

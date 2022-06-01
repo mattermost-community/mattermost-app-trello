@@ -3,7 +3,6 @@ import { AppFieldTypes } from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import { AppSelectOption, ExpandedBotActingUser, ExpandedOauth2App, Oauth2App } from '../types/apps';
-import { BaseFormFields } from '../utils/base_form_fields';
 import { Routes, TrelloIcon } from '../constant/index';
 import config from '../config'
 import { TrelloClient, TrelloOptions } from '../clients/trello';

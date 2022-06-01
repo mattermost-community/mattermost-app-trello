@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import config from '../config';
+import { Routes } from '../constant';
+import { ConfigStoreProps } from './kvstore';
 
 export interface TrelloOptions {
   apiKey: string;
@@ -41,5 +43,10 @@ export class TrelloClient {
     const url: string = `${config.TRELLO.URL}cards?idList=${listId}&name=${cardName}&${this.getKeyAndTokenUrlParams()}`;
     
     return axios.post(url).then((response:  AxiosResponse<any>) => response.data);
+  }
+
+  public validateToken(data: TrelloOptions): Promise<any> {
+    const verifyURL = `${config.TRELLO.URL}${Routes.TP.getMembers}?key=${data.apiKey}&token=${data.token}`;
+    return axios.get(verifyURL).then((response: AxiosResponse<any>) => response.data);
   }
 }
