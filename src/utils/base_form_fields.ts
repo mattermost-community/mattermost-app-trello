@@ -2,8 +2,8 @@ import Client4 from 'mattermost-redux/client/client4.js';
 import { AppCallResponse, AppForm, AppCallRequest, AppField } from '../types';
 import { AppCallValues} from 'mattermost-redux/types/apps';
 
-import {ZDClient} from '../clients';
 import { FieldsBuilder, newFieldsBuilder } from './helper_classes/fields/fields_builder';
+import { TrelloClient } from '../clients/trello';
 
 
 const DefaultMinLength = 2;
@@ -13,16 +13,14 @@ const DefaultMaxLength = 1024;
 export class BaseFormFields {
     call: AppCallRequest;
     builder: FieldsBuilder;
-    zdClient?: ZDClient;
-    mmClient: Client4;
+    client: TrelloClient;
 
-    constructor(call: AppCallRequest, mmClient: Client4, zdClient?: ZDClient) {
+    constructor(call: AppCallRequest, client: TrelloClient) {
         this.call = call;
         this.builder = newFieldsBuilder(this.call);
         this.builder.setDefaultMinLength(DefaultMinLength);
         this.builder.setDefaultMaxLength(DefaultMaxLength);
-        this.zdClient = zdClient;
-        this.mmClient = mmClient;
+        this.client = client;
     }
 
     getCurrentTeamID(): string {

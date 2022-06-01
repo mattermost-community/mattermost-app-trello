@@ -3,25 +3,23 @@ import { AppFieldTypes } from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import { ExpandedBotActingUser, ExpandedOauth2App, Oauth2App } from '../types/apps';
-import { newMMClient } from '../clients';
-import { MMClientOptions } from '../clients/mattermost';
 import { BaseFormFields } from '../utils/base_form_fields';
-import { ZendeskIcon } from '../utils/constants';
 import { AppConfigStore, ConfigStore, newConfigStore } from '../store/config';
 import { Routes, TrelloIcon } from '../constant/index';
 import config from '../config'
+import { TrelloClient, TrelloOptions } from '../clients/trello';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
    const context = call.context as ExpandedBotActingUser;
-   const mmOptions: MMClientOptions = {
-      mattermostSiteURL: config.MATTERMOST.URL,//context.mattermost_site_url || '',
-      actingUserAccessToken: context.acting_user_access_token,
-      botAccessToken: context.bot_access_token,
-   };
-   const mmClient = newMMClient(mmOptions).asActingUser();
+   
+   const trelloOptions: TrelloOptions = {
+      apiKey: config.TRELLO.API_KEY,
+      token: config.TRELLO.TOKEN,
+   }
+   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
    const configStore = newConfigStore(context.bot_access_token, config.MATTERMOST.URL/*context.mattermost_site_url*/ || '');
-   const formFields = new FormFields(call, configStore, mmClient);
+   const formFields = new FormFields(call, configStore, trelloClient);
    const fields = await formFields.getConfigFields();
 
    const form: AppForm = {
@@ -42,8 +40,8 @@ class FormFields extends BaseFormFields {
    storeValues: AppConfigStore
    OauthValues: Oauth2App
 
-   constructor(call: AppCallRequest, configStore: ConfigStore, mmClient: Client4) {
-      super(call, mmClient, undefined);
+   constructor(call: AppCallRequest, configStore: ConfigStore, client: TrelloClient) {
+      super(call, client);
       const context = call.context as ExpandedOauth2App;
       this.configStore = configStore;
       this.OauthValues = {

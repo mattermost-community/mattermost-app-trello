@@ -1,6 +1,3 @@
-export const CommandTrigger = 'zendesk';
-
-export const ZendeskIcon = 'zendesk.png';
 export const FormTextAreaMinLength = 2;
 export const FormTextAreaMaxLength = 1024;
 
@@ -17,15 +14,6 @@ const MMPaths = {
     PathOAuth2CreateState: '/oauth2/create-state',
 };
 
-// Routes to the Zendesk Instance
-const ZDPaths = {
-    OAuthAuthorizationURI: '/oauth/authorizations/new',
-    OAuthAccessTokenURI: '/oauth/tokens',
-    TicketPathPrefix: '/agent/tickets',
-    AccessURI: '/access/unauthenticated',
-    APIVersion: '/api/v2',
-};
-
 const TrelloPaths = {
     OAuthGetRequestToken: '/OAuthGetRequestToken',
     OAuthAuthorizeToken: '/OAuthAuthorizeToken',
@@ -40,7 +28,6 @@ const TrelloPaths = {
 
 
 export const Routes = {
-    ZD: ZDPaths,
     MM: MMPaths,
     TP: TrelloPaths
 };
@@ -60,9 +47,7 @@ export const StoreKeys = {
     config: 'config',
 };
 
-// Fields available inside Zendesk
-export const ZDFieldTypes = {
-
+export const FieldTypes = {
     // System Types
     // Assignee: 'assignee',
     Subject: 'subject',
@@ -70,7 +55,7 @@ export const ZDFieldTypes = {
     TicketType: 'tickettype',
     Description: 'description',
 
-    // Custom Zendesk UserField Types
+    // Custom UserField Types
     Text: 'text',
     MultiLine: 'textarea',
     Checkbox: 'checkbox',
@@ -158,20 +143,20 @@ TriggerFields.ActionValuePairs[TriggerFields.TicketTitleKey] = '{{ticket.title}}
 // ZdFieldValidation is an object of Zendesk fields types that validates a field
 // value against a regex.  The regex values are retreivable from the field
 // list API, but are hardcoded here for simplicity
-export const ZDFieldValidation: any = {};
-ZDFieldValidation[ZDFieldTypes.Integer] = {
+export const FieldValidation: any = {};
+FieldValidation[FieldTypes.Integer] = {
     Regex: '^[+-]?\\d+$',
     RegexError: 'Numeric field not valid',
 };
-ZDFieldValidation[ZDFieldTypes.Decimal] = {
+FieldValidation[FieldTypes.Decimal] = {
     Regex: '^[-+]?[0-9]*[.,]?[0-9]+$',
     RegexError: 'Decimal field not valid',
 };
-ZDFieldValidation[ZDFieldTypes.Date] = {
+FieldValidation[FieldTypes.Date] = {
     Regex: '^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])$',
     RegexError: 'Date field not valid',
 };
-ZDFieldValidation[ZDFieldTypes.Regex] = {
+FieldValidation[FieldTypes.Regex] = {
     Regex: '^(http|https):\\/\\/[a-z0-9]+([-.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(([0-9]{1,5})?\\/.*)?$',
     RegexError: 'Regex field not valid',
 };
@@ -183,6 +168,6 @@ export const ZDRoles = {
 
 // MappedZDNames are field names that need to be remapped before sending as a field name for the app modal.
 export const MappedZDNames: any = { };
-MappedZDNames[ZDFieldTypes.TicketType] = 'type';
+MappedZDNames[FieldTypes.TicketType] = 'type';
 
 export const SystemFields = ['subject'];

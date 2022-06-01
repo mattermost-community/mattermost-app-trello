@@ -5,7 +5,6 @@ import ClientOAuth2 from 'client-oauth2';
 import {Oauth2App} from '../types/apps';
 
 import {
-    StoredOauthUserToken,
     tryPromiseWithMessage,
     AppsPluginName, 
     PathAPI, 
@@ -19,7 +18,6 @@ export interface AppsClient {
     kvGet(key: string): Promise<any>;
     kvDelete(key: string): Promise<void>;
     storeOauth2App(id: string, secret: string): Promise<void>;
-    storeOauth2User(token: StoredOauthUserToken): Promise<void>
 }
 
 export const newAppsClient = (botAccessToken: string, baseURL: string): AppsClient => {
@@ -56,11 +54,6 @@ class AppsClientImpl implements AppsClient {
             client_secret: secret,
         };
         return tryPromiseWithMessage(this.doAPIPost(url, data), 'storeOauth2App failed');
-    }
-
-    storeOauth2User(token: StoredOauthUserToken): Promise<void> {
-        const url = this.url + this.oauth2UserPath();
-        return tryPromiseWithMessage(this.doAPIPost(url, token), 'storeOauth2User failed');
     }
 
     async doAPIPost(url: string, value: any): Promise<any> {

@@ -16,7 +16,7 @@ function getPort(): number {
 }
 
 export function getHTTPPath(): string {
-    if (`${config.APP.HOST}`.includes('localhost')){
+    if (!`${config.APP.HOST}`.includes('https')){
         return `${config.APP.HOST}:${getPort()}`;
     }
     return config.APP.HOST;
@@ -25,8 +25,6 @@ export function getHTTPPath(): string {
 
 export function getManifestData(): Manifest {
     const m: Manifest = manifest;
-
     m.http.root_url = getHTTPPath();
-
     return m;
 }

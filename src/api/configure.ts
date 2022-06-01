@@ -47,10 +47,6 @@ export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (re
       const configStore = newConfigStore(context.bot_access_token, config.MATTERMOST.URL/*context.mattermost_site_url || ''*/);
       const cValues = await configStore.getValues();
       
-      // Using a simple /\/+$/ fails CodeQL check - Polynomial regular expression used on uncontrolled data.
-      // The solution is to utilize the negative lookbehind pattern match.
-      // Matches when the previous character is not a forward slash, then any number of slashes, and EOL.
-      // https://codeql.github.com/codeql-query-help/javascript/js-polynomial-redos/#
       try {
          await verifyToken(url, values);
       } catch (error: any) {
