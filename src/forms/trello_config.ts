@@ -1,9 +1,7 @@
-import { AppCallRequest, AppField, AppForm } from '../types';
+import { AppCallRequest, AppForm } from '../types';
 
-import { AppSelectOption, ExpandedBotActingUser, ExpandedOauth2App, Oauth2App } from '../types/apps';
-import { Routes, TrelloIcon, AppFieldTypes } from '../constant/index';
-import config from '../config'
-import { TrelloClient, TrelloOptions } from '../clients/trello';
+import { ExpandedBotActingUser } from '../types';
+import { Routes, TrelloIcon, AppFieldTypes } from '../constant';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 
 export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
@@ -11,7 +9,7 @@ export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
    const kvOpts: KVStoreOptions = {
       mattermostUrl: context.mattermost_site_url || '',
       accessToken: context.bot_access_token
-   }
+   };
    
    const kvClient: KVStoreClient = new KVStoreClient(kvOpts);
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet('config_trello_keys') as ConfigStoreProps;
@@ -45,7 +43,7 @@ export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
       }
    ];
 
-   const form: AppForm = {
+   return {
       title: 'Configure Trello',
       header: 'Configure the Trello app with the following information.',
       icon: TrelloIcon,
@@ -53,7 +51,6 @@ export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
       submit: {
          path: Routes.App.CallPathConfigSubmitOrUpdateForm,
       },
-   };
-   return form;
+   } as AppForm;
 }
 

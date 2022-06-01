@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
-import {tryPromiseWithMessage} from '../utils/utils';
+import {tryPromiseWithMessage} from '../utils';
 import {AppsPluginName, Routes} from '../constant';
 import config from '../config';
 

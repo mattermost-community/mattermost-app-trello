@@ -1,7 +1,7 @@
 import axios, {AxiosResponse} from 'axios';
 import {DialogProps, PostCreate, PostUpdate, User} from '../types';
 import {Routes} from '../constant';
-import {replace} from "../utils/utils";
+import {replace} from "../utils";
 import config from '../config';
 
 export interface MattermostOptions {

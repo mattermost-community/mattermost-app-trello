@@ -1,16 +1,34 @@
 import {AppBinding, AppsState} from '../types';
 
 import {getHelpBinding, getSubscriptionBinding, getConfigureBinding, getCardBinding } from './bindings';
-import {newCommandBindings} from '../utils/bindings';
+import {AppBindingLocations, Commands, CommandTrigger, TrelloIcon} from "../constant";
+
+const newCommandBindings = (bindings: AppBinding[]): AppsState => {
+    const commands: string[] = [
+        Commands.HELP,
+        Commands.CARD,
+        Commands.SUBSCRIPTION,
+        Commands.CONFIGURE
+    ];
+
+    return {
+        location: AppBindingLocations.COMMAND,
+        bindings: [
+            {
+                icon: TrelloIcon,
+                label: CommandTrigger,
+                hint: `[${commands.join(' | ')}]`,
+                bindings,
+            },
+        ],
+    };
+};
 
 export const getCommandBindings = (): AppsState => {
     const bindings: AppBinding[] = [];
 
     bindings.push(getHelpBinding());
-    //bindings.push(getAddBinding());
-    //bindings.push(getNewBinding());
     bindings.push(getCardBinding());
-    //bindings.push(getLinkBinding());
     bindings.push(getSubscriptionBinding());
     bindings.push(getConfigureBinding());
     return newCommandBindings(bindings);

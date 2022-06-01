@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import config from '../config';
 import { Routes } from '../constant';
-import { ConfigStoreProps } from './kvstore';
 
 export interface TrelloOptions {
   apiKey: string;

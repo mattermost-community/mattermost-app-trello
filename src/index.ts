@@ -11,8 +11,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use('/', apiRoutes);
 
-console.log(apiRoutes)
-
 const port: number = config.APP.PORT;
 app.listen(port, () => console.log('Listening on ' + port));
 

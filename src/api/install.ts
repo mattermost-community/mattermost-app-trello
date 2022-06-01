@@ -1,10 +1,9 @@
 import {Request, Response} from 'express';
 import {AppCallResponse} from '../types';
-import {newOKCallResponseWithMarkdown} from '../utils/call-responses';
+import {newOKCallResponseWithMarkdown} from '../utils';
 import manifest from '../manifest.json';
 
 export const getInstall = async (request: Request, response: Response) => {
-  console.log('install')
     const helpText: string = [
         getCommands()
     ].join('');

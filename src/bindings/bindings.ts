@@ -1,7 +1,4 @@
-import {AppBinding, AppsState} from '../types';
-import manifest from '../manifest.json';
-import {AppExpandLevels, Locations, TrelloIcon, Routes, Commands} from '../constant';
-import { getManifestData } from '../api/manifest';
+import {AppExpandLevels, TrelloIcon, Routes, Commands} from '../constant';
 
 export const getHelpBinding = (): any => {
     return {

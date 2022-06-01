@@ -41,3 +41,16 @@ export const AppFieldTypes: { [name: string]: AppFieldType } = {
     USER: 'user',
     CHANNEL: 'channel',
 };
+
+export const FieldTypes: { [name: string]: AppFieldType } = {
+    Text: 'text',
+    MultiLine: 'textarea',
+    Checkbox: 'checkbox',
+    Date: 'date',
+    Integer: 'integer',
+    Decimal: 'decimal',
+    Regex: 'regexp',
+    Tagger: 'tagger',
+    Muliselect: 'multiselect',
+};
+
