@@ -13,7 +13,6 @@ import {
 } from '../utils';
 import { baseUrlFromContext } from '../utils/utils';
 import config from '../config';
-import fetch from "node-fetch";
 import { Routes } from '../constant';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';

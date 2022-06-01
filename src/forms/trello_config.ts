@@ -1,9 +1,7 @@
 import { AppCallRequest, AppField, AppForm } from '../types';
-import { AppFieldTypes } from 'mattermost-redux/constants/apps';
-import Client4 from 'mattermost-redux/client/client4.js';
 
 import { AppSelectOption, ExpandedBotActingUser, ExpandedOauth2App, Oauth2App } from '../types/apps';
-import { Routes, TrelloIcon } from '../constant/index';
+import { Routes, TrelloIcon, AppFieldTypes } from '../constant/index';
 import config from '../config'
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
