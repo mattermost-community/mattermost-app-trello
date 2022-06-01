@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import { AppCallResponse, AppsState} from '../types';
-import {newOKCallResponseWithData} from '../utils/call-responses';
+import {newOKCallResponseWithData} from '../utils';
 import {getAppBindings} from '../bindings';
 
 export const getBindings = async (request: Request, response: Response) => {

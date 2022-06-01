@@ -1,11 +1,8 @@
 import { 
    AppCallRequestWithValues, 
-   CtxExpandedBotActingUserAccessToken, 
-   AppCallResponse 
-} from '../types/apps';
-import { AppConfigStore, newConfigStore } from '../store/config';
-import { newAppsClient } from '../clients';
-import { newZendeskConfigForm } from '../forms';
+   AppCallResponse
+} from '../types';
+import { newConfigForm } from '../forms/trello_config';
 import { 
    CallResponseHandler, 
    newErrorCallResponseWithFieldErrors, 
@@ -13,19 +10,17 @@ import {
    newFormCallResponse, 
    newOKCallResponseWithMarkdown 
 } from '../utils';
-import { baseUrlFromContext } from '../utils/utils';
-import { Routes } from '../utils/constants';
+import { baseUrlFromContext } from '../utils';
 import config from '../config';
-import fetch from "node-fetch";
+import { TrelloClient, TrelloOptions } from '../clients/trello';
+import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import {StoreKeys} from '../constant';
 
-// fOpenTrelloConfigForm opens a new configuration form
-export const fOpenTrelloConfigForm: CallResponseHandler = async (req, res) => {
-   console.log("configure trello account")
+export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
    let callResponse: AppCallResponse;
+
    try {
-      console.log(1)
-      const form = await newZendeskConfigForm(req.body);
-      console.log(2)
+      const form = await newConfigForm(req.body);
       callResponse = newFormCallResponse(form);
       res.json(callResponse);
    } catch (error: any) {
@@ -34,45 +29,43 @@ export const fOpenTrelloConfigForm: CallResponseHandler = async (req, res) => {
    }
 };
 
-export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (req, res) => {
+export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
    const call: AppCallRequestWithValues = req.body;
-   const context = call.context as CtxExpandedBotActingUserAccessToken;
-   const url = baseUrlFromContext(config.MATTERMOST.URL/*call.context.mattermost_site_url || ''*/);
-   const values = call.values as AppConfigStore;
+   const values = call.values as ConfigStoreProps;
+
+   const options: KVStoreOptions = {
+      mattermostUrl: <string>baseUrlFromContext(config.MATTERMOST.URL),
+      accessToken: <string>call.context.bot_access_token,
+   };
+   const kvStoreClient = new KVStoreClient(options);
+
+   const trelloOptions: TrelloOptions = {
+      apiKey: values.trello_apikey,
+      token: values.trello_oauth_access_token,
+   }
 
    let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Trello configuration');
    try {
-      const ppClient = newAppsClient(context.acting_user_access_token, url);
-      await ppClient.storeOauth2App(values.trello_apikey, values.trello_oauth_access_token);
-      const configStore = newConfigStore(context.bot_access_token, config.MATTERMOST.URL/*context.mattermost_site_url || ''*/);
-      const cValues = await configStore.getValues();
-      
-      // Using a simple /\/+$/ fails CodeQL check - Polynomial regular expression used on uncontrolled data.
-      // The solution is to utilize the negative lookbehind pattern match.
-      // Matches when the previous character is not a forward slash, then any number of slashes, and EOL.
-      // https://codeql.github.com/codeql-query-help/javascript/js-polynomial-redos/#
       try {
-         await verifyToken(url, values);
+         await verifyToken(trelloOptions);
       } catch (error: any) {
          callResponse = newErrorCallResponseWithFieldErrors({ trello_oauth_access_token: error.message });
          res.json(callResponse);
          return;
       }
-      await configStore.storeConfigInfo(values);
+
+      await kvStoreClient.kvSet(StoreKeys.config, values);
    } catch (err: any) {
       callResponse = newErrorCallResponseWithMessage('Unable to submit configuration form: ' + err.message);
    }
+
    res.json(callResponse);
 };
 
-const verifyToken = async (url: string, data: AppConfigStore) => {
-   const verifyURL = `${config.TRELLO.URL}${Routes.TP.getMembers}?key=${data.trello_apikey}&token=${data.trello_oauth_access_token}`;
-   const quotedURL = '`token` and `key`';
+const verifyToken = async (trelloOpt: TrelloOptions) => {
    try {
-      const resp = await fetch(verifyURL, { method: 'get' });
-      if (!resp.ok) {
-         throw new Error(`Failed to verify: ${quotedURL}`);
-      }
+      const trelloClient: TrelloClient = new TrelloClient(trelloOpt);
+      await trelloClient.validateToken(trelloOpt);
    } catch (err) {
       throw new Error(`${err}`);
    }

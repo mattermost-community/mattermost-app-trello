@@ -1,48 +1,71 @@
-import Client from 'mattermost-redux/client/client4.js';
+import axios, {AxiosResponse} from 'axios';
+import {DialogProps, PostCreate, PostUpdate, User} from '../types';
+import {Routes} from '../constant';
+import {replace} from "../utils";
+import config from '../config';
 
-import {baseUrlFromContext} from '../utils';
-
-interface MMClient {
-    asBot(): Client;
-    asActingUser(): Client;
+export interface MattermostOptions {
+    mattermostUrl: string;
+    accessToken: string | null | undefined;
 }
 
-export type MMClientOptions = {
-    mattermostSiteURL: string,
-    actingUserAccessToken: string,
-    botAccessToken: string,
-}
+export class MattermostClient {
+    private readonly config: MattermostOptions;
 
-export const newMMClient = (mmOptions: MMClientOptions): MMClient => {
-    return new MMClientImpl(mmOptions);
-};
-
-class MMClientImpl implements MMClient {
-    options: MMClientOptions
-    constructor(options: MMClientOptions) {
-        this.options = options;
-    }
-    newClient(token: string): Client {
-        const client = new Client();
-        const baseURL = baseUrlFromContext(this.options.mattermostSiteURL);
-        client.setUrl(baseURL);
-        client.setToken(token);
-        return client;
+    constructor(
+        _config: MattermostOptions
+    ) {
+        if (config.MATTERMOST) _config.mattermostUrl = config.MATTERMOST.URL;
+        this.config = _config;
     }
 
-    as(token: string): Client {
-        return this.newClient(token);
+    public createPost(post: PostCreate): Promise<any> {
+        const url: string = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.PostsPath}`;
+        return axios.post(url, post, {
+            headers: {
+                Authorization: `Bearer ${this.config.accessToken}`
+            }
+        }).then((response: AxiosResponse<any>) => response.data);
     }
 
-    asBot(): Client {
-        return this.as(
-            this.options.botAccessToken,
-        );
+    public updatePost(postId: string, post: PostUpdate): Promise<any> {
+        const url: string = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.PostPath}`;
+        return axios.put(replace(url, Routes.PathsVariable.Identifier, postId), post, {
+            headers: {
+                Authorization: `Bearer ${this.config.accessToken}`
+            }
+        }).then((response: AxiosResponse<any>) => response.data);
     }
 
-    asActingUser(): Client {
-        return this.as(
-            this.options.actingUserAccessToken,
-        );
+    public deletePost(postId: string): Promise<any> {
+        const url: string = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.PostPath}`;
+        return axios.delete(replace(url, Routes.PathsVariable.Identifier, postId), {
+            headers: {
+                Authorization: `Bearer ${this.config.accessToken}`
+            }
+        }).then((response: AxiosResponse<any>) => response.data);
+    }
+
+    public getUser(userId: string): Promise<User> {
+        const url: string = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.UserPath}`;
+        return axios.get(replace(url, Routes.PathsVariable.Identifier, userId), {
+            headers: {
+                Authorization: `Bearer ${this.config.accessToken}`
+            }
+        }).then((response: AxiosResponse<any>) => response.data);
+    }
+
+    public showDialog(dialog: DialogProps): Promise<any> {
+        const url: string = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.DialogsOpenPath}`;
+        return axios.post(url, dialog, {
+            headers: {
+                Authorization: `Bearer ${this.config.accessToken}`
+            }
+        }).then((response: AxiosResponse<any>) => response.data);
+    }
+
+    public incomingWebhook(data: {[key: string]: any}): Promise<string> {
+        return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/jzyjmiwcdiya3go11ndobsewne`, data)
+            .then((response: AxiosResponse<any>) => response.data);
     }
 }

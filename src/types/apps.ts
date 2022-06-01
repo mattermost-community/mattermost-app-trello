@@ -1,6 +1,3 @@
-import { UserProfile } from "mattermost-redux/types/users";
-import { StoredOauthUserToken } from "../utils/ZDTypes";
-
 export type AppManifest = {
   app_id: string;
   display_name: string;
@@ -24,7 +21,7 @@ export type Oauth2App = {
   client_secret: string;
   connect_url?: string;
   complete_url?: string;
-  user?: StoredOauthUserToken
+  user?: any
 }
 
 export type ExpandedOauth2App = AppContext & {
@@ -32,7 +29,7 @@ export type ExpandedOauth2App = AppContext & {
 }
 
 export type ExpandedBotActingUser = AppContext & {
-  acting_user: UserProfile,
+  acting_user: any,
   acting_user_access_token: string
   bot_user_id: string,
   bot_access_token: string,

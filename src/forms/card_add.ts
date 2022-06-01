@@ -9,7 +9,7 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
 
   const options: AppSelectOption[] = await getBoardOptionList();
 
-  const form: AppForm = {
+  return {
     title: 'Create New Card',
     header: 'Fill the form with the card information.',
     icon: TrelloIcon,
@@ -36,8 +36,7 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
           expand: {
           }
       },
-  };
-  return form;
+  } as AppForm;
 }
 
 export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm> {
@@ -48,7 +47,7 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
 
   const options: AppSelectOption[] = await getListOptionList(boardId);
 
-  const form: AppForm = {
+  return {
     title: 'Create New Card',
     header: 'Fill the form with the card information.',
     icon: TrelloIcon,
@@ -74,8 +73,7 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
           path: Routes.App.AddFormStepTwoPath,
           expand: {}
       },
-  };
-  return form;
+  } as AppForm;
 }
 
 async function getBoardOptionList(): Promise<AppSelectOption[]> {

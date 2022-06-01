@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
-import {tryPromiseWithMessage} from '../utils/utils';
+import {tryPromiseWithMessage} from '../utils';
 import {AppsPluginName, Routes} from '../constant';
 import config from '../config';
 
@@ -10,6 +10,8 @@ export interface KVStoreOptions {
 
 export interface ConfigStoreProps {
     trello_apikey: string;
+    trello_oauth_access_token: string;
+    trello_webhook: string;
 }
 
 export class KVStoreClient {

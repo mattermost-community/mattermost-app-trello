@@ -1,26 +1,28 @@
 import {Request, Response} from 'express';
-import {newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from "../utils/call-responses";
+import {
+  newErrorCallResponseWithMessage,
+  newFormCallResponse,
+  newOKCallResponseWithMarkdown
+} from "../utils";
 import { AppCallRequest, AppCallResponse } from "../types";
-import { mattermostApi } from '../mattermost/mattermost-api';
 import config from '../config';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { cardAddFromStepOne, cardAddFromStepTwo } from '../forms/card_add';
-import { MattermostClient, MattermostOptions } from '../clients/mattermost2';
+import { MattermostClient, MattermostOptions } from '../clients/mattermost';
 
 export const getAdd = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
-  const bot_token = call.context.bot_access_token?? '';
-  let result = 'result test';
+
   let callResponse: AppCallResponse;
-  callResponse = newOKCallResponseWithMarkdown(result);
 
   try {
     const form = await cardAddFromStepOne(call);
     callResponse = newFormCallResponse(form);
+    response.json(callResponse);
   } catch(error: any) { 
     callResponse = newErrorCallResponseWithMessage('Unable to create card form: ' + error.message);
+    response.json(callResponse);
   }
-  response.json(callResponse);
 }
 
 export const formStepOne = async (request: Request, response: Response) => {
@@ -33,8 +35,8 @@ export const formStepOne = async (request: Request, response: Response) => {
     response.json(callResponse);
   } catch(error: any) { 
     callResponse = newErrorCallResponseWithMessage('Unable to continue: ' + error.message);
+    response.json(callResponse);
   }
-  response.json(callResponse); 
 }
 
 export const formStepTwo = async (request: Request, response: Response) => {
@@ -65,7 +67,6 @@ export const formStepTwo = async (request: Request, response: Response) => {
             text: `Card ${card_name} added to board`,
         }]
     }
-    //  await mattermostApi.postToHook(hookMessage, 'jzyjmiwcdiya3go11ndobsewne', mattermostUrl)
     const mattermostOptions: MattermostOptions = {
       accessToken: bot_token,
       mattermostUrl: mattermostUrl
@@ -75,7 +76,6 @@ export const formStepTwo = async (request: Request, response: Response) => {
     await mattermostClient.incomingWebhook(hookMessage);
     callResponse = newOKCallResponseWithMarkdown('')
   } catch(error: any) {
-    console.log(error)
     callResponse = newErrorCallResponseWithMessage('Unable to continue: ' + error.message);
   }
 
