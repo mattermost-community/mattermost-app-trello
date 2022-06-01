@@ -12,6 +12,9 @@ const AppPaths = {
   BoardSelectPath: '/board_select',
   ListSelectPath: '/list_select',
 
+  AddFormStepOnePath: '/add/stepone',
+  AddFormStepTwoPath: '/add/steptwo',
+
   BindingPathHelp: '/help',
   BindingPathAdd: '/add',
   BindingPathNew: '/new',
@@ -30,6 +33,7 @@ const MattermostPaths = {
   DialogsOpenPath: '/actions/dialogs/open',
   ApiVersionV4: '/api/v4',
   ApiVersionV1: '/api/v1',
+  Hooks:  '/hooks',
 }
 
 const TrelloPaths = {

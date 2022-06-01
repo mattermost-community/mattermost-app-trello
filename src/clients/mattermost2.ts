@@ -2,6 +2,7 @@ import axios, {AxiosResponse} from 'axios';
 import {DialogProps, PostCreate, PostUpdate, User} from '../types';
 import {Routes} from '../constant';
 import {replace} from "../utils/utils2";
+import config from '../config';
 
 export interface MattermostOptions {
     mattermostUrl: string;
@@ -12,9 +13,10 @@ export class MattermostClient {
     private readonly config: MattermostOptions;
 
     constructor(
-        config: MattermostOptions
+        _config: MattermostOptions
     ) {
-        this.config = config;
+        if (config.MATTERMOST) _config.mattermostUrl = config.MATTERMOST.URL;
+        this.config = _config;
     }
 
     public createPost(post: PostCreate): Promise<any> {
@@ -63,7 +65,7 @@ export class MattermostClient {
     }
 
     public incomingWebhook(data: {[key: string]: any}): Promise<string> {
-        return axios.post(this.config.mattermostUrl, data)
+        return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/jzyjmiwcdiya3go11ndobsewne`, data)
             .then((response: AxiosResponse<any>) => response.data);
     }
 }

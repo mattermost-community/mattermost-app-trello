@@ -26,17 +26,15 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
           name: "board",
           modal_label: 'Select Board',
           type: AppFieldTypes.STATIC_SELECT,
-          //description: 'Name of the card',
-          //value:  { label: '', value: ''},
           options: options,
           is_required: true,
         }
       ],
       submit_label: 'next',
       submit: {
-          //path: Routes.App.CallPathConfigSubmit,
-          path: Routes.App.BoardSelectPath,
-          expand: {}
+          path: Routes.App.AddFormStepOnePath,
+          expand: {
+          }
       },
   };
   return form;
@@ -45,8 +43,10 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
 export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm> {
   const mattermostUrl: string | undefined = call.context.mattermost_site_url;
   const botAccessToken: string | undefined = call.context.bot_access_token;
+  const boardId = call.values?.board.value;
+  const card_name = call.values?.card_name;
 
-  const options: AppSelectOption[] = await getListOptionList('');
+  const options: AppSelectOption[] = await getListOptionList(boardId);
 
   const form: AppForm = {
     title: 'Create New Card',
@@ -54,19 +54,24 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
     icon: TrelloIcon,
     fields: [
         {
+          type: AppFieldTypes.TEXT,
+          name: 'card_name',
+          modal_label: 'Card Name',
+          value: card_name,
+          description: 'Name of the card',
+          is_required: true,
+        },
+        {
           name: "list_select",
           modal_label: 'Select List',
           type: AppFieldTypes.STATIC_SELECT,
-          //description: 'Name of the card',
-          //value:  { label: '', value: ''},
           options: options,
           is_required: true,
         }
       ],
       submit_label: 'next',
       submit: {
-          //path: Routes.App.CallPathConfigSubmit,
-          path: '/',
+          path: Routes.App.AddFormStepTwoPath,
           expand: {}
       },
   };
