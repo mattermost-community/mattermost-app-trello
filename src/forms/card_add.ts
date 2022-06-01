@@ -1,13 +1,13 @@
 import { TrelloClient, TrelloOptions } from "../clients/trello";
 import config from "../config";
 import { AppFieldTypes, Routes, TrelloIcon } from "../constant";
-import { AppCallRequest, AppForm, AppSelectOption } from "../types";
+import { AppCallRequest, AppField, AppForm, AppSelectOption } from "../types";
 
 export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm> {
   const mattermostUrl: string | undefined = call.context.mattermost_site_url;
   const botAccessToken: string | undefined = call.context.bot_access_token;
 
-  const options: AppSelectOption[] = await getBoardOptionList();
+  /*const options: AppSelectOption[] = await getBoardOptionList();
 
   const form: AppForm = {
     title: 'Create New Card',
@@ -25,6 +25,7 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
         {
           name: "board",
           modal_label: 'Select Board',
+          refresh: true,
           type: AppFieldTypes.STATIC_SELECT,
           options: options,
           is_required: true,
@@ -36,19 +37,23 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
           expand: {
           }
       },
+      source: {
+        path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Form}`,
+      }
   };
-  return form;
+  return form;*/
+  return await getCreateCardForm();
 }
 
 export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm> {
   const mattermostUrl: string | undefined = call.context.mattermost_site_url;
   const botAccessToken: string | undefined = call.context.bot_access_token;
-  const boardId = call.values?.board.value;
+  const board = call.values?.board;
   const card_name = call.values?.card_name;
 
-  const options: AppSelectOption[] = await getListOptionList(boardId);
+  //const options: AppSelectOption[] = await getListOptionList(boardId);
 
-  const form: AppForm = {
+  /*const form: AppForm = {
     title: 'Create New Card',
     header: 'Fill the form with the card information.',
     icon: TrelloIcon,
@@ -74,6 +79,62 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
           path: Routes.App.AddFormStepTwoPath,
           expand: {}
       },
+  };
+  return form;*/
+  return await getCreateCardForm(card_name, board);
+}
+
+async function getCreateCardForm(card_name?: string, board?: AppSelectOption): Promise<AppForm> {
+  const board_options: AppSelectOption[] = await getBoardOptionList();
+  let list_options: AppSelectOption[] = [];
+  if (board)
+    list_options = await getListOptionList(board?.value);
+
+
+  const fields: AppField[] = [
+    {
+      type: AppFieldTypes.TEXT,
+      name: 'card_name',
+      modal_label: 'Card Name',
+      value: card_name? card_name : '',
+      description: 'Name of the card',
+      is_required: true,
+    },
+    {
+      name: "board",
+      modal_label: 'Select Board',
+      refresh: true,
+      value: board ? board : null,
+      type: AppFieldTypes.STATIC_SELECT,
+      options: board_options,
+      is_required: true,
+    }
+  ]
+
+  if (board) {
+    fields.push({
+      name: "list_select",
+      modal_label: 'Select List',
+      type: AppFieldTypes.STATIC_SELECT,
+      options: list_options,
+      is_required: true,
+    })
+  }
+
+  const form: AppForm = {
+    title: 'Create New Card',
+    header: 'Fill the form with the card information.',
+    icon: TrelloIcon,
+    fields: fields,
+    submit_label: 'next',
+    submit: {
+        path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Submit}`,
+        expand: {
+        }
+    },
+    source: {
+      path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Form}`,
+    }
   };
   return form;
 }

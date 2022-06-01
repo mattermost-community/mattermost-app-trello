@@ -6,6 +6,7 @@ import config from '../config';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { cardAddFromStepOne, cardAddFromStepTwo } from '../forms/card_add';
 import { MattermostClient, MattermostOptions } from '../clients/mattermost2';
+import { Routes } from '../constant';
 
 export const getAdd = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
@@ -17,6 +18,7 @@ export const getAdd = async (request: Request, response: Response) => {
   try {
     const form = await cardAddFromStepOne(call);
     callResponse = newFormCallResponse(form);
+    callResponse.call = { path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}` }
   } catch(error: any) { 
     callResponse = newErrorCallResponseWithMessage('Unable to create card form: ' + error.message);
   }
@@ -30,7 +32,6 @@ export const formStepOne = async (request: Request, response: Response) => {
   try {
     const form = await cardAddFromStepTwo(call);
     callResponse = newFormCallResponse(form);
-    response.json(callResponse);
   } catch(error: any) { 
     callResponse = newErrorCallResponseWithMessage('Unable to continue: ' + error.message);
   }
@@ -65,7 +66,7 @@ export const formStepTwo = async (request: Request, response: Response) => {
             text: `Card ${card_name} added to board`,
         }]
     }
-    //  await mattermostApi.postToHook(hookMessage, 'jzyjmiwcdiya3go11ndobsewne', mattermostUrl)
+
     const mattermostOptions: MattermostOptions = {
       accessToken: bot_token,
       mattermostUrl: mattermostUrl
@@ -75,7 +76,6 @@ export const formStepTwo = async (request: Request, response: Response) => {
     await mattermostClient.incomingWebhook(hookMessage);
     callResponse = newOKCallResponseWithMarkdown('')
   } catch(error: any) {
-    console.log(error)
     callResponse = newErrorCallResponseWithMessage('Unable to continue: ' + error.message);
   }
 
