@@ -26,6 +26,8 @@ const AppPaths = {
   BindingPathNew: '/new',
   BindingPathLink: '/link',
   BindingPathConfigure: '/configure',
+
+  BindingPathLogin: '/login',
   
   CallPathConfigOpenForm: '/config/open-form',
   CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',

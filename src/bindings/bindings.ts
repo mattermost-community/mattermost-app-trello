@@ -226,3 +226,74 @@ export const getConfigureBinding = (): any => {
         }
     }
 };
+
+export const getAccountBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.ACCOUNT,
+        description: 'Add a new Card To Board',
+        hint: `[${Commands.CREATE}]`,
+        bindings: [
+            getAccountLoginBinding(),
+            getAccountLogoutBinding
+        ]
+    }
+}
+
+export const getAccountLoginBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.LOGIN,
+        description: 'Add a new Card To Board',
+        form: {
+            title: 'Add a new Card to Board',
+            icon: TrelloIcon,
+            submit: {
+                path: `${Routes.App.BindingPathLogin}`,
+                expand: {
+                    app: AppExpandLevels.EXPAND_ALL,
+                    acting_user: AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    channel: AppExpandLevels.EXPAND_ALL,
+                    post: AppExpandLevels.EXPAND_ALL,
+                    root_post: AppExpandLevels.EXPAND_ALL,
+                    team: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_ALL,
+                    oauth2_app: AppExpandLevels.EXPAND_ALL,
+                    oauth2_user: AppExpandLevels.EXPAND_ALL,
+                    locale: AppExpandLevels.EXPAND_ALL
+                }
+            }
+        }
+    };
+}
+
+export const getAccountLogoutBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.LOGOUT,
+        description: 'Add a new Card To Board',
+        form: {
+            title: 'Add a new Card to Board',
+            icon: TrelloIcon,
+            submit: {
+                path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
+                expand: {
+                    app: AppExpandLevels.EXPAND_ALL,
+                    acting_user: AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    channel: AppExpandLevels.EXPAND_ALL,
+                    post: AppExpandLevels.EXPAND_ALL,
+                    root_post: AppExpandLevels.EXPAND_ALL,
+                    team: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_ALL,
+                    oauth2_app: AppExpandLevels.EXPAND_ALL,
+                    oauth2_user: AppExpandLevels.EXPAND_ALL,
+                    locale: AppExpandLevels.EXPAND_ALL
+                }
+            }
+        }
+    };
+}
