@@ -106,3 +106,14 @@ export type TAMemberCreator = {
    nonPublicAvailable: boolean,
    username: string,
 }
+
+
+export type TrelloWebhook = {
+   id: string,
+   description: string,
+   idModel: string,
+   callbackURL: string,
+   active: boolean,
+   consecutiveFailures: number,
+   firstConsecutiveFailDate: string,
+}

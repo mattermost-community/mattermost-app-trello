@@ -27,6 +27,7 @@ const AppPaths = {
   CallSubscriptionAdd: '/subscription/add',
   CallSubscriptionCreateWebhook: '/subscription/create-webhook',
   CallReceiveNotification: '/subscription/receive-data',
+  CallSubscriptionList: '/subscription/list',
 
   BindingPathTargetCreate: '/target-create',
 }
@@ -45,7 +46,9 @@ const MattermostPaths = {
 
 const TrelloPaths = {
   getMembers: 'members/me',
-  webhooks: 'webhooks'
+  webhooks: 'webhooks',
+  tokens: 'tokens'
+
 };
 
 export const Routes = {

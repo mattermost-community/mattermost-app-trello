@@ -2,12 +2,8 @@ import { Request, Response } from 'express';
 import {
    CallResponseHandler,
    errorDataMessage,
-   errorOpsgenieWithMessage,
-   errorWithMessage,
    newErrorCallResponseWithMessage,
    newFormCallResponse,
-   newOKCallResponse,
-   newOKCallResponseWithData,
    newOKCallResponseWithMarkdown
 } from "../utils";
 import { AppCallRequest, AppCallResponse, AppContext, CreateIncomingWebhook, IncomingWebhook } from "../types";
@@ -16,9 +12,11 @@ import { Routes, StoreKeys } from '../constant';
 import { BoardSelected } from '../types/callResponses';
 import { MattermostClient, MattermostOptions } from '../clients/mattermost'; 
 import { getHTTPPath } from './manifest';
-import { TrelloWebhookResponse } from '../types/trello';
+import { TrelloWebhook, TrelloWebhookResponse } from '../types/trello';
 import { trelloWebhookResponse } from '../forms/trello-webhook';
 import { TrelloImagePath } from '../constant/trello-webhook';
+import { h5, h6, joinLines } from '../utils/markdown';
+import { callSubscriptionList } from '../forms/subscription-list';
 
 export const addSubscription = async (request: Request, response: Response) => {
    const call: AppCallRequest = request.body;
@@ -114,4 +112,25 @@ export const createWebohookNotification = async (req: Request, res: Response) =>
    }
 }
 
+export const getWebhookSubscriptions = async (req: Request, res: Response) => {
+   let callResponse: AppCallResponse;
 
+   try {
+      const integrations: TrelloWebhook[] = await callSubscriptionList(req.body);
+        const subscriptionsText: string = [
+            h6(`Subscription List: Found ${integrations.length} open subscriptions.`),
+            `${joinLines(
+                integrations.map((integration: any) => {
+                   const channelName: string = integration.description;
+                   return `- Subscription ID: "${integration.id}" - Description "${channelName}"`;
+                }).join('\n')
+            )}`
+        ].join('');
+
+      callResponse = newOKCallResponseWithMarkdown(subscriptionsText);
+   } catch (error: any) {
+      callResponse = newErrorCallResponseWithMessage(errorDataMessage(error));
+   }
+   res.json(callResponse);
+
+}

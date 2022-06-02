@@ -17,7 +17,7 @@ export function replace(value: string, searchValue: string, replaceValue: string
 }
 
 export function errorDataMessage(error: Error | any): string {
-    const errorMessage: string = error?.data?.message || error?.message || error?.data;
+    const errorMessage: string = error?.data?.message || error?.message || error?.data || error;
     return `${errorMessage}`;
 }
 

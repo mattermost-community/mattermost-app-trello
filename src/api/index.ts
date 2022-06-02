@@ -30,6 +30,7 @@ router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, cConfigure.submitT
 // SUBCRIPTIONS
 router.post(`${Routes.App.CallSubscriptionAdd}`, cSubscription.addSubscription);
 router.post(`${Routes.App.CallSubscriptionCreateWebhook}`, cSubscription.createTrelloWebhookSubmit);
+router.post(`${Routes.App.CallSubscriptionList}`, cSubscription.getWebhookSubscriptions);
 
 // TRELLO -> MATTERMOST WEBHOOK
 router.post(`${Routes.App.CallReceiveNotification}/:hook_id`, cSubscription.createWebohookNotification); // TEST

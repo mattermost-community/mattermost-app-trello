@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { getHTTPPath } from '../api/manifest';
 import config from '../config';
 import { Routes } from '../constant';
+import { TrelloWebhook } from '../types/trello';
 import { tryPromiseWithMessage } from '../utils';
 
 export interface TrelloOptions {
@@ -56,5 +57,12 @@ export class TrelloClient {
     const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}?callbackURL=${callbackURL}&idModel=${idModel}&${this.getKeyAndTokenUrlParams()}`;
     return axios.post(url)
       .then((response: AxiosResponse<any>) => response.data);
+  }
+
+  public getTrelloActiveWebhooks(): Promise<TrelloWebhook[]> {
+    const token = this.config.token;
+    const url: string = `${config.TRELLO.URL}${Routes.TP.tokens}/${token}/${Routes.TP.webhooks}?${this.getKeyAndTokenUrlParams()}`;
+    return axios.get(url)
+      .then((response: AxiosResponse<TrelloWebhook[]>) => response.data);
   }
 }
