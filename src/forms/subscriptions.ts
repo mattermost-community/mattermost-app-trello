@@ -1,11 +1,10 @@
 import { getManifestData } from "../api/manifest";
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from "../clients/kvstore";
 import { TrelloClient, TrelloOptions } from "../clients/trello";
-import config from "../config";
 import { AppExpandLevels, AppFieldTypes, Routes, StoreKeys, TrelloIcon } from "../constant";
 import { AppCallRequest, AppForm, AppSelectOption } from "../types";
 import { BoardSelected } from "../types/callResponses";
-import { errorOpsgenieWithMessage, tryPromiseOpsgenieWithMessage, tryPromiseWithMessage } from "../utils";
+import { errorOpsgenieWithMessage } from "../utils";
 
 export async function addSubscriptionForm(call: AppCallRequest): Promise<AppForm> {
    const kvOpts: KVStoreOptions = {
@@ -81,9 +80,8 @@ export async function createWebhookForm(call: AppCallRequest, hookURL: string): 
       workspace: trelloConfig.trello_workspace
    };
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-   const createWebhook = trelloClient.createTrelloWebhook(hookURL, board.value);
    try {
-      await createWebhook;
+      const createWebhook = await trelloClient.createTrelloWebhook(hookURL, board.value);
       return {
          title: 'Configure Trello',
          header: 'Configure the Trello app with the following information.',

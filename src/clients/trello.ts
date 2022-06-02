@@ -53,8 +53,6 @@ export class TrelloClient {
   }
 
   public createTrelloWebhook(callbackURL: string, idModel: string): Promise<any> {
-    //callbackURL = `${getHTTPPath()}/subscription/receive-datass`;
-    //callbackURL = `(site url)/plugins/com.mattermost.apps/apps/(app id)/webhook/(arbitrary suffix you provide)?secret=(secret)`
     const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}?callbackURL=${callbackURL}&idModel=${idModel}&${this.getKeyAndTokenUrlParams()}`;
     return axios.post(url)
       .then((response: AxiosResponse<any>) => response.data);

@@ -74,7 +74,7 @@ export const formStepTwo = async (request: Request, response: Response) => {
     }
     
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-    await mattermostClient.incomingWebhook(hookMessage);
+    await mattermostClient.incomingWebhook('jzyjmiwcdiya3go11ndobsewne', hookMessage);
     callResponse = newOKCallResponseWithMarkdown('')
   } catch(error: any) {
     callResponse = newErrorCallResponseWithMessage('Unable to continue: ' + error.message);

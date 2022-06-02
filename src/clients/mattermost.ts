@@ -64,8 +64,8 @@ export class MattermostClient {
         }).then((response: AxiosResponse<any>) => response.data);
     }
 
-    public incomingWebhook(data: {[key: string]: any}): Promise<string> {
-        return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/jzyjmiwcdiya3go11ndobsewne`, data)
+    public incomingWebhook(hookID: string, data: any): Promise<string> {
+        return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/${hookID}`, data)
             .then((response: AxiosResponse<any>) => response.data);
     }
 
@@ -89,6 +89,6 @@ export class MattermostClient {
     }
 
     public returnHookURL(hook_id: string): string {
-        return `${this.config.mattermostUrl}/${Routes.Mattermost.Hooks}/${hook_id}`;
+        return `${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/${hook_id}`;
     }
 }

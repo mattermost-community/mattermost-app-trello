@@ -17,12 +17,12 @@ export function replace(value: string, searchValue: string, replaceValue: string
 }
 
 export function errorDataMessage(error: Error | any): string {
-    const errorMessage: string = error?.data?.message || error.message;
+    const errorMessage: string = error?.data?.message || error?.message || error?.data;
+    console.log(errorMessage);
     return `${errorMessage}`;
 }
 
 export function errorOpsgenieWithMessage(error: Error | any, message: string): string {
-    const errorMessage: string = error?.data?.message || error.message;
     return `"${message}".  ${errorDataMessage(error)}`;
 }
 

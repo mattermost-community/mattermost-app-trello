@@ -14,8 +14,11 @@ import { AppCallRequest, AppCallResponse, AppContext, CreateIncomingWebhook, Inc
 import { addSubscriptionForm, createWebhookForm } from '../forms/subscriptions';
 import { Routes, StoreKeys } from '../constant';
 import { BoardSelected } from '../types/callResponses';
-import { MattermostClient, MattermostOptions } from '../clients/mattermost';
-import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import { MattermostClient, MattermostOptions } from '../clients/mattermost'; 
+import { getHTTPPath } from './manifest';
+import { TrelloWebhookResponse } from '../types/trello';
+import { trelloWebhookResponse } from '../forms/trello-webhook';
+import { TrelloImagePath } from '../constant/trello-webhook';
 
 export const addSubscription = async (request: Request, response: Response) => {
    const call: AppCallRequest = request.body;
@@ -44,7 +47,8 @@ export const createTrelloWebhookSubmit: CallResponseHandler = async (req, res) =
    const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
 
    try {
-      const webhookURL = await getMattermostWebhook(mattermostClient, call.context)
+      const hookID = await getMattermostHookID(mattermostClient, call.context)
+      const webhookURL = createHookURL(hookID);
       const form = await createWebhookForm(call, webhookURL);
       callResponse = newFormCallResponse(form);
       res.json(callResponse);
@@ -54,7 +58,7 @@ export const createTrelloWebhookSubmit: CallResponseHandler = async (req, res) =
    }
 }
 
-const getMattermostWebhook = async (mattermostClient: MattermostClient, context: AppContext): Promise<string> => {
+const getMattermostHookID = async (mattermostClient: MattermostClient, context: AppContext): Promise<string> => {
    const channel_id = context.channel.id;
    let hook_id: string = '';
    try {
@@ -70,8 +74,8 @@ const getMattermostWebhook = async (mattermostClient: MattermostClient, context:
             display_name: 'Trello Webhook',
             description: `Added webhook to get notifications from Trello boards`,
             channel_locked: true,
-            username: "",
-            icon_url: ""
+            username: "Trello Webhook",
+            icon_url: TrelloImagePath(context.mattermost_site_url || '')
          }
          const incomingWebhook: IncomingWebhook = await mattermostClient.createIncomingWebhook(newWebhook);
          hook_id = incomingWebhook.id;
@@ -79,17 +83,37 @@ const getMattermostWebhook = async (mattermostClient: MattermostClient, context:
          hook_id = found.id;
       }
 
-      return mattermostClient.returnHookURL(hook_id);
+      return hook_id;
    } catch (error: any) {
       throw new Error(errorDataMessage(error.response));
    }
 }
 
-export const createWebohookNotification = async (request: Request, response: Response) => {
-   const call: AppCallRequest = request.body;
+const createHookURL = (hookID: string): string => {
+   return `${ getHTTPPath() }${ Routes.App.CallReceiveNotification }/${hookID}`;
+}
 
-   //console.log(call);
-   response.json(call);
+export const createWebohookNotification = async (req: Request, res: Response) => {
+   console.log('*****');
+   //console.log(req.body);
+   const call: TrelloWebhookResponse = req.body as TrelloWebhookResponse;
+   const splitURL = req.url.split('/');
+   const hookID = splitURL[splitURL.length - 1];
+   const mattermostOptions: MattermostOptions = {
+      accessToken: '',
+      mattermostUrl: ''
+   }
+   let callResponse: AppCallResponse;
+
+   try {
+      const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
+      const hookMessage = trelloWebhookResponse(call);
+      const postCreated = await mattermostClient.incomingWebhook(hookID, hookMessage);
+      res.json(postCreated);
+   } catch (error: any) {
+      callResponse = newErrorCallResponseWithMessage(errorDataMessage(error.response));
+      return res.json(callResponse);
+   }
 }
 
 
