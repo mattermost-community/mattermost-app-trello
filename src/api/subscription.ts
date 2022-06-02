@@ -94,8 +94,6 @@ const createHookURL = (hookID: string): string => {
 }
 
 export const createWebohookNotification = async (req: Request, res: Response) => {
-   console.log('*****');
-   //console.log(req.body);
    const call: TrelloWebhookResponse = req.body as TrelloWebhookResponse;
    const splitURL = req.url.split('/');
    const hookID = splitURL[splitURL.length - 1];

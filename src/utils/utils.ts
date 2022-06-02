@@ -18,7 +18,6 @@ export function replace(value: string, searchValue: string, replaceValue: string
 
 export function errorDataMessage(error: Error | any): string {
     const errorMessage: string = error?.data?.message || error?.message || error?.data;
-    console.log(errorMessage);
     return `${errorMessage}`;
 }
 
@@ -28,14 +27,12 @@ export function errorOpsgenieWithMessage(error: Error | any, message: string): s
 
 export async function tryPromiseWithMessage(p: Promise<any>, message: string): Promise<any> {
     return p.catch((error) => {
-        console.log('error', error);
         throw new Error(errorWithMessage(error, message));
     });
 }
 
 export async function tryPromiseOpsgenieWithMessage(p: Promise<any>, message: string): Promise<any> {
     return p.catch((error) => {
-        console.log('error', error.response.data);
         throw new Error(errorOpsgenieWithMessage(error.response, message));
     });
 }
