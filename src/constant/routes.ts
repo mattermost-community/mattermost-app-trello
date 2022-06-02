@@ -25,10 +25,8 @@ const AppPaths = {
   CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
 
   CallSubscriptionAdd: '/subscription/add',
-  CallSubscriptionCreateWebhook: '/subscription/create-webhook',
-  CallReceiveNotification: '/subscription/receive-data',
 
-  BindingPathTargetCreate: '/target-create',
+  CallPathIncomingWebhookPath: '/webhook'
 }
 
 const MattermostPaths = {

@@ -1,5 +1,7 @@
-import {AppExpandLevels, TrelloIcon, Routes, Commands} from '../constant';
+import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
 import { getManifestData } from '../api/manifest';
+import {AppBinding} from "../types";
+import {SubscriptionCreateForm} from "../constant/forms";
 
 export const getHelpBinding = (): any => {
     return {
@@ -103,22 +105,29 @@ export const getNewBinding = (): any => {
 }
 
 export const getSubscriptionBinding = (): any => {
+    const subCommands: string[] = [
+        Commands.ADD,
+        Commands.LIST,
+        Commands.REMOVE
+    ];
+
+    const bindings: AppBinding[] = [
+        getAddSubBinding(),
+        getListSubBinding(),
+        getRemoveSubBinding()
+    ];
+
     return {
         icon: TrelloIcon,
         label: Commands.SUBSCRIPTION,
         description: 'Subscribe current channel to a Trello board',
-        hint: `[${Commands.ADD} | ${Commands.LIST} | ${Commands.REMOVE}]`,
-        bindings: [
-            getAddSubBinding(),
-            getListSubBinding(),
-            getRemoveSubBinding()
-        ]
+        hint: `[${subCommands.join(' | ')}]`,
+        bindings: bindings
     }
 }
 
 export const getAddSubBinding = (): any => {
     return {
-        app_id: getManifestData().app_id,
         icon: TrelloIcon,
         label: Commands.ADD,
         description: 'Subscribe current channel to a Trello board',
@@ -132,14 +141,25 @@ export const getAddSubBinding = (): any => {
                     channel: AppExpandLevels.EXPAND_ALL,
                     admin_access_token: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_SUMMARY,
-
-
-                    acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
                 },
-            }
+            },
+            fields: [
+                {
+                    modal_label: 'Board name',
+                    name: SubscriptionCreateForm.BOARD_NAME,
+                    type: AppFieldTypes.TEXT,
+                    is_required: true,
+                    position: 1,
+                    max_length: 100
+                },
+                {
+                    modal_label: 'Channel',
+                    name: SubscriptionCreateForm.CHANNEL_ID,
+                    type: AppFieldTypes.CHANNEL,
+                    is_required: true,
+                    position: 2
+                }
+            ]
         }
     }
 }

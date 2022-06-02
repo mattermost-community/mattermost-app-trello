@@ -12,8 +12,8 @@ import {
 } from '../utils';
 import { baseUrlFromContext } from '../utils';
 import config from '../config';
-import { TrelloClient, TrelloOptions } from '../clients/trello';
-import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import {TrelloClient, TrelloOptions} from '../clients/trello';
+import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from '../clients/kvstore';
 import {StoreKeys} from '../constant';
 
 export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
@@ -67,7 +67,7 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
 const verifyToken = async (trelloOpt: TrelloOptions) => {
    try {
       const trelloClient: TrelloClient = new TrelloClient(trelloOpt);
-      await trelloClient.validateToken(trelloOpt);
+      await trelloClient.validateToken();
    } catch (err) {
       throw new Error(`${err}`);
    }

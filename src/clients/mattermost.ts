@@ -1,5 +1,12 @@
 import axios, {AxiosResponse} from 'axios';
-import {CreateIncomingWebhook, DialogProps, IncomingWebhook, PostCreate, PostUpdate, User} from '../types';
+import {
+    CreateIncomingWebhook,
+    DialogProps,
+    IncomingWebhook,
+    PostCreate,
+    PostUpdate,
+    User
+} from '../types';
 import {Routes} from '../constant';
 import {replace} from "../utils";
 import config from '../config';
@@ -67,28 +74,5 @@ export class MattermostClient {
     public incomingWebhook(hookID: string, data: any): Promise<string> {
         return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/${hookID}`, data)
             .then((response: AxiosResponse<any>) => response.data);
-    }
-
-    public createIncomingWebhook(data: CreateIncomingWebhook) {
-        const incomingURL: string = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.HooksIncoming}`;
-        return axios.post(incomingURL, data, {
-            headers: {
-                Authorization: `Bearer ${this.config.accessToken}`
-            }
-        }).then((response: AxiosResponse<any>) => response.data);
-    }
-
-    public getIncomingWebhooks(data: { [key: string]: any }): Promise<IncomingWebhook[]> {
-        const incomingURL = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.HooksIncoming}`;
-        return axios.get(incomingURL, {
-            headers: {
-                Authorization: `Bearer ${this.config.accessToken}`
-            }
-        })
-        .then((response: AxiosResponse<any>) => response.data);
-    }
-
-    public returnHookURL(hook_id: string): string {
-        return `${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/${hook_id}`;
     }
 }

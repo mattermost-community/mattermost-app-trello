@@ -1,7 +1,7 @@
 export default {
     APP: {
         PORT: 4002,
-        HOST: 'https://b527-201-160-206-2.ngrok.io'
+        HOST: 'http://192.168.1.13'
     },
     TRELLO: {
         URL: 'https://api.trello.com/1/',

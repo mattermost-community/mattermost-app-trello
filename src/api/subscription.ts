@@ -6,35 +6,27 @@ import {
    errorWithMessage,
    newErrorCallResponseWithMessage,
    newFormCallResponse,
-   newOKCallResponse,
-   newOKCallResponseWithData,
    newOKCallResponseWithMarkdown
 } from "../utils";
-import { AppCallRequest, AppCallResponse, AppContext, CreateIncomingWebhook, IncomingWebhook } from "../types";
-import { addSubscriptionForm, createWebhookForm } from '../forms/subscriptions';
-import { Routes, StoreKeys } from '../constant';
-import { BoardSelected } from '../types/callResponses';
-import { MattermostClient, MattermostOptions } from '../clients/mattermost'; 
-import { getHTTPPath } from './manifest';
-import { TrelloWebhookResponse } from '../types/trello';
-import { trelloWebhookResponse } from '../forms/trello-webhook';
-import { TrelloImagePath } from '../constant/trello-webhook';
+import { AppCallRequest, AppCallResponse } from "../types";
+import {addSubscriptionCall} from "../forms/subscriptions";
 
-export const addSubscription = async (request: Request, response: Response) => {
+export const addSubscriptionSubmit = async (request: Request, response: Response) => {
    const call: AppCallRequest = request.body;
    let callResponse: AppCallResponse;
 
    try {
-      const form = await addSubscriptionForm(call);
-      callResponse = newFormCallResponse(form);
+      await addSubscriptionCall(call);
+      callResponse = newOKCallResponseWithMarkdown("Subscription will be created");
       response.json(callResponse);
    } catch (error: any) {
-      callResponse = newErrorCallResponseWithMessage('Unable to create card form: ' + error.message);
+      console.log('error', error);
+      callResponse = newErrorCallResponseWithMessage('Unexpected error: ' + error.message);
       response.json(callResponse);
    }
 }
 
-export const createTrelloWebhookSubmit: CallResponseHandler = async (req, res) => {
+/*export const createTrelloWebhookSubmit: CallResponseHandler = async (req, res) => {
    const call: AppCallRequest = req.body;
 
    let callResponse: AppCallResponse;
@@ -67,7 +59,7 @@ const getMattermostHookID = async (mattermostClient: MattermostClient, context: 
       }
       const listWebhooks = await mattermostClient.getIncomingWebhooks(params);
       const found = listWebhooks.find(hook => hook.channel_id === channel_id);
-      
+
       if (!found) {
          const newWebhook: CreateIncomingWebhook = {
             channel_id: context.channel.id,
@@ -112,6 +104,6 @@ export const createWebohookNotification = async (req: Request, res: Response) =>
       callResponse = newErrorCallResponseWithMessage(errorDataMessage(error.response));
       return res.json(callResponse);
    }
-}
+}*/
 
 

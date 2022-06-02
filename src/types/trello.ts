@@ -30,8 +30,6 @@ export type TrelloAction = {
    memberCreator: TAMemberCreator
 }
 
-
-
 export type TMPref = {
    permissionLevel: string,
    hideVotes: boolean,
@@ -106,3 +104,25 @@ export type TAMemberCreator = {
    nonPublicAvailable: boolean,
    username: string,
 }
+
+export type Board = {
+   id: string;
+   name: string;
+   idOrganization: string;
+};
+
+export type SearchResponse = {
+   options: {
+      terms: any[];
+      modifiers: any[];
+      modelTypes: string[];
+      partial: boolean;
+   },
+   boards: Board[];
+};
+
+export type WebhookCreate = {
+   description: string;
+   callbackURL: string;
+   idModel: string;
+};

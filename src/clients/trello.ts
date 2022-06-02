@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
-import { getHTTPPath } from '../api/manifest';
+import queryString from "query-string";
 import config from '../config';
-import { Routes } from '../constant';
-import { tryPromiseWithMessage } from '../utils';
+import {Routes} from '../constant';
+import {SearchResponse, WebhookCreate} from "../types/trello";
 
 export interface TrelloOptions {
   apiKey: string;
@@ -15,45 +15,77 @@ export class TrelloClient {
 
   constructor(
     config: TrelloOptions
-  ) {
-    this.config = config;
-  }
-
-  private getKeyAndTokenUrlParams(): string {
-    return `key=${this.config.apiKey}&token=${this.config.token}`
-  }
+  ) { this.config = config; }
 
   public getListByBoard(boardId: string): Promise<any> {
-    const url: string = `${config.TRELLO.URL}boards/${boardId}/lists?${this.getKeyAndTokenUrlParams()}`;
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token
+    });
+    const url: string = `${config.TRELLO.URL}boards/${boardId}/lists?${queryParams}`;
     
-    return axios.get(url).then((response:  AxiosResponse<any>) => response.data);
+    return axios.get(url)
+        .then((response:  AxiosResponse<any>) => response.data);
   }
 
-  public searchBoardByName(boardName: string): Promise<any> {
-    const url: string = `${config.TRELLO.URL}search?modelTypes=boards&query=${boardName}&${this.getKeyAndTokenUrlParams()}`;
+  public searchBoardByName(boardName: string): Promise<SearchResponse> {
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token,
+      query: boardName,
+      modelTypes: 'boards'
+    });
+    const url: string = `${config.TRELLO.URL}search?${queryParams}`;
     
-    return axios.get(url).then((response:  AxiosResponse<any>) => response.data);
+    return axios.get(url)
+        .then((response:  AxiosResponse<any>) => response.data);
   }
 
   public searchBoardsInOrganization(): Promise<any> {
-    const url: string = `${config.TRELLO.URL}organizations/${this.config.workspace}/boards?${this.getKeyAndTokenUrlParams()}`;
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token
+    });
+    const url: string = `${config.TRELLO.URL}organizations/${this.config.workspace}/boards?${queryParams}`;
     
-    return axios.get(url).then((response:  AxiosResponse<any>) => response.data);
+    return axios.get(url)
+        .then((response:  AxiosResponse<any>) => response.data);
   }
 
   public sendCreateCardRequest(listId: string, cardName: string): Promise<any> {
-    const url: string = `${config.TRELLO.URL}cards?idList=${listId}&name=${cardName}&${this.getKeyAndTokenUrlParams()}`;
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token,
+      name: cardName,
+      idList: listId
+    });
+    const url: string = `${config.TRELLO.URL}cards?${queryParams}`;
     
-    return axios.post(url).then((response:  AxiosResponse<any>) => response.data);
+    return axios.post(url)
+        .then((response:  AxiosResponse<any>) => response.data);
   }
 
-  public validateToken(data: TrelloOptions): Promise<any> {
-    const verifyURL = `${config.TRELLO.URL}${Routes.TP.getMembers}?key=${data.apiKey}&token=${data.token}`;
-    return axios.get(verifyURL).then((response: AxiosResponse<any>) => response.data);
+  public validateToken(): Promise<any> {
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token
+    });
+    const verifyURL = `${config.TRELLO.URL}${Routes.TP.getMembers}?${queryParams}`;
+
+    return axios.get(verifyURL)
+        .then((response: AxiosResponse<any>) => response.data);
   }
 
-  public createTrelloWebhook(callbackURL: string, idModel: string): Promise<any> {
-    const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}?callbackURL=${callbackURL}&idModel=${idModel}&${this.getKeyAndTokenUrlParams()}`;
+  public createTrelloWebhook(payload: WebhookCreate): Promise<any> {
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token,
+      callbackURL: payload.callbackURL,
+      idModel: payload.idModel,
+      description: payload.description
+    });
+    const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}?${queryParams}`;
+    console.log('url', url);
     return axios.post(url)
       .then((response: AxiosResponse<any>) => response.data);
   }
