@@ -1,7 +1,8 @@
+import { getManifestData } from "../api/manifest";
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from "../clients/kvstore";
 import { TrelloClient, TrelloOptions } from "../clients/trello";
 import config from "../config";
-import { AppFieldTypes, Routes, StoreKeys, TrelloIcon } from "../constant";
+import { AppExpandLevels, AppFieldTypes, Routes, StoreKeys, TrelloIcon } from "../constant";
 import { AppCallRequest, AppForm, AppSelectOption } from "../types";
 import { BoardSelected } from "../types/callResponses";
 import { errorOpsgenieWithMessage, tryPromiseOpsgenieWithMessage, tryPromiseWithMessage } from "../utils";
@@ -24,6 +25,7 @@ export async function addSubscriptionForm(call: AppCallRequest): Promise<AppForm
    const options: AppSelectOption[] = await getBoardOptionList(trelloOptions);
 
    return {
+      app_id: getManifestData().app_id,
       title: 'New subscription',
       header: 'Subscribe a board to current channel',
       icon: TrelloIcon,
@@ -40,6 +42,15 @@ export async function addSubscriptionForm(call: AppCallRequest): Promise<AppForm
       submit: {
          path: Routes.App.CallSubscriptionCreateWebhook,
          expand: {
+            app: AppExpandLevels.EXPAND_ALL,
+            channel: AppExpandLevels.EXPAND_ALL,
+            admin_access_token: AppExpandLevels.EXPAND_ALL,
+            user: AppExpandLevels.EXPAND_ALL,
+
+            acting_user: AppExpandLevels.EXPAND_ALL,
+            acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+            post: AppExpandLevels.EXPAND_ALL,
+            root_post: AppExpandLevels.EXPAND_ALL,
          }
       },
    } as AppForm;
@@ -54,7 +65,7 @@ async function getBoardOptionList(trelloOptions: TrelloOptions): Promise<AppSele
    return options;
 }
 
-export async function createWebhookForm(call: AppCallRequest): Promise<any> {
+export async function createWebhookForm(call: AppCallRequest, hookURL: string): Promise<any> {
    const board = (call.values as BoardSelected)?.board;
    const kvOpts: KVStoreOptions = {
       mattermostUrl: call.context.mattermost_site_url || '',
@@ -70,7 +81,7 @@ export async function createWebhookForm(call: AppCallRequest): Promise<any> {
       workspace: trelloConfig.trello_workspace
    };
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-   const createWebhook = trelloClient.createTrelloWebhook('', board.value);
+   const createWebhook = trelloClient.createTrelloWebhook(hookURL, board.value);
    try {
       await createWebhook;
       return {

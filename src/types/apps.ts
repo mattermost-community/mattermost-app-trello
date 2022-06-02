@@ -95,12 +95,46 @@ export type AppCallResponse<Res = unknown> = {
   props?: any;
 };
 
+export type AppAppContext = {
+  SchemaVersion: string,
+  app_id: string,
+  version: string,
+  homepage_url: string,
+  deploy_type: string,
+  webhook_secret: string,
+  bot_user_id: string,
+  bot_username: string,
+  remote_oauth2: any
+};
+
+export type AppActingUser = {
+  id: string,
+  delete_at: number,
+  username: string,
+  auth_service: string,
+  email: string,
+  nickname: string,
+  first_name: string,
+  last_name: string,
+  position: string,
+  roles: string,
+  locale: string,
+  timezone: any,
+  disable_welcome_email: boolean
+}
+
+export type ContextChannel = {
+  id: string;
+  team_id: string;
+}
+
 export type AppContext = {
   app_id: string;
   location?: string;
   acting_user_id?: string;
+  bot_user_id?: string;
   user_id?: string;
-  channel: { id: string };
+  channel: ContextChannel;
   team_id?: string;
   post_id?: string;
   root_id?: string;
@@ -108,6 +142,9 @@ export type AppContext = {
   user_agent?: string;
   bot_access_token?: string;
   mattermost_site_url?: string;
+  app?: AppAppContext;
+  acting_user?: AppActingUser;
+  acting_user_access_token?: string;
 };
 
 export type AppContextProps = {

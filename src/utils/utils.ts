@@ -16,9 +16,14 @@ export function replace(value: string, searchValue: string, replaceValue: string
     return value.replace(searchValue, replaceValue);
 }
 
+export function errorDataMessage(error: Error | any): string {
+    const errorMessage: string = error?.data?.message || error.message;
+    return `${errorMessage}`;
+}
+
 export function errorOpsgenieWithMessage(error: Error | any, message: string): string {
     const errorMessage: string = error?.data?.message || error.message;
-    return `"${message}".  ${errorMessage}`;
+    return `"${message}".  ${errorDataMessage(error)}`;
 }
 
 export async function tryPromiseWithMessage(p: Promise<any>, message: string): Promise<any> {

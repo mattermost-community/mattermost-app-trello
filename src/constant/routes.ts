@@ -26,7 +26,9 @@ const AppPaths = {
 
   CallSubscriptionAdd: '/subscription/add',
   CallSubscriptionCreateWebhook: '/subscription/create-webhook',
-  CallReceiveNotification: '/subscription/receive-data'
+  CallReceiveNotification: '/subscription/receive-data',
+
+  BindingPathTargetCreate: '/target-create',
 }
 
 const MattermostPaths = {
@@ -38,6 +40,7 @@ const MattermostPaths = {
   ApiVersionV4: '/api/v4',
   ApiVersionV1: '/api/v1',
   Hooks:  '/hooks',
+  HooksIncoming: '/hooks/incoming'
 }
 
 const TrelloPaths = {

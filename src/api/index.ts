@@ -33,6 +33,7 @@ router.post(`${Routes.App.CallSubscriptionCreateWebhook}`, cSubscription.createT
 router.post(`${Routes.App.CallReceiveNotification}`, cSubscription.createWebohookNotification); // TEST
 router.get(`${Routes.App.CallReceiveNotification}`, cSubscription.createWebohookNotification);
 
+
 const staticRouter = express.Router();
 staticRouter.use(express.static('static'));
 router.use('/static', staticRouter);
