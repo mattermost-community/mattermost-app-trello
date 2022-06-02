@@ -34,24 +34,23 @@ export const getCardBinding = (): any => {
         icon: TrelloIcon,
         label: Commands.CARD,
         description: 'Add a new Card To Board',
-        hint: `[${Commands.NEW} | ${Commands.ADD}]`,
+        hint: `[${Commands.CREATE}]`,
         bindings: [
-            getAddBinding(),
-            getNewBinding(),
+            getCardCreateBinding(),
         ]
     }
 }
 
-export const getAddBinding = (): any => {
+export const getCardCreateBinding = (): any => {
     return {
         icon: TrelloIcon,
-        label: Commands.ADD,
+        label: Commands.CREATE,
         description: 'Add a new Card To Board',
         form: {
             title: 'Add a new Card to Board',
             icon: TrelloIcon,
             submit: {
-                path: Routes.App.BindingPathAdd,
+                path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
                 expand: {
                     app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
@@ -69,36 +68,6 @@ export const getAddBinding = (): any => {
             }
         }
     };
-}
-
-export const getNewBinding = (): any => {
-    return {
-        icon: TrelloIcon,
-        label: Commands.NEW,
-        description: 'Add a new Card To Board',
-        hint: '[form]',
-        form: {
-            title: 'Add a new Card to Board',
-            icon: TrelloIcon,
-            submit: {
-                path: Routes.App.BindingPathAdd,
-                expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
-                    acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
-                    channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
-                    user: AppExpandLevels.EXPAND_ALL,
-                    oauth2_app: AppExpandLevels.EXPAND_ALL,
-                    oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
-                }
-            }
-        }
-    }
 }
 
 export const getSubscriptionBinding = (): any => {

@@ -14,6 +14,12 @@ const AppPaths = {
 
   AddFormStepOnePath: '/add/stepone',
   AddFormStepTwoPath: '/add/steptwo',
+  BindingPathCreateCard: '/create-card',
+
+  Lookup: '/lookup',
+  Form:  '/form',
+  Submit: '/submit',
+  Forms: '/forms',
 
   BindingPathHelp: '/help',
   BindingPathAdd: '/add',

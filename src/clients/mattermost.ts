@@ -15,7 +15,7 @@ export class MattermostClient {
     constructor(
         _config: MattermostOptions
     ) {
-        if (config.MATTERMOST) _config.mattermostUrl = config.MATTERMOST.URL;
+        if (config.MATTERMOST.USE) _config.mattermostUrl = config.MATTERMOST.URL;
         this.config = _config;
     }
 

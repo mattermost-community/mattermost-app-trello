@@ -20,7 +20,7 @@ export class KVStoreClient {
     constructor(
         _config: KVStoreOptions
     ) {
-        if (config.MATTERMOST) _config.mattermostUrl = config.MATTERMOST.URL;
+        if (config.MATTERMOST.USE) _config.mattermostUrl = config.MATTERMOST.URL;
         this.config = _config;
     }
 
