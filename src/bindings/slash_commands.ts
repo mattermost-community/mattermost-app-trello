@@ -26,11 +26,10 @@ const newCommandBindings = (bindings: AppBinding[]): AppsState => {
 
 export const getCommandBindings = (): AppsState => {
     const bindings: AppBinding[] = [];
-
     bindings.push(getHelpBinding());
     bindings.push(getCardBinding());
-    bindings.push(getSubscriptionBinding());
     bindings.push(getConfigureBinding());
+    bindings.push(getSubscriptionBinding());
     return newCommandBindings(bindings);
 };
 
