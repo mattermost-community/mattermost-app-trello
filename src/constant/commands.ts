@@ -6,5 +6,9 @@ export const Commands = {
   CARD: 'card',
   SUBSCRIPTION: 'subscription',
   LIST: 'list',
-  REMOVE: 'remove'
+  REMOVE: 'remove',
+  CREATE: 'create',
+  ACCOUNT: 'account',
+  LOGIN: 'login',
+  LOGOUT: 'logout'
 }

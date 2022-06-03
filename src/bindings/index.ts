@@ -1,9 +1,9 @@
 import {AppsState} from '../types';
 import {getCommandBindings} from './slash_commands';
 
-export function getAppBindings(context: any): AppsState[] {
+export async function getAppBindings(context: any): Promise<AppsState[]> {
     const bindings: AppsState[] = [];
-    bindings.push(getCommandBindings());
+    bindings.push(await getCommandBindings(context));
 
     return bindings;
 }

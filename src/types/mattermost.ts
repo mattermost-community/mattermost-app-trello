@@ -46,6 +46,8 @@ export type Attachment = {
   text?: string;
   title?: string;
   title_link?: string;
+  author_name?: string;
+  author_icon?: string;
   fields?: {
       short: boolean;
       title: string;
@@ -60,7 +62,7 @@ export type PostCreate = {
   root_id?: string;
   file_ids?: string[];
   props?: {
-      attachments: Attachment[];
+    attachments: Attachment[];
   }
 }
 
@@ -152,4 +154,36 @@ export type DialogProps = {
 
 export type AddNoteDialogForm = {
   note: string;
+}
+
+export type CreateIncomingWebhook = {
+  channel_id?: string,
+  channel_locked?: boolean,
+  user_id?: string,
+  display_name?: string,
+  description?: string,
+  username?: string,
+  icon_url?: string,
+}
+
+export type IncomingWebhook = {
+  id: string,
+  create_at: number,
+  update_at: number,
+  delete_at: number,
+  user_id: string,
+  channel_id: string,
+  team_id: string,
+  display_name: string,
+  description: string,
+  username: string,
+  icon_url: string,
+  channel_locked: boolean
+}
+
+export type MattermostPluginWebhook = {
+  mattermostUrl: string,
+  appID: string,
+  whPath: string,
+  whSecret: string
 }

@@ -14,15 +14,33 @@ const AppPaths = {
 
   AddFormStepOnePath: '/add/stepone',
   AddFormStepTwoPath: '/add/steptwo',
+  BindingPathCreateCard: '/create-card',
+
+  Lookup: '/lookup',
+  Form:  '/form',
+  Submit: '/submit',
+  Forms: '/forms',
 
   BindingPathHelp: '/help',
   BindingPathAdd: '/add',
   BindingPathNew: '/new',
   BindingPathLink: '/link',
   BindingPathConfigure: '/configure',
+
+  BindingPathLogin: '/login', 
   
   CallPathConfigOpenForm: '/config/open-form',
   CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
+
+  CallSubscriptionAdd: '/subscription/add',
+  CallSubscriptionCreateWebhook: '/subscription/create-webhook',
+  CallReceiveNotification: '/subscription/receive-data',
+  CallSubscriptionList: '/subscription/list',
+  CallSubscriptionRemove: '/subscription/remove',
+  CallSubscriptionListAppOpts: '/subscription/app-options/list',
+  CallMattermostSubscription: '/subscription',
+
+  CallPathIncomingWebhookPath: '/webhook'
 }
 
 const MattermostPaths = {
@@ -34,18 +52,15 @@ const MattermostPaths = {
   ApiVersionV4: '/api/v4',
   ApiVersionV1: '/api/v1',
   Hooks:  '/hooks',
+  HooksIncoming: '/hooks/incoming',
+  webhook: '/webhook'
 }
 
 const TrelloPaths = {
-  OAuthGetRequestToken: '/OAuthGetRequestToken',
-  OAuthAuthorizeToken: '/OAuthAuthorizeToken',
-  OAuthGetAccessToken: '/OAuthGetAccessToken',
-  OAuthAuthorizationURI: '/oauth/authorizations/new',
-  OAuthAccessTokenURI: '/oauth/tokens',
-  TicketPathPrefix: '/agent/tickets',
-  AccessURI: '/access/unauthenticated',
-  APIVersion: '/api/v2',
-  getMembers: 'members/me'
+  getMembers: 'members/me',
+  webhooks: 'webhooks',
+  tokens: 'tokens'
+
 };
 
 export const Routes = {

@@ -1,6 +1,14 @@
 import axios, {AxiosResponse} from 'axios';
-import {DialogProps, PostCreate, PostUpdate, User} from '../types';
-import {Routes} from '../constant';
+import {
+    CreateIncomingWebhook,
+    DialogProps,
+    IncomingWebhook,
+    MattermostPluginWebhook,
+    PostCreate,
+    PostUpdate,
+    User
+} from '../types';
+import {AppsPluginName, Routes} from '../constant';
 import {replace} from "../utils";
 import config from '../config';
 
@@ -15,7 +23,7 @@ export class MattermostClient {
     constructor(
         _config: MattermostOptions
     ) {
-        if (config.MATTERMOST) _config.mattermostUrl = config.MATTERMOST.URL;
+        if (config.MATTERMOST.USE) _config.mattermostUrl = config.MATTERMOST.URL;
         this.config = _config;
     }
 
@@ -64,8 +72,15 @@ export class MattermostClient {
         }).then((response: AxiosResponse<any>) => response.data);
     }
 
-    public incomingWebhook(data: {[key: string]: any}): Promise<string> {
-        return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/jzyjmiwcdiya3go11ndobsewne`, data)
+    public incomingWebhook(hookID: string, data: any): Promise<string> {
+        return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/${hookID}`, data)
+            .then((response: AxiosResponse<any>) => response.data);
+    }
+
+    public webhookPlugin(pluginData: MattermostPluginWebhook, data: any): Promise<string> {
+        const url = `${pluginData.mattermostUrl}plugins/${AppsPluginName}/apps/${pluginData.appID}${pluginData.whPath}?secret=${pluginData.whSecret}`
+        
+        return axios.post(`${url}`, data)
             .then((response: AxiosResponse<any>) => response.data);
     }
 }
