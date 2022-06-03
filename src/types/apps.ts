@@ -108,6 +108,7 @@ export type AppContext = {
   user_agent?: string;
   bot_access_token?: string;
   mattermost_site_url?: string;
+  acting_user?: any;
 };
 
 export type AppContextProps = {

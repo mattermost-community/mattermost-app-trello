@@ -26,6 +26,7 @@ router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`, cAdd.getAd
 router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Submit}`, cAdd.formStepTwo);
 router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Form}`, cAdd.formStepOne);
 router.post(`${Routes.App.BindingPathLogin}`, cLogin.getLogin);
+router.post(`${Routes.App.BindingPathLogin}${Routes.App.Submit}`, cLogin.saveToken)
 
 // CONFIGURE TRELLO ACCOUNT
 router.post(`${Routes.App.CallPathConfigOpenForm}`, cConfigure.openTrelloConfigForm);
