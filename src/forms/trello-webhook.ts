@@ -2,7 +2,6 @@ import { TrelloTranslationKeys } from "../constant/trello-webhook";
 import { TrelloWebhookResponse } from "../types/trello";
 import { h5 } from "../utils/markdown";
 
-
 export const trelloWebhookResponse = (action: TrelloWebhookResponse) => {
    switch (action.action.display.translationKey) {
       case TrelloTranslationKeys.CardCreated:

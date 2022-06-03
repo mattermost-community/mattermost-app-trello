@@ -178,6 +178,7 @@ export type AppForm = {
   call?: AppCall;
   depends_on?: string[];
   form?: any;
+  source?: any;
   submit?: any;
   submit_label?: string;
 };

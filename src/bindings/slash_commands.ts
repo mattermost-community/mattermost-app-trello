@@ -1,6 +1,6 @@
 import {AppBinding, AppsState} from '../types';
 
-import {getHelpBinding, getSubscriptionBinding, getConfigureBinding, getCardBinding } from './bindings';
+import {getHelpBinding, getSubscriptionBinding, getConfigureBinding, getCardBinding, getAccountBinding } from './bindings';
 import {AppBindingLocations, Commands, CommandTrigger, TrelloIcon} from "../constant";
 
 const newCommandBindings = (bindings: AppBinding[]): AppsState => {
@@ -8,7 +8,8 @@ const newCommandBindings = (bindings: AppBinding[]): AppsState => {
         Commands.HELP,
         Commands.CARD,
         Commands.SUBSCRIPTION,
-        Commands.CONFIGURE
+        Commands.CONFIGURE,
+        Commands.ACCOUNT
     ];
 
     return {

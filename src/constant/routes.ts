@@ -14,12 +14,20 @@ const AppPaths = {
 
   AddFormStepOnePath: '/add/stepone',
   AddFormStepTwoPath: '/add/steptwo',
+  BindingPathCreateCard: '/create-card',
+
+  Lookup: '/lookup',
+  Form:  '/form',
+  Submit: '/submit',
+  Forms: '/forms',
 
   BindingPathHelp: '/help',
   BindingPathAdd: '/add',
   BindingPathNew: '/new',
   BindingPathLink: '/link',
   BindingPathConfigure: '/configure',
+
+  BindingPathLogin: '/login', 
   
   CallPathConfigOpenForm: '/config/open-form',
   CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
@@ -30,7 +38,7 @@ const AppPaths = {
   CallSubscriptionList: '/subscription/list',
   CallSubscriptionRemove: '/subscription/remove',
 
-  BindingPathTargetCreate: '/target-create',
+  CallPathIncomingWebhookPath: '/webhook'
 }
 
 const MattermostPaths = {

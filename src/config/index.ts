@@ -10,6 +10,7 @@ export default {
         WORKSPACE: 'integrationancient'
     },
     MATTERMOST: {
-        URL: 'http://[::1]:8066'
+        URL: 'http://[::1]:8065',
+        USE: true
     }
 }

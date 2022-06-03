@@ -1,8 +1,7 @@
 import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
-import { getManifestData } from '../api/manifest';
 import { subscriptionRemoveForm } from '../forms/subscription-remove';
-import { AppCallRequest } from '../types';
-import { AppContext } from '../types/apps';
+import { AppBinding, AppContext } from '../types/apps';
+import {SubscriptionCreateForm} from "../constant/forms";
 
 export const getHelpBinding = (): any => {
     return {
@@ -38,24 +37,23 @@ export const getCardBinding = (): any => {
         icon: TrelloIcon,
         label: Commands.CARD,
         description: 'Add a new Card To Board',
-        hint: `[${Commands.NEW} | ${Commands.ADD}]`,
+        hint: `[${Commands.CREATE}]`,
         bindings: [
-            getAddBinding(),
-            getNewBinding(),
+            getCardCreateBinding(),
         ]
     }
 }
 
-export const getAddBinding = (): any => {
+export const getCardCreateBinding = (): any => {
     return {
         icon: TrelloIcon,
-        label: Commands.ADD,
+        label: Commands.CREATE,
         description: 'Add a new Card To Board',
         form: {
             title: 'Add a new Card to Board',
             icon: TrelloIcon,
             submit: {
-                path: Routes.App.BindingPathAdd,
+                path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
                 expand: {
                     app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
@@ -75,53 +73,30 @@ export const getAddBinding = (): any => {
     };
 }
 
-export const getNewBinding = (): any => {
-    return {
-        icon: TrelloIcon,
-        label: Commands.NEW,
-        description: 'Add a new Card To Board',
-        hint: '[form]',
-        form: {
-            title: 'Add a new Card to Board',
-            icon: TrelloIcon,
-            submit: {
-                path: Routes.App.BindingPathAdd,
-                expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
-                    acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
-                    channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
-                    user: AppExpandLevels.EXPAND_ALL,
-                    oauth2_app: AppExpandLevels.EXPAND_ALL,
-                    oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
-                }
-            }
-        }
-    }
-}
-
 export const getSubscriptionBinding = async (context: AppContext): Promise<any> => {
+    const subCommands: string[] = [
+        Commands.ADD,
+        Commands.LIST,
+        Commands.REMOVE
+    ];
+
+    const bindings: AppBinding[] = [
+        getAddSubBinding(),
+        getListSubBinding(),
+        await getRemoveSubBinding(context)
+    ];
+
     return {
         icon: TrelloIcon,
         label: Commands.SUBSCRIPTION,
         description: 'Subscribe current channel to a Trello board',
-        hint: `[${Commands.ADD} | ${Commands.LIST} | ${Commands.REMOVE}]`,
-        bindings: [
-            getAddSubBinding(),
-            getListSubBinding(),
-            await getRemoveSubBinding(context)
-        ]
+        hint: `[${subCommands.join(' | ')}]`,
+        bindings: bindings
     }
 }
 
 export const getAddSubBinding = (): any => {
     return {
-        app_id: getManifestData().app_id,
         icon: TrelloIcon,
         label: Commands.ADD,
         description: 'Subscribe current channel to a Trello board',
@@ -136,7 +111,24 @@ export const getAddSubBinding = (): any => {
                     admin_access_token: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_SUMMARY,
                 },
-            }
+            },
+            fields: [
+                {
+                    modal_label: 'Board name',
+                    name: SubscriptionCreateForm.BOARD_NAME,
+                    type: AppFieldTypes.TEXT,
+                    is_required: true,
+                    position: 1,
+                    max_length: 100
+                },
+                {
+                    modal_label: 'Channel',
+                    name: SubscriptionCreateForm.CHANNEL_ID,
+                    type: AppFieldTypes.CHANNEL,
+                    is_required: true,
+                    position: 2
+                }
+            ]
         }
     }
 }
@@ -198,3 +190,74 @@ export const getConfigureBinding = (): any => {
         }
     }
 };
+
+export const getAccountBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.ACCOUNT,
+        description: 'Add a new Card To Board',
+        hint: `[${Commands.LOGIN}]`,
+        bindings: [
+            getAccountLoginBinding(),
+            getAccountLogoutBinding()
+        ]
+    }
+}
+
+export const getAccountLoginBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.LOGIN,
+        description: 'Configure your Trello credentials',
+        form: {
+            title: 'Configure your Trello credentials',
+            icon: TrelloIcon,
+            submit: {
+                path: `${Routes.App.BindingPathLogin}`,
+                expand: {
+                    app: AppExpandLevels.EXPAND_ALL,
+                    acting_user: AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    channel: AppExpandLevels.EXPAND_ALL,
+                    post: AppExpandLevels.EXPAND_ALL,
+                    root_post: AppExpandLevels.EXPAND_ALL,
+                    team: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_ALL,
+                    oauth2_app: AppExpandLevels.EXPAND_ALL,
+                    oauth2_user: AppExpandLevels.EXPAND_ALL,
+                    locale: AppExpandLevels.EXPAND_ALL
+                }
+            }
+        }
+    };
+}
+
+export const getAccountLogoutBinding = (): any => {
+    return {
+        icon: TrelloIcon,
+        label: Commands.LOGOUT,
+        description: 'Remove your Trello credentials',
+        form: {
+            title: 'Remove your Trello credentials',
+            icon: TrelloIcon,
+            submit: {
+                path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
+                expand: {
+                    app: AppExpandLevels.EXPAND_ALL,
+                    acting_user: AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    channel: AppExpandLevels.EXPAND_ALL,
+                    post: AppExpandLevels.EXPAND_ALL,
+                    root_post: AppExpandLevels.EXPAND_ALL,
+                    team: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_ALL,
+                    oauth2_app: AppExpandLevels.EXPAND_ALL,
+                    oauth2_user: AppExpandLevels.EXPAND_ALL,
+                    locale: AppExpandLevels.EXPAND_ALL
+                }
+            }
+        }
+    };
+}
