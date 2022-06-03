@@ -35,7 +35,7 @@ router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, cConfigure.submitT
 // SUBCRIPTIONS
 router.post(`${Routes.App.CallSubscriptionAdd}`, cSubscription.addWebhookSubscription);
 //router.post(`${Routes.App.CallSubscriptionCreateWebhook}`, cSubscription.createTrelloWebhookSubmit);
-//router.post(`${Routes.App.CallSubscriptionList}`, cSubscription.getWebhookSubscriptions);
+router.post(`${Routes.App.CallSubscriptionList}`, cSubscription.getWebhookSubscriptions);
 router.post(`${Routes.App.CallSubscriptionRemove}`, cSubscription.removeWebhookSubscription);
 
 // TRELLO -> MATTERMOST WEBHOOK

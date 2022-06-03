@@ -10,16 +10,10 @@ import {
 import { AppCallRequest, AppCallResponse, AppContext, AppSelectOption, CreateIncomingWebhook, IncomingWebhook } from "../types";
 import { addSubscriptionCall, } from '../forms/subscriptions';
 import { Routes, StoreKeys } from '../constant';
-import { BoardSelected } from '../types/callResponses';
-import { MattermostClient, MattermostOptions } from '../clients/mattermost'; 
-import { getHTTPPath } from './manifest';
-import { TrelloWebhook, TrelloWebhookResponse } from '../types/trello';
-import { trelloWebhookResponse } from '../forms/trello-webhook';
-import { TrelloImagePath } from '../constant/trello-webhook';
-import { h5, h6, joinLines } from '../utils/markdown';
-import { callSubscriptionList } from '../forms/subscription-list';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
+import { callSubscriptionList } from '../forms/subscription-list';
+import { h6, joinLines } from '../utils/markdown';
 
 export const addWebhookSubscription = async (request: Request, response: Response) => {
    const call: AppCallRequest = request.body;
@@ -62,5 +56,28 @@ export const removeWebhookSubscription = async (req: Request, res: Response) => 
       callResponse = newErrorCallResponseWithMessage(errorOpsgenieWithMessage(error.response, 'Unable to remove subscription'));
    }
    
+   res.json(callResponse);
+}
+
+
+export const getWebhookSubscriptions = async (req: Request, res: Response) => {
+   let callResponse: AppCallResponse;
+   const context = req.body.context as AppContext;
+
+   try {
+      const integrations: AppSelectOption[] = await callSubscriptionList(context);
+      const subscriptionsText: string = [
+         h6(`Subscription List: Found ${integrations.length} open subscriptions.`),
+         `${joinLines(
+            integrations.map((integration: AppSelectOption) => {
+               return `- Subscription ID: "${integration.value}" - Description "${integration.label}"`;
+            }).join('\n')
+         )}`
+      ].join('');
+
+      callResponse = newOKCallResponseWithMarkdown(subscriptionsText);
+   } catch (error: any) {
+      callResponse = newErrorCallResponseWithMessage(errorDataMessage(error));
+   }
    res.json(callResponse);
 }
