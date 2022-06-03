@@ -65,4 +65,10 @@ export class TrelloClient {
     return axios.get(url)
       .then((response: AxiosResponse<TrelloWebhook[]>) => response.data);
   }
+
+  public deleteTrelloWebhook(hookId: string) {
+    const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}/${hookId}?${this.getKeyAndTokenUrlParams()}`;
+    return axios.delete(url)
+      .then((response: AxiosResponse<TrelloWebhook[]>) => response.data);
+  }
 }

@@ -1,5 +1,8 @@
-import {AppExpandLevels, TrelloIcon, Routes, Commands} from '../constant';
+import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
 import { getManifestData } from '../api/manifest';
+import { subscriptionRemoveForm } from '../forms/subscription-remove';
+import { AppCallRequest } from '../types';
+import { AppContext } from '../types/apps';
 
 export const getHelpBinding = (): any => {
     return {
@@ -102,7 +105,7 @@ export const getNewBinding = (): any => {
     }
 }
 
-export const getSubscriptionBinding = (): any => {
+export const getSubscriptionBinding = async (context: AppContext): Promise<any> => {
     return {
         icon: TrelloIcon,
         label: Commands.SUBSCRIPTION,
@@ -111,7 +114,7 @@ export const getSubscriptionBinding = (): any => {
         bindings: [
             getAddSubBinding(),
             getListSubBinding(),
-            getRemoveSubBinding()
+            await getRemoveSubBinding(context)
         ]
     }
 }
@@ -132,12 +135,6 @@ export const getAddSubBinding = (): any => {
                     channel: AppExpandLevels.EXPAND_ALL,
                     admin_access_token: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_SUMMARY,
-
-
-                    acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
                 },
             }
         }
@@ -162,32 +159,14 @@ export const  getListSubBinding = (): any => {
     }
 }
 
-export const  getRemoveSubBinding = (): any => {
+export const getRemoveSubBinding = async (context: AppContext): Promise<any> => {
+    const form = await subscriptionRemoveForm(context);
+    
     return {
         icon: TrelloIcon,
         label: Commands.REMOVE,
         description: 'Remove subscription from current channel',
-        form: {
-            title: 'This is a form',
-            icon: TrelloIcon,
-            submit: {
-                path: Routes.App.BindingPathLink,
-                expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
-                    acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
-                    channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
-                    user: AppExpandLevels.EXPAND_ALL,
-                    oauth2_app: AppExpandLevels.EXPAND_ALL,
-                    oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
-                }
-            }
-        },
+        form: form
     }
 }
 

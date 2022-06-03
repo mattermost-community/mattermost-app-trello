@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import {
    CallResponseHandler,
    errorDataMessage,
+   errorOpsgenieWithMessage,
    newErrorCallResponseWithMessage,
    newFormCallResponse,
    newOKCallResponseWithMarkdown
 } from "../utils";
-import { AppCallRequest, AppCallResponse, AppContext, CreateIncomingWebhook, IncomingWebhook } from "../types";
+import { AppCallRequest, AppCallResponse, AppContext, AppSelectOption, CreateIncomingWebhook, IncomingWebhook } from "../types";
 import { addSubscriptionForm, createWebhookForm } from '../forms/subscriptions';
 import { Routes, StoreKeys } from '../constant';
 import { BoardSelected } from '../types/callResponses';
@@ -17,8 +18,10 @@ import { trelloWebhookResponse } from '../forms/trello-webhook';
 import { TrelloImagePath } from '../constant/trello-webhook';
 import { h5, h6, joinLines } from '../utils/markdown';
 import { callSubscriptionList } from '../forms/subscription-list';
+import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import { TrelloClient, TrelloOptions } from '../clients/trello';
 
-export const addSubscription = async (request: Request, response: Response) => {
+export const addWebhookSubscription = async (request: Request, response: Response) => {
    const call: AppCallRequest = request.body;
    let callResponse: AppCallResponse;
 
@@ -91,38 +94,17 @@ const createHookURL = (hookID: string): string => {
    return `${ getHTTPPath() }${ Routes.App.CallReceiveNotification }/${hookID}`;
 }
 
-export const createWebohookNotification = async (req: Request, res: Response) => {
-   const call: TrelloWebhookResponse = req.body as TrelloWebhookResponse;
-   const splitURL = req.url.split('/');
-   const hookID = splitURL[splitURL.length - 1];
-   const mattermostOptions: MattermostOptions = {
-      accessToken: '',
-      mattermostUrl: ''
-   }
-   let callResponse: AppCallResponse;
-
-   try {
-      const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-      const hookMessage = trelloWebhookResponse(call);
-      const postCreated = await mattermostClient.incomingWebhook(hookID, hookMessage);
-      res.json(postCreated);
-   } catch (error: any) {
-      callResponse = newErrorCallResponseWithMessage(errorDataMessage(error.response));
-      return res.json(callResponse);
-   }
-}
-
 export const getWebhookSubscriptions = async (req: Request, res: Response) => {
    let callResponse: AppCallResponse;
-
+   const context = req.body.context as AppContext;
+   
    try {
-      const integrations: TrelloWebhook[] = await callSubscriptionList(req.body);
+      const integrations: AppSelectOption[] = await callSubscriptionList(context);
         const subscriptionsText: string = [
             h6(`Subscription List: Found ${integrations.length} open subscriptions.`),
             `${joinLines(
-                integrations.map((integration: any) => {
-                   const channelName: string = integration.description;
-                   return `- Subscription ID: "${integration.id}" - Description "${channelName}"`;
+               integrations.map((integration: AppSelectOption) => {
+                  return `- Subscription ID: "${integration.value}" - Description "${integration.label}"`;
                 }).join('\n')
             )}`
         ].join('');
@@ -132,5 +114,33 @@ export const getWebhookSubscriptions = async (req: Request, res: Response) => {
       callResponse = newErrorCallResponseWithMessage(errorDataMessage(error));
    }
    res.json(callResponse);
+}
 
+export const removeWebhookSubscription = async (req: Request, res: Response) => {
+   const values = req.body.values;
+   const subscription = values.subscription as AppSelectOption;
+   const context = req.body.context as AppContext;
+   const kvOpts: KVStoreOptions = {
+      mattermostUrl: context.mattermost_site_url || '',
+      accessToken: context.bot_access_token || ''
+   };
+
+   const kvClient: KVStoreClient = new KVStoreClient(kvOpts);
+   const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config) as ConfigStoreProps;
+
+   const trelloOptions: TrelloOptions = {
+      apiKey: trelloConfig.trello_apikey,
+      token: trelloConfig.trello_oauth_access_token,
+      workspace: trelloConfig.trello_workspace
+   };
+
+   let callResponse: AppCallResponse = newOKCallResponseWithMarkdown(`Subscription "${subscription.label}" removed sucessfully!`);
+   try {
+      const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
+      await trelloClient.deleteTrelloWebhook(subscription.value);
+   } catch (error: any) {
+      callResponse = newErrorCallResponseWithMessage(errorOpsgenieWithMessage(error.response, 'Unable to remove subscription'));
+   }
+   
+   res.json(callResponse);
 }

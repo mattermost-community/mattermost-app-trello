@@ -7,6 +7,7 @@ import * as cAdd from './add';
 import * as cInstall from './install';
 import * as cConfigure from './configure';
 import * as cSubscription from './subscription';
+import * as cWebhook from './webhook-notifications';
 
 const router: Router = express.Router();
 
@@ -27,14 +28,16 @@ router.post(`${Routes.App.AddFormStepTwoPath}`, cAdd.formStepTwo)
 router.post(`${Routes.App.CallPathConfigOpenForm}`, cConfigure.openTrelloConfigForm);
 router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, cConfigure.submitTrelloConfig);
 
+
 // SUBCRIPTIONS
-router.post(`${Routes.App.CallSubscriptionAdd}`, cSubscription.addSubscription);
+router.post(`${Routes.App.CallSubscriptionAdd}`, cSubscription.addWebhookSubscription);
 router.post(`${Routes.App.CallSubscriptionCreateWebhook}`, cSubscription.createTrelloWebhookSubmit);
 router.post(`${Routes.App.CallSubscriptionList}`, cSubscription.getWebhookSubscriptions);
+router.post(`${Routes.App.CallSubscriptionRemove}`, cSubscription.removeWebhookSubscription);
 
 // TRELLO -> MATTERMOST WEBHOOK
-router.post(`${Routes.App.CallReceiveNotification}/:hook_id`, cSubscription.createWebohookNotification); // TEST
-router.get(`${Routes.App.CallReceiveNotification}/:hook_id`, cSubscription.createWebohookNotification);
+router.post(`${Routes.App.CallReceiveNotification}/:hook_id`, cWebhook.createWebohookNotification); // TEST
+router.get(`${Routes.App.CallReceiveNotification}/:hook_id`, cWebhook.createWebohookNotification);
 
 
 const staticRouter = express.Router();

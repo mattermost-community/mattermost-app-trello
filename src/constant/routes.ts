@@ -28,6 +28,7 @@ const AppPaths = {
   CallSubscriptionCreateWebhook: '/subscription/create-webhook',
   CallReceiveNotification: '/subscription/receive-data',
   CallSubscriptionList: '/subscription/list',
+  CallSubscriptionRemove: '/subscription/remove',
 
   BindingPathTargetCreate: '/target-create',
 }

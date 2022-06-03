@@ -1,6 +1,6 @@
 
 import {
-   AppCallRequest,
+   AppCallRequest, AppContext, AppSelectOption,
 } from '../types';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { StoreKeys } from '../constant';
@@ -8,9 +8,9 @@ import { errorDataMessage, errorOpsgenieWithMessage, tryPromiseOpsgenieWithMessa
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { TrelloWebhook } from '../types/trello';
 
-export async function callSubscriptionList(call: AppCallRequest): Promise<TrelloWebhook[]> {
-   const mattermostUrl: string | undefined = call.context.mattermost_site_url;
-   const botAccessToken: string | undefined = call.context.bot_access_token;
+export async function callSubscriptionList(context: AppContext): Promise<AppSelectOption[]> {
+   const mattermostUrl: string | undefined = context.mattermost_site_url;
+   const botAccessToken: string | undefined = context.bot_access_token;
 
    const options: KVStoreOptions = {
       mattermostUrl: <string>mattermostUrl,
@@ -27,7 +27,14 @@ export async function callSubscriptionList(call: AppCallRequest): Promise<Trello
    try {
       const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
       const responseIntegration = await trelloClient.getTrelloActiveWebhooks();
-      return responseIntegration;
+      const options: AppSelectOption[] = responseIntegration.map(res => {
+         return {
+            label: res.description,
+            value: res.id
+         } as AppSelectOption;
+      });
+      
+      return options;
    } catch (error: any) {
       throw new Error(errorOpsgenieWithMessage(error.response, `Unable to display current subscriptions`));
    }

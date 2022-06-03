@@ -24,12 +24,12 @@ const newCommandBindings = (bindings: AppBinding[]): AppsState => {
     };
 };
 
-export const getCommandBindings = (): AppsState => {
+export const getCommandBindings = async (context: any): Promise<AppsState> => {
     const bindings: AppBinding[] = [];
     bindings.push(getHelpBinding());
     bindings.push(getCardBinding());
     bindings.push(getConfigureBinding());
-    bindings.push(getSubscriptionBinding());
+    bindings.push(await getSubscriptionBinding(context));
     return newCommandBindings(bindings);
 };
 
