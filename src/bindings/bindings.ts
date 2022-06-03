@@ -232,8 +232,8 @@ export const getAccountBinding = (): any => {
     return {
         icon: TrelloIcon,
         label: Commands.ACCOUNT,
-        description: 'Add a new Card To Board',
-        hint: `[${Commands.LOGIN}]`,
+        description: 'Configure your trello account',
+        hint: `[${Commands.LOGIN} | ${Commands.LOGOUT}]`,
         bindings: [
             getAccountLoginBinding(),
             getAccountLogoutBinding()

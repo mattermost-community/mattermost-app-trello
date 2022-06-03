@@ -1,6 +1,6 @@
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from "../clients/kvstore";
 import { TrelloClient, TrelloOptions } from "../clients/trello";
-import { AppFieldTypes, Routes, StoreKeys, TrelloIcon } from "../constant";
+import { AppFieldTypes, Routes, TrelloIcon } from "../constant";
 import { AppCallRequest, AppField, AppForm, AppSelectOption } from "../types";
 import { tryGetTrelloConfig, tryGetUserOauthToken } from "../utils";
 

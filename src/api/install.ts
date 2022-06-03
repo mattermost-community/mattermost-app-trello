@@ -8,7 +8,6 @@ export const getInstall = async (request: Request, response: Response) => {
         getCommands()
     ].join('');
     const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
-    console.log(callResponse)
 
     response.json(callResponse);
 };
