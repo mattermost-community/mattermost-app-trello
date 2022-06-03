@@ -112,8 +112,10 @@ export const createWebohookNotification = async (req: Request, res: Response) =>
 export const notificationToMattermost = async (req: Request, res: Response) => {
     const m: Manifest = manifest;
     const call: TrelloWebhookResponse = req.body as TrelloWebhookResponse;
+    //console.log(call);
     const splitURL = req.url.split('/');
     const pluginWebhook = getUrlData(splitURL);
+    console.log(pluginWebhook);
     const mattermostOptions: MattermostOptions = {
         accessToken: '',
         mattermostUrl: ''
@@ -132,7 +134,6 @@ export const notificationToMattermost = async (req: Request, res: Response) => {
         const postCreated = await mattermostClient.webhookPlugin(pluginData, call);
         res.json(postCreated);
     } catch (error: any) {
-        console.log(error);
         callResponse = newErrorCallResponseWithMessage(errorDataMessage(error.response));
         return res.json(callResponse);
     }

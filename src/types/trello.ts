@@ -139,5 +139,6 @@ export type WebhookCreate = {
 export type TrelloApiUrlParams = {
    context: string,
    secret: string,
-   idModel: string
+   idModel: string,
+   channel: string
 }

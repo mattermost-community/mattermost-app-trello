@@ -39,8 +39,8 @@ router.post(`${Routes.App.CallSubscriptionRemove}`, cSubscription.removeWebhookS
 router.post(`${Routes.App.CallSubscriptionListAppOpts}`, cSubscription.getkSubscriptionsAppOpts);
 
 // TRELLO -> MATTERMOST WEBHOOK
-router.post(`${Routes.App.CallReceiveNotification}/context_:context/secret_:whSecret/model_:idModel`, cWebhook.notificationToMattermost);
-router.get(`${Routes.App.CallReceiveNotification}/context_:context/secret_:whSecret/model_:idModel`, cWebhook.notificationToMattermost);
+router.post(`${Routes.App.CallReceiveNotification}/context_:context/secret_:whSecret/model_:idModel/channel_:idChannel`, cWebhook.notificationToMattermost);
+router.get(`${Routes.App.CallReceiveNotification}/context_:context/secret_:whSecret/model_:idModel/channel_:idChannel`, cWebhook.notificationToMattermost);
 router.get(`${Routes.App.CallMattermostSubscription}`, cWebhook.createWebohookNotification);
 
 router.post(`${Routes.App.CallPathIncomingWebhookPath}`, cWebhook.incomingWebhook);

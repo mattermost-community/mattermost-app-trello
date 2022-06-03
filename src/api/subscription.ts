@@ -32,7 +32,6 @@ export const addWebhookSubscription = async (request: Request, response: Respons
 
 export const removeWebhookSubscription = async (req: Request, res: Response) => {
    const values = req.body.values;
-   console.log(values);
    const subscription = values?.subscription as string;
    const context = req.body.context as AppContext;
    const kvOpts: KVStoreOptions = {

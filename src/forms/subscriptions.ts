@@ -50,7 +50,8 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const trelloAPiParams: TrelloApiUrlParams = {
       context: (new URL(<string>mattermostUrl)).hostname,
       secret: <string>whSecret,
-      idModel: board.id
+      idModel: board.id,
+      channel: channelId
    }
    
    const url: string = TrelloAPIWebhook(trelloAPiParams);
