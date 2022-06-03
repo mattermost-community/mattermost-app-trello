@@ -131,7 +131,7 @@ export const notificationToMattermost = async (req: Request, res: Response) => {
         const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
         
         const pluginData: MattermostPluginWebhook = {
-            mattermostUrl: new URL(createContext()).href,
+            mattermostUrl: new URL(createContext(pluginWebhook)).href,
             appID: m.app_id,
             whPath: Routes.Mattermost.webhook,
             whSecret: pluginWebhook.secret
@@ -158,6 +158,10 @@ const getUrlData = (dataURL: string[]): TrelloApiUrlParams => {
     return apiParams as TrelloApiUrlParams;
 }
 
-const createContext = () => {
-    return 'http://localhost:8066'
+const createContext = (plugin: TrelloApiUrlParams): string => {
+    if (plugin.context === 'localhost') {
+        return 'http://localhost:8066';
+    }
+    
+    return new URL(plugin.context).href;
 }
