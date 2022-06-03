@@ -6,6 +6,7 @@ import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvst
 
 export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
    const context = call.context as ExpandedBotActingUser;
+   
    const kvOpts: KVStoreOptions = {
       mattermostUrl: context.mattermost_site_url || '',
       accessToken: context.bot_access_token
@@ -43,6 +44,7 @@ export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
       }
    ];
 
+   console.log(fields);
    return {
       title: 'Configure Trello',
       header: 'Configure the Trello app with the following information.',

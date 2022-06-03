@@ -1,7 +1,6 @@
 import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
-import { getManifestData } from '../api/manifest';
-import {AppBinding} from "../types";
-import {SubscriptionCreateForm} from "../constant/forms";
+import { AppBinding, AppContext } from '../types/apps';
+import {SubscriptionCreateForm, SubscriptionRemoveForm} from "../constant/forms";
 
 export const getHelpBinding = (): any => {
     return {
@@ -73,7 +72,7 @@ export const getCardCreateBinding = (): any => {
     };
 }
 
-export const getSubscriptionBinding = (): any => {
+export const getSubscriptionBinding = async (context: AppContext): Promise<any> => {
     const subCommands: string[] = [
         Commands.ADD,
         Commands.LIST,
@@ -83,7 +82,7 @@ export const getSubscriptionBinding = (): any => {
     const bindings: AppBinding[] = [
         getAddSubBinding(),
         getListSubBinding(),
-        getRemoveSubBinding()
+        await getRemoveSubBinding(context)
     ];
 
     return {
@@ -139,63 +138,50 @@ export const  getListSubBinding = (): any => {
         label: Commands.LIST,
         description: 'Get list of Trello boards subscribed to current channel',
         form: {
-            title: 'This is a form',
-            icon: TrelloIcon,
-            fields: [
-                {
-                    type: 'text',
-                    name: 'workspace',
-                    is_required: true,
-                    position: 1
-                }
-            ],
             submit: {
-                path: Routes.App.BindingPathLink,
+                path: Routes.App.CallSubscriptionList,
                 expand: {
                     app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
-                    channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
-                    user: AppExpandLevels.EXPAND_ALL,
-                    oauth2_app: AppExpandLevels.EXPAND_ALL,
-                    oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
                 }
             }
         },
     }
 }
 
-export const  getRemoveSubBinding = (): any => {
+export const getRemoveSubBinding = async (context: AppContext): Promise<any> => {
+    
     return {
         icon: TrelloIcon,
         label: Commands.REMOVE,
         description: 'Remove subscription from current channel',
         form: {
-            title: 'This is a form',
+            title: 'Unsubscribe from Trello board notifications',
             icon: TrelloIcon,
             submit: {
-                path: Routes.App.BindingPathLink,
+                path: Routes.App.CallSubscriptionRemove,
                 expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
-                    acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    app: AppExpandLevels.EXPAND_SUMMARY,
                     channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
-                    user: AppExpandLevels.EXPAND_ALL,
-                    oauth2_app: AppExpandLevels.EXPAND_ALL,
-                    oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_SUMMARY,
+                },
+                call: {
+                    path: Routes.App.CallSubscriptionListAppOpts
                 }
-            }
-        },
+            },
+            fields: [
+                {
+                    modal_label: 'Subscription ID',
+                    name: SubscriptionRemoveForm.SUBSCRIPTION,
+                    type: AppFieldTypes.TEXT,
+                    is_required: true,
+                    position: 1,
+                    max_length: 100
+                },
+            ]
+        }
     }
 }
 

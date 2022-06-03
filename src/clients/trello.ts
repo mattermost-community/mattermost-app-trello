@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 import queryString from "query-string";
 import config from '../config';
-import {Routes} from '../constant';
+import { Routes } from '../constant';
+import { TrelloWebhook } from '../types/trello';
 import {SearchResponse, WebhookCreate} from "../types/trello";
 
 export interface TrelloOptions {
@@ -88,5 +89,26 @@ export class TrelloClient {
     console.log('url', url);
     return axios.post(url)
       .then((response: AxiosResponse<any>) => response.data);
+  }
+
+  public getTrelloActiveWebhooks(): Promise<TrelloWebhook[]> {
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token
+    });
+    const token = this.config.token;
+    const url: string = `${config.TRELLO.URL}${Routes.TP.tokens}/${token}/${Routes.TP.webhooks}?${queryParams}`;
+    return axios.get(url)
+      .then((response: AxiosResponse<TrelloWebhook[]>) => response.data);
+  }
+
+  public deleteTrelloWebhook(hookId: string) {
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token
+    });
+    const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}/${hookId}?${queryParams}`;
+    return axios.delete(url)
+      .then((response: AxiosResponse<TrelloWebhook[]>) => response.data);
   }
 }

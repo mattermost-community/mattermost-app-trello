@@ -1,6 +1,7 @@
 export type TrelloWebhookResponse = {
    model: TrelloModel,
-   action: TrelloAction
+   action: TrelloAction,
+   channel_id: string
 }
 
 export type TrelloModel = {
@@ -105,6 +106,15 @@ export type TAMemberCreator = {
    username: string,
 }
 
+export type TrelloWebhook = {
+   id: string,
+   description: string,
+   idModel: string,
+   callbackURL: string,
+   active: boolean,
+   consecutiveFailures: number,
+   firstConsecutiveFailDate: string,
+}
 export type Board = {
    id: string;
    name: string;
@@ -126,3 +136,10 @@ export type WebhookCreate = {
    callbackURL: string;
    idModel: string;
 };
+
+export type TrelloApiUrlParams = {
+   context: string,
+   secret: string,
+   idModel: string,
+   channel: string
+}
