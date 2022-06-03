@@ -34,6 +34,12 @@ const AppPaths = {
   CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
 
   CallSubscriptionAdd: '/subscription/add',
+  CallSubscriptionCreateWebhook: '/subscription/create-webhook',
+  CallReceiveNotification: '/subscription/receive-data',
+  CallSubscriptionList: '/subscription/list',
+  CallSubscriptionRemove: '/subscription/remove',
+  CallSubscriptionListAppOpts: '/subscription/app-options/list',
+  CallMattermostSubscription: '/subscription',
 
   CallPathIncomingWebhookPath: '/webhook'
 }
@@ -47,12 +53,15 @@ const MattermostPaths = {
   ApiVersionV4: '/api/v4',
   ApiVersionV1: '/api/v1',
   Hooks:  '/hooks',
-  HooksIncoming: '/hooks/incoming'
+  HooksIncoming: '/hooks/incoming',
+  webhook: '/webhook'
 }
 
 const TrelloPaths = {
   getMembers: 'members/me',
-  webhooks: 'webhooks'
+  webhooks: 'webhooks',
+  tokens: 'tokens'
+
 };
 
 export const Routes = {
