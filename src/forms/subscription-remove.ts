@@ -1,4 +1,5 @@
 import { AppExpandLevels, AppFieldTypes, Routes, TrelloIcon } from "../constant";
+import { SubscriptionRemoveForm } from "../constant/forms";
 import { AppCallRequest, AppForm, AppSelectOption } from "../types";
 import { AppContext } from '../types/apps';
 import { callSubscriptionList } from "./subscription-list";
@@ -21,9 +22,10 @@ export async function subscriptionRemoveForm(context: AppContext): Promise<AppFo
       },
       fields: [
          {
-            name: "subscription",
+            name: SubscriptionRemoveForm.SUBSCRIPTION,
             modal_label: 'Subscription',
             type: AppFieldTypes.STATIC_SELECT,
+            refresh: true,
             options: options,
             is_required: true,
          }

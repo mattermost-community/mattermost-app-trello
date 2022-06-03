@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import {
    CallResponseHandler,
    errorDataMessage,
-   errorOpsgenieWithMessage,
+   errorWithMessage,
    newErrorCallResponseWithMessage,
    newFormCallResponse,
    newOKCallResponseWithMarkdown
@@ -24,15 +24,14 @@ export const addWebhookSubscription = async (request: Request, response: Respons
       callResponse = newOKCallResponseWithMarkdown("Subscription will be created");
       response.json(callResponse);
    } catch (error: any) {
-      console.log('error', error);
-      callResponse = newErrorCallResponseWithMessage('Unexpected error: ' + error.message);
+      callResponse = newErrorCallResponseWithMessage(errorWithMessage(error.response, 'Unable to add subscription'));
       response.json(callResponse);
    }
 }
 
 export const removeWebhookSubscription = async (req: Request, res: Response) => {
    const values = req.body.values;
-   const subscription = values.subscription as AppSelectOption;
+   const subscription = values?.subscription as AppSelectOption;
    const context = req.body.context as AppContext;
    const kvOpts: KVStoreOptions = {
       mattermostUrl: context.mattermost_site_url || '',
@@ -53,7 +52,7 @@ export const removeWebhookSubscription = async (req: Request, res: Response) => 
       const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
       await trelloClient.deleteTrelloWebhook(subscription.value);
    } catch (error: any) {
-      callResponse = newErrorCallResponseWithMessage(errorOpsgenieWithMessage(error.response, 'Unable to remove subscription'));
+      callResponse = newErrorCallResponseWithMessage(errorWithMessage(error.response, 'Unable to remove subscription'));
    }
    
    res.json(callResponse);

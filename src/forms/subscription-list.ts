@@ -4,7 +4,7 @@ import {
 } from '../types';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { StoreKeys } from '../constant';
-import { errorDataMessage, errorOpsgenieWithMessage, tryPromiseOpsgenieWithMessage } from '../utils/utils';
+import { errorDataMessage, errorWithMessage, tryPromiseOpsgenieWithMessage } from '../utils/utils';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { TrelloWebhook } from '../types/trello';
 
@@ -36,6 +36,6 @@ export async function callSubscriptionList(context: AppContext): Promise<AppSele
       
       return options;
    } catch (error: any) {
-      throw new Error(errorOpsgenieWithMessage(error.response, `Unable to display current subscriptions`));
+      throw new Error(errorWithMessage(error.response, `Unable to display current subscriptions`));
    }
 }
