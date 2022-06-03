@@ -1,7 +1,6 @@
 import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
-import { subscriptionRemoveForm } from '../forms/subscription-remove';
 import { AppBinding, AppContext } from '../types/apps';
-import {SubscriptionCreateForm} from "../constant/forms";
+import {SubscriptionCreateForm, SubscriptionRemoveForm} from "../constant/forms";
 
 export const getHelpBinding = (): any => {
     return {
@@ -152,13 +151,37 @@ export const  getListSubBinding = (): any => {
 }
 
 export const getRemoveSubBinding = async (context: AppContext): Promise<any> => {
-    const form = await subscriptionRemoveForm(context);
     
     return {
         icon: TrelloIcon,
         label: Commands.REMOVE,
         description: 'Remove subscription from current channel',
-        form: form
+        form: {
+            title: 'Unsubscribe from Trello board notifications',
+            icon: TrelloIcon,
+            submit: {
+                path: Routes.App.CallSubscriptionRemove,
+                expand: {
+                    app: AppExpandLevels.EXPAND_SUMMARY,
+                    channel: AppExpandLevels.EXPAND_ALL,
+                    admin_access_token: AppExpandLevels.EXPAND_ALL,
+                    user: AppExpandLevels.EXPAND_SUMMARY,
+                },
+                call: {
+                    path: Routes.App.CallSubscriptionListAppOpts
+                }
+            },
+            fields: [
+                {
+                    modal_label: 'Subscription ID',
+                    name: SubscriptionRemoveForm.SUBSCRIPTION,
+                    type: AppFieldTypes.TEXT,
+                    is_required: true,
+                    position: 1,
+                    max_length: 100
+                },
+            ]
+        }
     }
 }
 

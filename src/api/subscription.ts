@@ -32,7 +32,8 @@ export const addWebhookSubscription = async (request: Request, response: Respons
 
 export const removeWebhookSubscription = async (req: Request, res: Response) => {
    const values = req.body.values;
-   const subscription = values?.subscription as AppSelectOption;
+   console.log(values);
+   const subscription = values?.subscription as string;
    const context = req.body.context as AppContext;
    const kvOpts: KVStoreOptions = {
       mattermostUrl: context.mattermost_site_url || '',
@@ -48,10 +49,10 @@ export const removeWebhookSubscription = async (req: Request, res: Response) => 
       workspace: trelloConfig.trello_workspace
    };
 
-   let callResponse: AppCallResponse = newOKCallResponseWithMarkdown(`Subscription "${subscription?.label}" removed sucessfully!`);
+   let callResponse: AppCallResponse = newOKCallResponseWithMarkdown(`Subscription ID "${subscription}" removed sucessfully!`);
    try {
       const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-      await trelloClient.deleteTrelloWebhook(subscription?.value);
+      await trelloClient.deleteTrelloWebhook(subscription);
    } catch (error: any) {
       callResponse = newErrorCallResponseWithMessage(errorWithMessage(error.response, 'Unable to remove subscription'));
    }
