@@ -4,12 +4,11 @@ import { AppCallRequest, AppForm, AppSelectOption } from "../types";
 import { AppContext } from '../types/apps';
 import { callSubscriptionList } from "./subscription-list";
 
-
 export async function subscriptionRemoveForm(context: AppContext): Promise<AppForm> {
    const options: AppSelectOption[] = await callSubscriptionList(context);
 
    return {
-      title: 'Subscribe channel to Trello board',
+      title: 'Unsubscribe from Trello board notifications',
       icon: TrelloIcon,
       submit: {
          path: Routes.App.CallSubscriptionRemove,
@@ -19,12 +18,15 @@ export async function subscriptionRemoveForm(context: AppContext): Promise<AppFo
             admin_access_token: AppExpandLevels.EXPAND_ALL,
             user: AppExpandLevels.EXPAND_SUMMARY,
          },
+         call: {
+            path: Routes.App.CallSubscriptionListAppOpts
+         }
       },
       fields: [
          {
             name: SubscriptionRemoveForm.SUBSCRIPTION,
             modal_label: 'Subscription',
-            type: AppFieldTypes.STATIC_SELECT,
+            type: AppFieldTypes.DYNAMIC_SELECT,
             refresh: true,
             options: options,
             is_required: true,

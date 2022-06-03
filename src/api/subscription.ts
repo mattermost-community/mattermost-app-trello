@@ -5,6 +5,7 @@ import {
    errorWithMessage,
    newErrorCallResponseWithMessage,
    newFormCallResponse,
+   newOKCallResponseWithData,
    newOKCallResponseWithMarkdown
 } from "../utils";
 import { AppCallRequest, AppCallResponse, AppContext, AppSelectOption, CreateIncomingWebhook, IncomingWebhook } from "../types";
@@ -47,10 +48,10 @@ export const removeWebhookSubscription = async (req: Request, res: Response) => 
       workspace: trelloConfig.trello_workspace
    };
 
-   let callResponse: AppCallResponse = newOKCallResponseWithMarkdown(`Subscription "${subscription.label}" removed sucessfully!`);
+   let callResponse: AppCallResponse = newOKCallResponseWithMarkdown(`Subscription "${subscription?.label}" removed sucessfully!`);
    try {
       const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-      await trelloClient.deleteTrelloWebhook(subscription.value);
+      await trelloClient.deleteTrelloWebhook(subscription?.value);
    } catch (error: any) {
       callResponse = newErrorCallResponseWithMessage(errorWithMessage(error.response, 'Unable to remove subscription'));
    }
@@ -75,6 +76,19 @@ export const getWebhookSubscriptions = async (req: Request, res: Response) => {
       ].join('');
 
       callResponse = newOKCallResponseWithMarkdown(subscriptionsText);
+   } catch (error: any) {
+      callResponse = newErrorCallResponseWithMessage(errorDataMessage(error));
+   }
+   res.json(callResponse);
+}
+
+export const getkSubscriptionsAppOpts = async (req: Request, res: Response) => {
+   let callResponse: AppCallResponse;
+   const context = req.body.context as AppContext;
+
+   try {
+      const integrations: AppSelectOption[] = await callSubscriptionList(context);
+      callResponse = newOKCallResponseWithData(integrations);
    } catch (error: any) {
       callResponse = newErrorCallResponseWithMessage(errorDataMessage(error));
    }

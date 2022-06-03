@@ -37,6 +37,7 @@ const AppPaths = {
   CallReceiveNotification: '/subscription/receive-data',
   CallSubscriptionList: '/subscription/list',
   CallSubscriptionRemove: '/subscription/remove',
+  CallSubscriptionListAppOpts: '/subscription/app-options/list',
 
   CallPathIncomingWebhookPath: '/webhook'
 }

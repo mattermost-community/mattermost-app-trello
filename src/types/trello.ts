@@ -135,3 +135,9 @@ export type WebhookCreate = {
    callbackURL: string;
    idModel: string;
 };
+
+export type TrelloApiUrlParams = {
+   context: string,
+   secret: string,
+   idModel: string
+}

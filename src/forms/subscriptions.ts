@@ -5,8 +5,9 @@ import {TrelloClient, TrelloOptions} from "../clients/trello";
 import {AppsPluginName, Routes, StoreKeys} from "../constant";
 import {AppCallRequest, AppCallValues, Manifest} from "../types";
 import {SubscriptionCreateForm} from "../constant/forms";
-import {Board, SearchResponse, WebhookCreate} from "../types/trello";
+import {Board, SearchResponse, TrelloApiUrlParams, WebhookCreate} from "../types/trello";
 import manifest from "../manifest.json";
+import { TrelloAPIWebhook } from "../constant/trello-webhook";
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
@@ -45,10 +46,17 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const params = queryString.stringify({
       secret: whSecret
    });
-   const url: string = `https://045b-201-160-207-97.ngrok.io/plugins/${AppsPluginName}/apps/${pluginName}${whPath}?${params}`;
+
+   const trelloAPiParams: TrelloApiUrlParams = {
+      context: (new URL(<string>mattermostUrl)).hostname,
+      secret: <string>whSecret,
+      idModel: board.id
+   }
+   
+   const url: string = TrelloAPIWebhook(trelloAPiParams);
 
    const payload: WebhookCreate = {
-      description: `Mattermost_${channelName}_${channelId}`,
+      description: `Mattermost_${channelName}_${channelId}_${board?.name}`,
       idModel: board.id,
       callbackURL: url
    };
