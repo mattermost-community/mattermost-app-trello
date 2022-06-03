@@ -46,6 +46,8 @@ export type Attachment = {
   text?: string;
   title?: string;
   title_link?: string;
+  author_name?: string;
+  author_icon?: string;
   fields?: {
       short: boolean;
       title: string;
@@ -60,7 +62,7 @@ export type PostCreate = {
   root_id?: string;
   file_ids?: string[];
   props?: {
-      attachments: Attachment[];
+    attachments: Attachment[];
   }
 }
 

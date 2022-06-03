@@ -20,6 +20,8 @@ async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext
         props: {
             attachments: [
                 {
+                    author_icon: `${action.memberCreator.avatarUrl}/30.png`,
+                    author_name: `${action.memberCreator.fullName}`,
                     title: `Board "${action.data.board.name}"`,
                     title_link: cardModel.url,
                     text: `Card "${action.data.card.name}" was moved (from "${action.data.listBefore.name}" list to "${action.data.listAfter.name}" list)`,
@@ -45,10 +47,12 @@ async function notifyCardCreated(event: TrelloWebhookResponse, context: AppConte
 
     const payload: PostCreate = {
         message: h5(`Card created "${action.data.card.name}"  ("${action.data.board.name}" Board)`),
-        channel_id: '',
+        channel_id: event.channel_id,
         props: {
             attachments: [
                 {
+                    author_icon: `${action.memberCreator.avatarUrl}/30.png`,
+                    author_name: `${action.memberCreator.fullName}`,
                     title: `Board "${action.data.board.name}"`,
                     title_link: cardModel.url,
                     text: `Card "${action.data.card.name}" was created (in "${action.data.list.name}" list)`,
@@ -82,7 +86,7 @@ export const incomingWebhook = async (request: Request, response: Response) => {
         callResponse = newOKCallResponse();
         response.json(callResponse);
     } catch (error: any) {
-        console.log(error);
+        //console.log(error);
         callResponse = newErrorCallResponseWithMessage('Error webhook: ' + error.message);
         response.json(callResponse);
     }
