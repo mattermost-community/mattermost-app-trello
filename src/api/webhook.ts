@@ -1,10 +1,12 @@
 import {Request, Response} from "express";
-import {AppCallResponse, AppContext, PostCreate} from "../types";
+import {AppCallResponse, AppContext, Manifest, MattermostPluginWebhook, PostCreate} from "../types";
 import {errorDataMessage, newErrorCallResponseWithMessage, newOKCallResponse} from "../utils";
 import {h5} from "../utils/markdown";
-import {TrelloAction, TrelloModel, TrelloWebhookResponse} from "../types/trello";
+import {TrelloAction, TrelloApiUrlParams, TrelloModel, TrelloWebhookResponse} from "../types/trello";
 import {MattermostClient, MattermostOptions} from "../clients/mattermost";
 import { trelloWebhookResponse } from "../forms/trello-webhook";
+import manifest from "../manifest.json";
+import { Routes } from "../constant";
 
 async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext) {
     const mattermostUrl: string | undefined = context.mattermost_site_url;
@@ -105,4 +107,50 @@ export const createWebohookNotification = async (req: Request, res: Response) =>
         callResponse = newErrorCallResponseWithMessage(errorDataMessage(error.response));
         return res.json(callResponse);
     }
+}
+
+export const notificationToMattermost = async (req: Request, res: Response) => {
+    const m: Manifest = manifest;
+    const call: TrelloWebhookResponse = req.body as TrelloWebhookResponse;
+    const splitURL = req.url.split('/');
+    const pluginWebhook = getUrlData(splitURL);
+    const mattermostOptions: MattermostOptions = {
+        accessToken: '',
+        mattermostUrl: ''
+    }
+    let callResponse: AppCallResponse;
+
+    try {
+        const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
+        
+        const pluginData: MattermostPluginWebhook = {
+            mattermostUrl: new URL(createContext()).href,
+            appID: m.app_id,
+            whPath: Routes.App.CallMattermostSubscription,
+            whSecret: pluginWebhook.secret
+        }
+        const postCreated = await mattermostClient.webhookPlugin(pluginData, call);
+        res.json(postCreated);
+    } catch (error: any) {
+        console.log(error);
+        callResponse = newErrorCallResponseWithMessage(errorDataMessage(error.response));
+        return res.json(callResponse);
+    }
+}
+
+const getUrlData = (dataURL: string[]): TrelloApiUrlParams => {
+    const utilKeys = dataURL.map(key => {
+        if (key.includes('_')){
+            return key.split('_');
+        }
+        return [];
+    }).filter(key => !!key.length);
+
+    const apiParams = utilKeys.reduce((o: any, key) => Object.assign(o, { [key[0]]: key[1] }), {});
+    
+    return apiParams as TrelloApiUrlParams;
+}
+
+const createContext = () => {
+    return 'http://localhost:8066'
 }

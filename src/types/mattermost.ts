@@ -178,3 +178,10 @@ export type IncomingWebhook = {
   icon_url: string,
   channel_locked: boolean
 }
+
+export type MattermostPluginWebhook = {
+  mattermostUrl: string,
+  appID: string,
+  whPath: string,
+  whSecret: string
+}

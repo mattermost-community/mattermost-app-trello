@@ -9,7 +9,7 @@ export const TrelloTranslationKeys = {
 }
 
 export const TrelloAPIWebhook = (params: TrelloApiUrlParams) => {
-   return `${getHTTPPath()}${Routes.App.CallReceiveNotification}/context${params.context}/secret${params.secret}/model${params.idModel}`;
+   return `${getHTTPPath()}${Routes.App.CallReceiveNotification}/context_${params.context}/secret_${params.secret}/model_${params.idModel}`;
 }
 
 export const TrelloImagePath = (siteURL: string) => {

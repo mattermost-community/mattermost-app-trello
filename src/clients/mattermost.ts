@@ -3,6 +3,7 @@ import {
     CreateIncomingWebhook,
     DialogProps,
     IncomingWebhook,
+    MattermostPluginWebhook,
     PostCreate,
     PostUpdate,
     User
@@ -73,6 +74,15 @@ export class MattermostClient {
 
     public incomingWebhook(hookID: string, data: any): Promise<string> {
         return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/${hookID}`, data)
+            .then((response: AxiosResponse<any>) => response.data);
+    }
+
+    public webhookPlugin(pluginData: MattermostPluginWebhook, data: any): Promise<string> {
+        const url = `${pluginData.mattermostUrl}plugins/com.mattermost.apps/apps/${pluginData.appID}${pluginData.whPath}?secret=${pluginData.whSecret}`
+        
+        console.log(url);
+        console.log('');
+        return axios.post(`${url}`, data)
             .then((response: AxiosResponse<any>) => response.data);
     }
 }

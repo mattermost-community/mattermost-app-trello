@@ -38,6 +38,7 @@ const AppPaths = {
   CallSubscriptionList: '/subscription/list',
   CallSubscriptionRemove: '/subscription/remove',
   CallSubscriptionListAppOpts: '/subscription/app-options/list',
+  CallMattermostSubscription: '/subscription/from-mattermost',
 
   CallPathIncomingWebhookPath: '/webhook'
 }
