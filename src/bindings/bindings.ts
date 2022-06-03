@@ -279,7 +279,7 @@ export const getAccountLogoutBinding = (): any => {
             title: 'Remove your Trello credentials',
             icon: TrelloIcon,
             submit: {
-                path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
+                path: `${Routes.App.BindingPathLogout}`,
                 expand: {
                     app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,

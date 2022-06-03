@@ -1,3 +1,5 @@
+import { ConfigStoreProps, KVStoreClient } from "../clients/kvstore";
+import { StoreKeys } from "../constant";
 import { AppField } from "../types";
 
 export function errorWithMessage(err: Error, message: string): string {
@@ -35,4 +37,20 @@ export async function tryPromiseOpsgenieWithMessage(p: Promise<any>, message: st
     return p.catch((error) => {
         throw new Error(errorOpsgenieWithMessage(error.response, message));
     });
+}
+
+export async function tryGetUserOauthToken(kvClient: KVStoreClient, key: string) {
+    const user_oauth_token = await kvClient.getOauth2User(key);
+    if (JSON.stringify(user_oauth_token) === '{}')
+        throw new Error('You are not logged in.')
+
+    return user_oauth_token;
+}
+
+export async function tryGetTrelloConfig(kvClient: KVStoreClient) {
+    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
+    if (JSON.stringify(trelloConfig) === '{}')
+        throw new Error('Initial configuration is not done.')
+
+    return trelloConfig;
 }

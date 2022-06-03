@@ -2,6 +2,7 @@ import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from "../clients/kvst
 import { TrelloClient, TrelloOptions } from "../clients/trello";
 import { AppFieldTypes, Routes, StoreKeys, TrelloIcon } from "../constant";
 import { AppCallRequest, AppField, AppForm, AppSelectOption } from "../types";
+import { tryGetTrelloConfig, tryGetUserOauthToken } from "../utils";
 
 export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm> {
   const mattermostUrl: string | undefined = call.context.mattermost_site_url;
@@ -14,10 +15,8 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
   };
   
   const kvClient = new KVStoreClient(options);
-
-  const user_oauth_token = await kvClient.getOauth2User(<string>user_id)
-  const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-
+  const trelloConfig: ConfigStoreProps = await tryGetTrelloConfig(kvClient);
+  const user_oauth_token = await tryGetUserOauthToken(kvClient, <string>user_id)
 
   return await getCreateCardForm({
     apiKey: trelloConfig.trello_apikey,
@@ -39,10 +38,8 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
   };
   
   const kvClient = new KVStoreClient(options);
-
-  const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-
-  const user_oauth_token = await kvClient.getOauth2User(<string>user_id)
+  const trelloConfig: ConfigStoreProps = await tryGetTrelloConfig(kvClient);
+  const user_oauth_token = await tryGetUserOauthToken(kvClient, <string>user_id)
 
   const trelloOptions = {
     apiKey: trelloConfig.trello_apikey,
