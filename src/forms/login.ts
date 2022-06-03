@@ -1,7 +1,7 @@
 import { AppCallRequest, AppForm } from '../types';
 
 import { ExpandedBotActingUser } from '../types';
-import { Routes, TrelloIcon, AppFieldTypes, TRELLO_OAUTH } from '../constant';
+import { Routes, TrelloIcon, AppFieldTypes, TRELLO_OAUTH, StoreKeys } from '../constant';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 
 export async function getLoginForm(call: AppCallRequest): Promise<AppForm> {
@@ -11,6 +11,10 @@ export async function getLoginForm(call: AppCallRequest): Promise<AppForm> {
       accessToken: context.bot_access_token
    };
 
+   const kvClient = new KVStoreClient(kvOpts);
+
+   const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
+
    const fields = [
       {
          type: AppFieldTypes.TEXT,
@@ -18,7 +22,7 @@ export async function getLoginForm(call: AppCallRequest): Promise<AppForm> {
          modal_label: 'OAuth Token',
          value: '',
          hint: `token`,
-         description: `[Follow the link](${TRELLO_OAUTH.BASE_URL}?expiration=${TRELLO_OAUTH.EXPIRATION.DAY}&name=${TRELLO_OAUTH.APP_NAME}&scope=${TRELLO_OAUTH.SCOPE.READ},${TRELLO_OAUTH.SCOPE.WRITE}&response_type=token&key=60cc02a7db35b9205fa8628d59a8e354)`,
+         description: `[Follow the link](${TRELLO_OAUTH.BASE_URL}?expiration=${TRELLO_OAUTH.EXPIRATION.DAY}&name=${TRELLO_OAUTH.APP_NAME}&scope=${TRELLO_OAUTH.SCOPE.READ},${TRELLO_OAUTH.SCOPE.WRITE}&response_type=${TRELLO_OAUTH.RESPONSE_TYPE.TOKEN}&key=${trelloConfig.trello_apikey})`,
          is_required: true,
       }
    ];

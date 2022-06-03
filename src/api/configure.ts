@@ -12,8 +12,8 @@ import {
 } from '../utils';
 import { baseUrlFromContext } from '../utils';
 import config from '../config';
-import { TrelloClient, TrelloOptions } from '../clients/trello';
-import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import {TrelloClient, TrelloOptions} from '../clients/trello';
+import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from '../clients/kvstore';
 import {StoreKeys} from '../constant';
 
 export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
@@ -37,11 +37,13 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
       mattermostUrl: <string>baseUrlFromContext(config.MATTERMOST.URL),
       accessToken: <string>call.context.bot_access_token,
    };
+   
    const kvStoreClient = new KVStoreClient(options);
 
    const trelloOptions: TrelloOptions = {
       apiKey: values.trello_apikey,
       token: values.trello_oauth_access_token,
+      workspace: values.trello_workspace
    }
 
    let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Trello configuration');
@@ -65,7 +67,7 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
 const verifyToken = async (trelloOpt: TrelloOptions) => {
    try {
       const trelloClient: TrelloClient = new TrelloClient(trelloOpt);
-      await trelloClient.validateToken(trelloOpt);
+      await trelloClient.validateToken();
    } catch (err) {
       throw new Error(`${err}`);
    }

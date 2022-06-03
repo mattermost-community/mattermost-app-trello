@@ -1,13 +1,29 @@
+import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from "../clients/kvstore";
 import { TrelloClient, TrelloOptions } from "../clients/trello";
-import config from "../config";
-import { AppFieldTypes, Routes, TrelloIcon } from "../constant";
+import { AppFieldTypes, Routes, StoreKeys, TrelloIcon } from "../constant";
 import { AppCallRequest, AppField, AppForm, AppSelectOption } from "../types";
 
 export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm> {
   const mattermostUrl: string | undefined = call.context.mattermost_site_url;
   const botAccessToken: string | undefined = call.context.bot_access_token;
+  const user_id = call.context.acting_user?.id;
 
-  return await getCreateCardForm();
+  const options: KVStoreOptions = {
+    mattermostUrl: <string>mattermostUrl,
+    accessToken: <string>botAccessToken,
+  };
+  
+  const kvClient = new KVStoreClient(options);
+
+  const user_oauth_token = await kvClient.getOauth2User(<string>user_id)
+  const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
+
+
+  return await getCreateCardForm({
+    apiKey: trelloConfig.trello_apikey,
+    token: user_oauth_token.oauth_token,
+    workspace: trelloConfig.trello_workspace
+  });
 }
 
 export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm> {
@@ -15,15 +31,33 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
   const botAccessToken: string | undefined = call.context.bot_access_token;
   const board = call.values?.board;
   const card_name = call.values?.card_name;
+  const user_id = call.context.acting_user?.id;
 
-  return await getCreateCardForm(card_name, board);
+  const options: KVStoreOptions = {
+    mattermostUrl: <string>mattermostUrl,
+    accessToken: <string>botAccessToken,
+  };
+  
+  const kvClient = new KVStoreClient(options);
+
+  const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
+
+  const user_oauth_token = await kvClient.getOauth2User(<string>user_id)
+
+  const trelloOptions = {
+    apiKey: trelloConfig.trello_apikey,
+    token: user_oauth_token.oauth_token,
+    workspace: trelloConfig.trello_workspace
+  }
+
+  return await getCreateCardForm(trelloOptions, card_name, board);
 }
 
-async function getCreateCardForm(card_name?: string, board?: AppSelectOption): Promise<AppForm> {
-  const board_options: AppSelectOption[] = await getBoardOptionList();
+async function getCreateCardForm(trelloOptions: TrelloOptions, card_name?: string, board?: AppSelectOption): Promise<AppForm> {
+  const board_options: AppSelectOption[] = await getBoardOptionList(trelloOptions);
   let list_options: AppSelectOption[] = [];
   if (board)
-    list_options = await getListOptionList(board?.value);
+    list_options = await getListOptionList(board?.value, trelloOptions);
 
   const fields: AppField[] = [
     {
@@ -73,12 +107,7 @@ async function getCreateCardForm(card_name?: string, board?: AppSelectOption): P
   return form;
 }
 
-async function getBoardOptionList(): Promise<AppSelectOption[]> {
-  const trelloOptions: TrelloOptions = {
-    apiKey: config.TRELLO.API_KEY,
-    token: config.TRELLO.TOKEN,
-  }
-
+async function getBoardOptionList(trelloOptions: TrelloOptions): Promise<AppSelectOption[]> {
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
   const boards = await trelloClient.searchBoardsInOrganization();
@@ -89,12 +118,7 @@ async function getBoardOptionList(): Promise<AppSelectOption[]> {
   return options;
 }
 
-async function getListOptionList(boardId: string): Promise<AppSelectOption[]> {
-  const trelloOptions: TrelloOptions = {
-    apiKey: config.TRELLO.API_KEY,
-    token: config.TRELLO.TOKEN,
-  }
-
+async function getListOptionList(boardId: string, trelloOptions: TrelloOptions): Promise<AppSelectOption[]> {
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
   const boards = await trelloClient.getListByBoard(boardId);

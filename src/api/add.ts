@@ -9,6 +9,8 @@ import config from '../config';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { cardAddFromStepOne, cardAddFromStepTwo } from '../forms/card_add';
 import { MattermostClient, MattermostOptions } from '../clients/mattermost';
+import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import { StoreKeys } from '../constant';
 
 export const getAdd = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
@@ -46,10 +48,23 @@ export const formStepTwo = async (request: Request, response: Response) => {
   const card_name = call.values?.card_name;
   const mattermostUrl = call.context.mattermost_site_url ?? '' ;
   const bot_token = call.context.bot_access_token;
+  const user_id = call.context.acting_user?.id;
 
-  const trelloOptions: TrelloOptions = {
-    apiKey: config.TRELLO.API_KEY,
-    token: config.TRELLO.TOKEN,
+  const options: KVStoreOptions = {
+    mattermostUrl: <string>mattermostUrl,
+    accessToken: <string>call.context.bot_access_token,
+  };
+  
+  const kvClient = new KVStoreClient(options);
+
+  const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
+
+  const user_oauth_token = await kvClient.getOauth2User(<string>user_id)
+
+  const trelloOptions = {
+    apiKey: trelloConfig.trello_apikey,
+    token: user_oauth_token.oauth_token,
+    workspace: trelloConfig.trello_workspace
   }
 
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
@@ -73,7 +88,7 @@ export const formStepTwo = async (request: Request, response: Response) => {
     }
     
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-    await mattermostClient.incomingWebhook(hookMessage);
+    await mattermostClient.incomingWebhook('jzyjmiwcdiya3go11ndobsewne', hookMessage);
     callResponse = newOKCallResponseWithMarkdown('')
   } catch(error: any) {
     callResponse = newErrorCallResponseWithMessage('Unable to continue: ' + error.message);

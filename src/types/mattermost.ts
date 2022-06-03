@@ -153,3 +153,28 @@ export type DialogProps = {
 export type AddNoteDialogForm = {
   note: string;
 }
+
+export type CreateIncomingWebhook = {
+  channel_id?: string,
+  channel_locked?: boolean,
+  user_id?: string,
+  display_name?: string,
+  description?: string,
+  username?: string,
+  icon_url?: string,
+}
+
+export type IncomingWebhook = {
+  id: string,
+  create_at: number,
+  update_at: number,
+  delete_at: number,
+  user_id: string,
+  channel_id: string,
+  team_id: string,
+  display_name: string,
+  description: string,
+  username: string,
+  icon_url: string,
+  channel_locked: boolean
+}

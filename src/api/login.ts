@@ -20,9 +20,9 @@ export const getLogin = async (request: Request, response: Response) => {
 
 export const saveToken = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
+  let callResponse: AppCallResponse;
   const token = call.values?.token;
-  const userId = call.context.acting_user.id;
-  const acting_user_token = call.state.user_token;
+  const userId = call.context.acting_user?.id;
   const bot_token = call.context.bot_access_token;
   const mattermost_url = call.context.mattermost_site_url;
 
@@ -31,21 +31,42 @@ export const saveToken = async (request: Request, response: Response) => {
       accessToken: bot_token ?? '',
       mattermostUrl: mattermost_url ?? ''
     }
-    console.log(acting_user_token)
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
     const kvClient: KVStoreClient = new KVStoreClient(kvOptions);
-    const kvResult = await kvClient.storeOauth2User(
-      userId
+    await kvClient.storeOauth2User(
+      userId ?? ''
       ,{
         oauth_token: token
       })
-    
-    console.log(kvResult)
-
+    callResponse = newOKCallResponseWithMarkdown('Auth Token stored.')
   } catch (e) {
-    //console.log(e)
+    callResponse = newErrorCallResponseWithMessage('Login could not be completed.')
   }
-  return response.json(newOKCallResponseWithMarkdown('Auth Token stored.'))
+  return response.json(callResponse)
 }
+
+export const getLogout = async (request: Request, response: Response) => {
+  const call: AppCallRequest = request.body;
+
+  let callResponse: AppCallResponse;
+
+  const userId = call.context.acting_user?.id;
+  const bot_token = call.context.bot_access_token;
+  const mattermost_url = call.context.mattermost_site_url;
+
+  try {
+    const kvOptions: KVStoreOptions = {
+      accessToken: bot_token ?? '',
+      mattermostUrl: mattermost_url ?? ''
+    }
+    const kvClient: KVStoreClient = new KVStoreClient(kvOptions);
+    await kvClient.kvDelete(<string>userId);
+    callResponse = newOKCallResponseWithMarkdown('Logged out successfully .')
+  } catch(error: any) { 
+    callResponse = newErrorCallResponseWithMessage('Unable to logout: ' + error.message);
+  }
+  return response.json(callResponse)
+}
+
+
 
 

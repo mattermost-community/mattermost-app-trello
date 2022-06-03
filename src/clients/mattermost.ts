@@ -1,5 +1,12 @@
 import axios, {AxiosResponse} from 'axios';
-import {DialogProps, PostCreate, PostUpdate, User} from '../types';
+import {
+    CreateIncomingWebhook,
+    DialogProps,
+    IncomingWebhook,
+    PostCreate,
+    PostUpdate,
+    User
+} from '../types';
 import {Routes} from '../constant';
 import {replace} from "../utils";
 import config from '../config';
@@ -64,8 +71,8 @@ export class MattermostClient {
         }).then((response: AxiosResponse<any>) => response.data);
     }
 
-    public incomingWebhook(data: {[key: string]: any}): Promise<string> {
-        return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/jzyjmiwcdiya3go11ndobsewne`, data)
+    public incomingWebhook(hookID: string, data: any): Promise<string> {
+        return axios.post(`${this.config.mattermostUrl}${Routes.Mattermost.Hooks}/${hookID}`, data)
             .then((response: AxiosResponse<any>) => response.data);
     }
 }
