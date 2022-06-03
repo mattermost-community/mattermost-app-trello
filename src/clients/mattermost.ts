@@ -8,7 +8,7 @@ import {
     PostUpdate,
     User
 } from '../types';
-import {Routes} from '../constant';
+import {AppsPluginName, Routes} from '../constant';
 import {replace} from "../utils";
 import config from '../config';
 
@@ -78,10 +78,8 @@ export class MattermostClient {
     }
 
     public webhookPlugin(pluginData: MattermostPluginWebhook, data: any): Promise<string> {
-        const url = `${pluginData.mattermostUrl}plugins/com.mattermost.apps/apps/${pluginData.appID}${pluginData.whPath}?secret=${pluginData.whSecret}`
+        const url = `${pluginData.mattermostUrl}plugins/${AppsPluginName}/apps/${pluginData.appID}${pluginData.whPath}?secret=${pluginData.whSecret}`
         
-        console.log(url);
-        console.log('');
         return axios.post(`${url}`, data)
             .then((response: AxiosResponse<any>) => response.data);
     }

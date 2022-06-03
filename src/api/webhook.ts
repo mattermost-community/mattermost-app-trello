@@ -16,7 +16,7 @@ async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext
 
     const payload: PostCreate = {
         message: h5(`Card moved "${action.data.card.name}"  ("${action.data.board.name}" Board)`),
-        channel_id: '',
+        channel_id: event.channel_id,
         props: {
             attachments: [
                 {
@@ -32,6 +32,7 @@ async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext
         mattermostUrl: <string>mattermostUrl,
         accessToken: <string>botAccessToken
     };
+    
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
     await mattermostClient.createPost(payload);
 }
@@ -72,7 +73,6 @@ const WEBHOOKS_ACTIONS: { [key: string]: Function } = {
 export const incomingWebhook = async (request: Request, response: Response) => {
     const data: TrelloWebhookResponse = request.body.values.data;
     const context: AppContext = request.body.context;
-    console.log('request', request.body);
     let callResponse: AppCallResponse;
     try {
         const action: Function = WEBHOOKS_ACTIONS[data.action.display.translationKey];
@@ -82,6 +82,7 @@ export const incomingWebhook = async (request: Request, response: Response) => {
         callResponse = newOKCallResponse();
         response.json(callResponse);
     } catch (error: any) {
+        console.log(error);
         callResponse = newErrorCallResponseWithMessage('Error webhook: ' + error.message);
         response.json(callResponse);
     }
@@ -101,8 +102,8 @@ export const createWebohookNotification = async (req: Request, res: Response) =>
     try {
         const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
         const hookMessage = trelloWebhookResponse(call);
-        const postCreated = await mattermostClient.incomingWebhook(hookID, hookMessage);
-        res.json(postCreated);
+        //const postCreated = await mattermostClient.incomingWebhook(hookID, hookMessage);
+        //res.json(postCreated);
     } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage(errorDataMessage(error.response));
         return res.json(callResponse);
@@ -128,9 +129,10 @@ export const notificationToMattermost = async (req: Request, res: Response) => {
         const pluginData: MattermostPluginWebhook = {
             mattermostUrl: new URL(createContext()).href,
             appID: m.app_id,
-            whPath: Routes.App.CallMattermostSubscription,
+            whPath: Routes.Mattermost.webhook,
             whSecret: pluginWebhook.secret
         }
+        call.channel_id = pluginWebhook.channel;
         const postCreated = await mattermostClient.webhookPlugin(pluginData, call);
         res.json(postCreated);
     } catch (error: any) {

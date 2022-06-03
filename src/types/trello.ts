@@ -1,6 +1,7 @@
 export type TrelloWebhookResponse = {
    model: TrelloModel,
-   action: TrelloAction
+   action: TrelloAction,
+   channel_id: string
 }
 
 export type TrelloModel = {

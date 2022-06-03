@@ -52,7 +52,8 @@ const MattermostPaths = {
   ApiVersionV4: '/api/v4',
   ApiVersionV1: '/api/v1',
   Hooks:  '/hooks',
-  HooksIncoming: '/hooks/incoming'
+  HooksIncoming: '/hooks/incoming',
+  webhook: '/webhook'
 }
 
 const TrelloPaths = {

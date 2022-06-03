@@ -81,16 +81,3 @@ export const getWebhookSubscriptions = async (req: Request, res: Response) => {
    }
    res.json(callResponse);
 }
-
-export const getkSubscriptionsAppOpts = async (req: Request, res: Response) => {
-   let callResponse: AppCallResponse;
-   const context = req.body.context as AppContext;
-
-   try {
-      const integrations: AppSelectOption[] = await callSubscriptionList(context);
-      callResponse = newOKCallResponseWithData(integrations);
-   } catch (error: any) {
-      callResponse = newErrorCallResponseWithMessage(errorDataMessage(error));
-   }
-   res.json(callResponse);
-}

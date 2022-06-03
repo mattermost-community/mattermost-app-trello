@@ -36,7 +36,6 @@ router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, cConfigure.submitT
 router.post(`${Routes.App.CallSubscriptionAdd}`, cSubscription.addWebhookSubscription);
 router.post(`${Routes.App.CallSubscriptionList}`, cSubscription.getWebhookSubscriptions);
 router.post(`${Routes.App.CallSubscriptionRemove}`, cSubscription.removeWebhookSubscription);
-router.post(`${Routes.App.CallSubscriptionListAppOpts}`, cSubscription.getkSubscriptionsAppOpts);
 
 // TRELLO -> MATTERMOST WEBHOOK
 router.post(`${Routes.App.CallReceiveNotification}/context_:context/secret_:whSecret/model_:idModel/channel_:idChannel`, cWebhook.notificationToMattermost);
