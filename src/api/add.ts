@@ -20,7 +20,8 @@ export const getAdd = async (request: Request, response: Response) => {
   try {
     const form = await cardAddFromStepOne(call);
     callResponse = newFormCallResponse(form);
-  } catch(error: any) { 
+  } catch(error: any) {
+    console.log('error', error);
     callResponse = newErrorCallResponseWithMessage('Unable to create card form: ' + error.message);
   }
   return response.json(callResponse)
@@ -70,27 +71,9 @@ export const formStepTwo = async (request: Request, response: Response) => {
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
   try {
     const resultTrello = await trelloClient.sendCreateCardRequest(list_id, card_name);
-    const hookMessage = {
-      text: 'New card created from Hook',
-      attachments: [
-        {
-            author_icon: 'https://trello-members.s3.amazonaws.com/627ad9bcc8aeeb621b7dfd71/cd2acddb9dcc091de7f73b9200f4c4cf/30.png',
-            author_name: 'jose lopez',
-            author_link: 'https://trello.com/joselopez864',
-            title: resultTrello.name,
-            title_link: resultTrello.url,
-            text: `Card ${card_name} added to board`,
-        }]
-    }
-    const mattermostOptions: MattermostOptions = {
-      accessToken: bot_token,
-      mattermostUrl: mattermostUrl
-    }
-    
-    const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-    await mattermostClient.incomingWebhook('jzyjmiwcdiya3go11ndobsewne', hookMessage);
-    callResponse = newOKCallResponseWithMarkdown('')
+    callResponse = newOKCallResponseWithMarkdown('Card created')
   } catch(error: any) {
+    console.log('error', error);
     callResponse = newErrorCallResponseWithMessage('Unable to continue: ' + error.message);
   }
 

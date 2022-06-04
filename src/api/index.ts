@@ -17,16 +17,14 @@ router.post(Routes.App.BindingsPath, cBindings.getBindings);
 router.post(Routes.App.InstallPath, cInstall.getInstall);
 
 router.post(`${Routes.App.BindingPathHelp}`, cHelp.getHelp);
-router.post(`${Routes.App.BindingPathAdd}`, cAdd.getAdd);
-router.post(`${Routes.App.BindingPathNew}`, cAdd.getAdd);
 
-router.post(`${Routes.App.AddFormStepOnePath}`, cAdd.formStepOne)
-router.post(`${Routes.App.AddFormStepTwoPath}`, cAdd.formStepTwo)
 router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`, cAdd.getAdd);
 router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Submit}`, cAdd.formStepTwo);
 router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Form}`, cAdd.formStepOne);
+
 router.post(`${Routes.App.BindingPathLogin}`, cLogin.getLogin);
 router.post(`${Routes.App.BindingPathLogin}${Routes.App.Submit}`, cLogin.saveToken)
+router.post(`${Routes.App.BindingPathLogout}`, cLogin.getLogout)
 
 router.post(`${Routes.App.CallPathConfigOpenForm}`, cConfigure.openTrelloConfigForm);
 router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, cConfigure.submitTrelloConfig);

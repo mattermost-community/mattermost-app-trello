@@ -218,8 +218,8 @@ export const getAccountBinding = (): any => {
     return {
         icon: TrelloIcon,
         label: Commands.ACCOUNT,
-        description: 'Add a new Card To Board',
-        hint: `[${Commands.LOGIN}]`,
+        description: 'Configure your trello account',
+        hint: `[${Commands.LOGIN} | ${Commands.LOGOUT}]`,
         bindings: [
             getAccountLoginBinding(),
             getAccountLogoutBinding()
@@ -265,7 +265,7 @@ export const getAccountLogoutBinding = (): any => {
             title: 'Remove your Trello credentials',
             icon: TrelloIcon,
             submit: {
-                path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
+                path: `${Routes.App.BindingPathLogout}`,
                 expand: {
                     app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
