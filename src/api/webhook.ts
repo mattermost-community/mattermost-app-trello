@@ -160,7 +160,7 @@ const getUrlData = (dataURL: string[]): TrelloApiUrlParams => {
 
 const createContext = (plugin: TrelloApiUrlParams): string => {
     if (plugin.context === 'localhost') {
-        return 'http://localhost:8066';
+        return 'http://[::1]:8065';
     }
     
     return new URL(plugin.context).href;

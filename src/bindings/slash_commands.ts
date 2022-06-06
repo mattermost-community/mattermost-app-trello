@@ -31,6 +31,7 @@ export const getCommandBindings = async (context: any): Promise<AppsState> => {
     bindings.push(getCardBinding());
     bindings.push(getConfigureBinding());
     bindings.push(await getSubscriptionBinding(context));
+    bindings.push(getAccountBinding());
     return newCommandBindings(bindings);
 };
 

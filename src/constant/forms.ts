@@ -10,3 +10,7 @@ export const SubscriptionCreateForm = {
 export const SubscriptionRemoveForm = {
     SUBSCRIPTION: 'subscription'
 }
+
+export const LoginForm = {
+    TOKEN: 'token'
+}
