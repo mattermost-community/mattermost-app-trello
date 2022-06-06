@@ -60,7 +60,9 @@ const MattermostPaths = {
 const TrelloPaths = {
   getMembers: 'members/me',
   webhooks: 'webhooks',
-  tokens: 'tokens'
+  tokens: 'tokens',
+  organizations: 'organizations'
+  
 
 };
 
