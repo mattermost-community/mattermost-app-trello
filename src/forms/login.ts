@@ -9,12 +9,15 @@ import { LoginForm } from '../constant/forms';
 
 export async function getLoginForm(call: AppCallRequest): Promise<AppForm> {
    const context = call.context as ExpandedBotActingUser;
+   const user_id = call.context.acting_user?.id;
    const kvOpts: KVStoreOptions = {
       mattermostUrl: context.mattermost_site_url || '',
       accessToken: context.bot_access_token
    };
 
    const kvClient = new KVStoreClient(kvOpts);
+
+   const user_oauth_token = await kvClient.getOauth2User(<string>user_id);
 
    const trelloConfig: ConfigStoreProps = await tryGetTrelloConfig(kvClient);
 
@@ -23,7 +26,7 @@ export async function getLoginForm(call: AppCallRequest): Promise<AppForm> {
          type: AppFieldTypes.TEXT,
          name: LoginForm.TOKEN,
          modal_label: 'OAuth Token',
-         value: '',
+         value: JSON.stringify(user_oauth_token) != '{}' ? user_oauth_token.oauth_token : '',
          hint: `token`,
          description: `To get your token [Follow this link](${TRELLO_OAUTH.BASE_URL}?expiration=${TRELLO_OAUTH.EXPIRATION.DAY}&name=${TRELLO_OAUTH.APP_NAME}&scope=${TRELLO_OAUTH.SCOPE.READ},${TRELLO_OAUTH.SCOPE.WRITE}&response_type=${TRELLO_OAUTH.RESPONSE_TYPE.TOKEN}&key=${trelloConfig.trello_apikey})`,
          is_required: true,
