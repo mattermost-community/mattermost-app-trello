@@ -14,7 +14,6 @@ export const getAdd = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
 
   let callResponse: AppCallResponse;
-
   try {
     if (call.values?.card_name && call.values?.board_name && call.values?.list_name) {
       await addFromCommand(call);

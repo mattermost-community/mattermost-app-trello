@@ -57,18 +57,12 @@ export const getCardCreateBinding = () => {
             submit: {
                 path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
                 expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
                     channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
                 }
             },
             fields: [
@@ -77,21 +71,18 @@ export const getCardCreateBinding = () => {
                     name: 'card_name',
                     modal_label: 'Card Name',
                     description: 'Name of the card',
-                    is_required: true,
                 },
                 {
                     type: AppFieldTypes.TEXT,
                     name: 'board_name',
                     modal_label: 'Board Name',
                     description: 'Name of the board',
-                    is_required: true,
                 },
                 {
                     type: AppFieldTypes.TEXT,
                     name: 'list_name',
                     modal_label: 'List Name',
                     description: 'Name of the list',
-                    is_required: true,
                 },
             ]
         }
@@ -264,18 +255,12 @@ export const getAccountLoginBinding = (): any => {
             submit: {
                 path: `${Routes.App.BindingPathLogin}`,
                 expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
                     channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
                 }
             }
         }
@@ -293,18 +278,12 @@ export const getAccountLogoutBinding = (): any => {
             submit: {
                 path: `${Routes.App.BindingPathLogout}`,
                 expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
                     channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
                 }
             }
         }
