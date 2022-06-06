@@ -7,6 +7,7 @@ import {MattermostClient, MattermostOptions} from "../clients/mattermost";
 import { trelloWebhookResponse } from "../forms/trello-webhook";
 import manifest from "../manifest.json";
 import { Routes } from "../constant";
+import config from "../config";
 
 async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext) {
     const mattermostUrl: string | undefined = context.mattermost_site_url;
@@ -159,8 +160,8 @@ const getUrlData = (dataURL: string[]): TrelloApiUrlParams => {
 }
 
 const createContext = (plugin: TrelloApiUrlParams): string => {
-    if (plugin.context === 'localhost') {
-        return 'http://[::1]:8065';
+    if (config.MATTERMOST.USE) {
+        return config.MATTERMOST.URL;
     }
     
     return new URL(plugin.context).href;
