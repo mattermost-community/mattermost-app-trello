@@ -72,7 +72,7 @@ export const getCardCreateBinding = (): any => {
     };
 }
 
-export const getSubscriptionBinding = async (context: AppContext): Promise<any> => {
+export const getSubscriptionBinding = (): any => {
     const subCommands: string[] = [
         Commands.ADD,
         Commands.LIST,
@@ -82,7 +82,7 @@ export const getSubscriptionBinding = async (context: AppContext): Promise<any> 
     const bindings: AppBinding[] = [
         getAddSubBinding(),
         getListSubBinding(),
-        await getRemoveSubBinding(context)
+        getRemoveSubBinding()
     ];
 
     return {
@@ -150,7 +150,7 @@ export const  getListSubBinding = (): any => {
     }
 }
 
-export const getRemoveSubBinding = async (context: AppContext): Promise<any> => {
+export const getRemoveSubBinding = (): any => {
     
     return {
         icon: TrelloIcon,

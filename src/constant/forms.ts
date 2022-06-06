@@ -10,3 +10,9 @@ export const SubscriptionCreateForm = {
 export const SubscriptionRemoveForm = {
     SUBSCRIPTION: 'subscription'
 }
+
+export const ConfigureWorkspaceForm = {
+    TRELLO_WORKSPACE: 'trello_workspace',
+    TRELLO_APIKEY: 'trello_apikey',
+    TRELLO_TOKEN: 'trello_oauth_access_token'
+}
