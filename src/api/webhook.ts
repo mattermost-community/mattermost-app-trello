@@ -34,10 +34,9 @@ async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext
         mattermostUrl: <string>mattermostUrl,
         accessToken: <string>botAccessToken
     };
-    console.log(payload);
+    
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
     const s = await mattermostClient.createPost(payload);
-    console.log(s);
 }
 
 async function notifyCardCreated(event: TrelloWebhookResponse, context: AppContext) {
@@ -87,7 +86,6 @@ export const incomingWebhook = async (request: Request, response: Response) => {
         callResponse = newOKCallResponse();
         response.json(callResponse);
     } catch (error: any) {
-        //console.log(error);
         callResponse = newErrorCallResponseWithMessage('Error webhook: ' + error.message);
         response.json(callResponse);
     }
@@ -96,7 +94,6 @@ export const incomingWebhook = async (request: Request, response: Response) => {
 export const notificationToMattermost = async (req: Request, res: Response) => {
     const m: Manifest = manifest;
     const call: TrelloWebhookResponse = req.body as TrelloWebhookResponse;
-    //console.log(call);
     const splitURL = req.url.split('/');
     const pluginWebhook = getUrlData(splitURL);
     

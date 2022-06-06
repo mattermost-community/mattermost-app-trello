@@ -86,7 +86,6 @@ export class TrelloClient {
       description: payload.description
     });
     const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}?${queryParams}`;
-    console.log('url', url);
     return axios.post(url)
       .then((response: AxiosResponse<any>) => response.data);
   }
