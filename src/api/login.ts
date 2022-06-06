@@ -3,7 +3,6 @@ import { AppCallRequest, AppCallResponse } from "../types";
 import { newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown } from '../utils';
 import { getLoginForm, loginFormSaveToken } from '../forms/login';
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
-import { LoginForm } from '../constant/forms'
 
 export const getLogin = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
@@ -11,13 +10,8 @@ export const getLogin = async (request: Request, response: Response) => {
   let callResponse: AppCallResponse;
 
   try {
-    if  (call.values?.[LoginForm.TOKEN]) {
-      await loginFormSaveToken(call);
-      callResponse = newOKCallResponseWithMarkdown('Auth Token stored.');
-    } else {
       const form = await getLoginForm(call);
       callResponse = newFormCallResponse(form);
-    }
   } catch(error: any) { 
     callResponse = newErrorCallResponseWithMessage('Unable to create login form: ' + error.message);
   }
