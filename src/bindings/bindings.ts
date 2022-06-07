@@ -1,9 +1,6 @@
 import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
-import { AppBinding, AppContext, AppSelectOption } from '../types/apps';
+import {AppBinding} from '../types';
 import {SubscriptionCreateForm, SubscriptionRemoveForm} from "../constant/forms";
-import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
-import { tryGetTrelloConfig, tryGetUserOauthToken } from '../utils';
-import { getBoardOptionList } from '../forms/card_add';
 
 export const getHelpBinding = (): any => {
     return {
@@ -16,18 +13,7 @@ export const getHelpBinding = (): any => {
             submit: {
                 path: Routes.App.BindingPathHelp,
                 expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
-                    acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
-                    channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
-                    user: AppExpandLevels.EXPAND_ALL,
-                    oauth2_app: AppExpandLevels.EXPAND_ALL,
-                    oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
+                    acting_user: AppExpandLevels.EXPAND_ALL
                 }
             }
         }
@@ -35,11 +21,15 @@ export const getHelpBinding = (): any => {
 };
 
 export const getCardBinding = () => {
+    const commands: string[] = [
+        Commands.CREATE
+    ];
+
     return {
         icon: TrelloIcon,
         label: Commands.CARD,
         description: 'Add a new Card To Board',
-        hint: `[${Commands.CREATE}]`,
+        hint: `[${commands.join(' | ')}]`,
         bindings: [
             getCardCreateBinding(),
         ]
@@ -168,7 +158,6 @@ export const  getListSubBinding = (): any => {
 }
 
 export const getRemoveSubBinding = (): any => {
-    
     return {
         icon: TrelloIcon,
         label: Commands.REMOVE,
@@ -232,11 +221,16 @@ export const getConfigureBinding = (): any => {
 };
 
 export const getAccountBinding = (): any => {
+    const commands: string[] = [
+        Commands.LOGIN,
+        Commands.LOGOUT
+    ];
+
     return {
         icon: TrelloIcon,
         label: Commands.ACCOUNT,
         description: 'Configure your trello account',
-        hint: `[${Commands.LOGIN} | ${Commands.LOGOUT}]`,
+        hint: `[${commands.join(' | ')}]`,
         bindings: [
             getAccountLoginBinding(),
             getAccountLogoutBinding()

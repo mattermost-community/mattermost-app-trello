@@ -24,6 +24,48 @@ export type User = {
   disable_welcome_email: false;
 };
 
+export type UserProfile = {
+  id: string;
+  create_at: number;
+  update_at: number;
+  delete_at: number;
+  username: string;
+  auth_data: string;
+  auth_service: string;
+  email: string;
+  nickname: string;
+  first_name: string;
+  last_name: string;
+  position: string;
+  roles: string;
+  allow_marketing: boolean;
+  notify_props: UserNotifyProps;
+  last_password_update: number;
+  locale: string;
+  timezone?: UserTimezone;
+}
+
+export type UserNotifyProps = {
+  channel: string;
+  comments: string;
+  desktop: string;
+  desktop_sound: string;
+  desktop_threads: string;
+  email: string;
+  email_thread: string;
+  first_name: string;
+  mention_keys: string;
+  push: string;
+  push_status: string;
+  push_threads: string;
+}
+
+export type UserTimezone = {
+  useAutomaticTimezone: boolean | string;
+  automaticTimezone: string;
+  manualTimezone: string;
+};
+
 export type AttachmentOption = {
   text: string;
   value: string;

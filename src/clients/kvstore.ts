@@ -1,7 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import {AppsPluginName, Routes} from '../constant';
 import config from '../config';
-import { tryPromiseWithMessage } from '../utils';
 
 export interface KVStoreOptions {
     mattermostUrl: string;
@@ -49,47 +48,32 @@ export class KVStoreClient {
     }
 
     public storeOauth2User(key: string, token: StoredOauthUserToken) {
-        /*const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}/oauth2/user/trello`;
-        const promise: Promise<any> = axios.post(url, token, {
-            headers: {
-                Authorization: `BEARER ${this.config.accessToken}`,
-                'content-type': 'application/json; charset=UTF-8',
-            },
-        }).then((response: AxiosResponse<any>) => response.data);
-
-        return tryPromiseWithMessage(promise, 'kvSet failed');*/
         const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathKV}/${key}`;
-        const promise: Promise<any> = axios.post(url, token, {
+        return axios.post(url, token, {
             headers: {
                 Authorization: `BEARER ${this.config.accessToken}`,
                 'content-type': 'application/json; charset=UTF-8',
             },
         }).then((response: AxiosResponse<any>) => response.data);
-
-        return tryPromiseWithMessage(promise, 'kvSet failed');
     }
     
     public getOauth2User(key: string): Promise<StoredOauthUserToken> {
         const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathKV}/${key}`;
-        const promise: Promise<any> = axios.get(url, {
+        return axios.get(url, {
             headers: {
                 Authorization: `BEARER ${this.config.accessToken}`,
                 'content-type': 'application/json; charset=UTF-8',
             },
         }).then((response: AxiosResponse<any>) => response.data);
-
-        return tryPromiseWithMessage(promise, 'kvSet failed');
     }
 
     public kvDelete(key: string): Promise<void> {
         const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathKV}/${key}`;
-        const promise = axios.delete(url, {
+        return axios.delete(url, {
             headers: {
                 Authorization: `BEARER ${this.config.accessToken}`,
                 'content-type': 'application/json; charset=UTF-8',
             },
         }).then((response: AxiosResponse<any>) => response.data);
-
-        return tryPromiseWithMessage(promise, 'kvSet delete');
     }
 }

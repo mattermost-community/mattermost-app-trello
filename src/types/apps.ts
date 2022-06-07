@@ -1,3 +1,5 @@
+import {UserProfile} from "./mattermost";
+
 export type AppManifest = {
   app_id: string;
   display_name: string;
@@ -29,7 +31,7 @@ export type ExpandedOauth2App = AppContext & {
 }
 
 export type ExpandedBotActingUser = AppContext & {
-  acting_user: any,
+  acting_user: UserProfile,
   acting_user_access_token: string
   bot_user_id: string,
   bot_access_token: string,

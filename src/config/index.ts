@@ -1,13 +1,10 @@
 export default {
     APP: {
         PORT: 4002,
-        HOST: 'https://7a3b-201-160-207-97.ngrok.io'
+        HOST: 'https://7601-189-203-193-1.ngrok.io'
     },
     TRELLO: {
-        URL: 'https://api.trello.com/1/',
-        API_KEY: '60cc02a7db35b9205fa8628d59a8e354',
-        TOKEN: '75b6cf735be5e1449e70a26965550815971e8d55ea7d26efeaea18f1f2167a01',
-        WORKSPACE: 'integrationancient'
+        URL: 'https://api.trello.com/1/'
     },
     MATTERMOST: {
         URL: 'http://[::1]:8066',

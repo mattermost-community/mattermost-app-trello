@@ -14,7 +14,7 @@ export interface TrelloOptions {
 export class TrelloClient {
   private readonly config: TrelloOptions;
 
-  constructor(
+  constructor (
     config: TrelloOptions
   ) { this.config = config; }
 

@@ -1,8 +1,21 @@
 import {AppBinding, AppsState} from '../types';
 
-import {getHelpBinding, getSubscriptionBinding, getConfigureBinding, getCardBinding, getAccountBinding } from './bindings';
-import {AppBindingLocations, Commands, CommandTrigger, StoreKeys, TrelloIcon} from "../constant";
-import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import {
+    getHelpBinding,
+    getSubscriptionBinding,
+    getConfigureBinding,
+    getCardBinding,
+    getAccountBinding
+} from "./bindings";
+import {
+    AppBindingLocations,
+    Commands,
+    CommandTrigger,
+    StoreKeys,
+    TrelloIcon
+} from "../constant";
+import {ConfigStoreProps, KVStoreClient, KVStoreOptions, StoredOauthUserToken} from '../clients/kvstore';
+import {isUserSystemAdmin} from "../utils";
 
 const newCommandBindings = (bindings: AppBinding[]): AppsState => {
     const commands: string[] = [
@@ -35,16 +48,16 @@ export const getCommandBindings = async (context: any): Promise<AppsState> => {
     };
     const kvClient = new KVStoreClient(options);
     const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-    const oauthToken = await kvClient.getOauth2User(context.acting_user.id)
+    const oauthToken: StoredOauthUserToken = await kvClient.getOauth2User(context.acting_user.id)
     
     const bindings: AppBinding[] = [];
     bindings.push(getHelpBinding());
-    if (context.acting_user.roles.includes('system_admin'))
+    if (isUserSystemAdmin(context.acting_user))
         bindings.push(getConfigureBinding());
-    if (JSON.stringify(trelloConfig) != '{}') {
-        if (JSON.stringify(oauthToken) != '{}') {
+    if (!Object.keys(trelloConfig).length) {
+        if (!Object.keys(oauthToken).length) {
             bindings.push(getCardBinding());
-            bindings.push(await getSubscriptionBinding());
+            bindings.push(getSubscriptionBinding());
         }
         bindings.push(getAccountBinding());
     }
