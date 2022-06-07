@@ -9,7 +9,7 @@ import {
    newOKCallResponseWithMarkdown
 } from "../utils";
 import { AppCallRequest, AppCallResponse, AppContext, AppSelectOption, CreateIncomingWebhook, IncomingWebhook } from "../types";
-import { addSubscriptionCall, } from '../forms/subscriptions';
+import { addSubscriptionCall, listWebhookCall, removeWebhookCall, } from '../forms/subscriptions';
 import { Routes, StoreKeys } from '../constant';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
@@ -31,27 +31,13 @@ export const addWebhookSubscription = async (request: Request, response: Respons
 }
 
 export const removeWebhookSubscription = async (req: Request, res: Response) => {
-   const values = req.body.values;
-   const subscription = values?.subscription as string;
-   const context = req.body.context as AppContext;
-   const kvOpts: KVStoreOptions = {
-      mattermostUrl: context.mattermost_site_url || '',
-      accessToken: context.bot_access_token || ''
-   };
+   const call: AppCallRequest = req.body; 
+   const subscription = call.values?.subscription as string;
+   let callResponse: AppCallResponse;
 
-   const kvClient: KVStoreClient = new KVStoreClient(kvOpts);
-   const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config) as ConfigStoreProps;
-
-   const trelloOptions: TrelloOptions = {
-      apiKey: trelloConfig.trello_apikey,
-      token: trelloConfig.trello_oauth_access_token,
-      workspace: trelloConfig.trello_workspace
-   };
-
-   let callResponse: AppCallResponse = newOKCallResponseWithMarkdown(`Subscription ID "${subscription}" removed sucessfully!`);
    try {
-      const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-      await trelloClient.deleteTrelloWebhook(subscription);
+      await removeWebhookCall(call);
+      callResponse = newOKCallResponseWithMarkdown(`Subscription ID "${subscription}" removed sucessfully!`);
    } catch (error: any) {
       callResponse = newErrorCallResponseWithMessage(errorWithMessage(error.response, 'Unable to remove subscription'));
    }
@@ -65,16 +51,7 @@ export const getWebhookSubscriptions = async (req: Request, res: Response) => {
    const context = req.body.context as AppContext;
 
    try {
-      const integrations: AppSelectOption[] = await callSubscriptionList(context);
-      const subscriptionsText: string = [
-         h6(`Subscription List: Found ${integrations.length} open subscriptions.`),
-         `${joinLines(
-            integrations.map((integration: AppSelectOption) => {
-               return `- Subscription ID: "${integration.value}" - Description "${integration.label}"`;
-            }).join('\n')
-         )}`
-      ].join('');
-
+      const subscriptionsText: string = await listWebhookCall(context);
       callResponse = newOKCallResponseWithMarkdown(subscriptionsText);
    } catch (error: any) {
       callResponse = newErrorCallResponseWithMessage(errorDataMessage(error));
