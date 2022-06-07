@@ -5,6 +5,8 @@ import {
 import { newConfigForm } from '../forms/trello_config';
 import { 
    CallResponseHandler, 
+   errorDataMessage, 
+   errorWithMessage, 
    newErrorCallResponseWithFieldErrors, 
    newErrorCallResponseWithMessage, 
    newFormCallResponse, 
@@ -15,6 +17,7 @@ import config from '../config';
 import {TrelloClient, TrelloOptions} from '../clients/trello';
 import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from '../clients/kvstore';
 import {StoreKeys} from '../constant';
+import { ConfigureWorkspaceForm } from '../constant/forms';
 
 export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
    let callResponse: AppCallResponse;
@@ -47,18 +50,12 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
    }
 
    let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Trello configuration');
+   
    try {
-      try {
-         await verifyToken(trelloOptions);
-      } catch (error: any) {
-         callResponse = newErrorCallResponseWithFieldErrors({ trello_oauth_access_token: error.message });
-         res.json(callResponse);
-         return;
-      }
-
+      await verifyToken(trelloOptions);
       await kvStoreClient.kvSet(StoreKeys.config, values);
    } catch (err: any) {
-      callResponse = newErrorCallResponseWithMessage('Unable to submit configuration form: ' + err.message);
+      callResponse = newErrorCallResponseWithMessage(errorWithMessage(err.message, 'Unable to submit configuration form'));
    }
 
    res.json(callResponse);
@@ -67,8 +64,8 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
 const verifyToken = async (trelloOpt: TrelloOptions) => {
    try {
       const trelloClient: TrelloClient = new TrelloClient(trelloOpt);
-      await trelloClient.validateToken();
-   } catch (err) {
-      throw new Error(`${err}`);
+      await trelloClient.validateToken(trelloOpt.workspace);
+   } catch (err: any) {
+      throw new Error(`${errorDataMessage(err.response)}`);
    }
 };

@@ -66,15 +66,15 @@ export class TrelloClient {
         .then((response:  AxiosResponse<any>) => response.data);
   }
 
-  public validateToken(): Promise<any> {
+  public validateToken(workspace: string): Promise<any> {
     const queryParams: string = queryString.stringify({
       key: this.config.apiKey,
       token: this.config.token
     });
-    const verifyURL = `${config.TRELLO.URL}${Routes.TP.getMembers}?${queryParams}`;
+    const verifyURL = `${config.TRELLO.URL}${Routes.TP.organizations}/${workspace}?${queryParams}`;
 
     return axios.get(verifyURL)
-        .then((response: AxiosResponse<any>) => response.data);
+      .then((response: AxiosResponse<any>) => response.data);
   }
 
   public createTrelloWebhook(payload: WebhookCreate): Promise<any> {
@@ -86,7 +86,6 @@ export class TrelloClient {
       description: payload.description
     });
     const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}?${queryParams}`;
-    console.log('url', url);
     return axios.post(url)
       .then((response: AxiosResponse<any>) => response.data);
   }
