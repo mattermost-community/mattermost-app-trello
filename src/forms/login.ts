@@ -72,7 +72,7 @@ export async function loginFormSaveToken(call: AppCallRequest) {
    }
 
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-   await tryPromiseWithMessage(trelloClient.validateToken(), 'Invalid token.');
+   await tryPromiseWithMessage(trelloClient.validateToken(trelloOptions.workspace), 'Invalid token.');
    
    await kvClient.storeOauth2User(
    userId ?? ''
