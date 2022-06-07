@@ -52,15 +52,18 @@ export const getCommandBindings = async (context: any): Promise<AppsState> => {
     
     const bindings: AppBinding[] = [];
     bindings.push(getHelpBinding());
-    if (isUserSystemAdmin(context.acting_user))
+
+    if (isUserSystemAdmin(context.acting_user)) {
         bindings.push(getConfigureBinding());
-    if (!Object.keys(trelloConfig).length) {
-        if (!Object.keys(oauthToken).length) {
+    } else if (Object.keys(trelloConfig).length) {
+        if (Object.keys(oauthToken).length) {
             bindings.push(getCardBinding());
             bindings.push(getSubscriptionBinding());
         }
+
         bindings.push(getAccountBinding());
     }
+
     return newCommandBindings(bindings);
 };
 

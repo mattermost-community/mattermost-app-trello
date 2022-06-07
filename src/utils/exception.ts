@@ -1,8 +1,8 @@
-import {ExceptionLevel} from '../constant/exception-level';
+import {ExceptionType} from '../constant';
 
 export class Exception extends Error {
     constructor(
-        public readonly level: ExceptionLevel,
+        public readonly type: ExceptionType,
         public readonly message: string
     ) {
         super(message);

@@ -62,7 +62,6 @@ const TrelloPaths = {
   webhooks: 'webhooks',
   tokens: 'tokens',
   organizations: 'organizations'
-  
 
 };
 

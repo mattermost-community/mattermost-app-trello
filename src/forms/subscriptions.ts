@@ -1,20 +1,18 @@
-import queryString from "query-string";
 import {head} from "lodash";
 import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from "../clients/kvstore";
 import {TrelloClient, TrelloOptions} from "../clients/trello";
-import {AppsPluginName, Routes, StoreKeys} from "../constant";
-import {AppCallRequest, AppCallValues, Manifest} from "../types";
-import {SubscriptionCreateForm} from "../constant/forms";
-import {Board, SearchResponse, TrelloApiUrlParams, WebhookCreate} from "../types/trello";
-import manifest from "../manifest.json";
-import { TrelloAPIWebhook } from "../constant/trello-webhook";
+import {Routes, StoreKeys} from "../constant";
+import {AppCallRequest, AppCallValues} from "../types";
+import {SubscriptionCreateForm, ExceptionType} from "../constant";
+import {Board, SearchResponse, WebhookCreate} from "../types";
+import {getHTTPPath} from "../utils";
+import {Exception} from "../utils/exception";
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
    const botAccessToken: string | undefined = call.context.bot_access_token;
    const whSecret: string | undefined = call.context.app?.webhook_secret;
    const values: AppCallValues | undefined = call.values;
-   const m: Manifest = manifest;
 
    const boardName: string = values?.[SubscriptionCreateForm.BOARD_NAME];
    const channelId: string = values?.[SubscriptionCreateForm.CHANNEL_ID].value;
@@ -38,28 +36,17 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const searchResponse: SearchResponse = await trelloClient.searchBoardByName(boardName);
    const board: Board | undefined = head(searchResponse.boards);
    if (!board) {
-      throw new Error(`Not found board with name ${boardName}`);
+      throw new Exception(ExceptionType.MARKDOWN, `Not found board with name ${boardName}`);
    }
 
-   const pluginName = m.app_id;
-   const whPath = Routes.App.CallPathIncomingWebhookPath;
-   const params = queryString.stringify({
-      secret: whSecret
-   });
+   const domain: string = (new URL(<string>mattermostUrl)).hostname;
+   const idModel: string = board.id;
 
-   const trelloAPiParams: TrelloApiUrlParams = {
-      context: (new URL(<string>mattermostUrl)).hostname,
-      secret: <string>whSecret,
-      idModel: board.id,
-      channel: channelId
-   }
-   
-   const url: string = TrelloAPIWebhook(trelloAPiParams);
-
+   const callbackURL: string = `${getHTTPPath()}${Routes.App.CallReceiveNotification}/context_${domain}/secret_${whSecret}/model_${idModel}/channel_${channelId}`;
    const payload: WebhookCreate = {
-      description: `Mattermost_${channelName}_${channelId}_${board?.name}`,
+      description: `Channel: ${channelName} - Board: ${board?.name}`,
       idModel: board.id,
-      callbackURL: url
+      callbackURL
    };
    await trelloClient.createTrelloWebhook(payload);
 }

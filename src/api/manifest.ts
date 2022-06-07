@@ -22,9 +22,3 @@ export function getHTTPPath(): string {
     return config.APP.HOST;
     
 }
-
-export function getManifestData(): Manifest {
-    const m: Manifest = manifest;
-    m.http.root_url = getHTTPPath();
-    return m;
-}

@@ -1,20 +1,23 @@
 import { Request, Response } from 'express';
 import {
-   CallResponseHandler,
    errorDataMessage,
    errorWithMessage,
    newErrorCallResponseWithMessage,
-   newFormCallResponse,
-   newOKCallResponseWithData,
-   newOKCallResponseWithMarkdown
+   newOKCallResponseWithMarkdown,
+   showMessageToMattermost
 } from "../utils";
-import { AppCallRequest, AppCallResponse, AppContext, AppSelectOption, CreateIncomingWebhook, IncomingWebhook } from "../types";
-import { addSubscriptionCall, } from '../forms/subscriptions';
-import { Routes, StoreKeys } from '../constant';
-import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
-import { TrelloClient, TrelloOptions } from '../clients/trello';
-import { callSubscriptionList } from '../forms/subscription-list';
-import { h6, joinLines } from '../utils/markdown';
+import {
+   AppCallRequest,
+   AppCallResponse,
+   AppContext,
+   AppSelectOption
+} from "../types";
+import {addSubscriptionCall} from '../forms/subscriptions';
+import {StoreKeys} from '../constant';
+import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from '../clients/kvstore';
+import {TrelloClient, TrelloOptions} from '../clients/trello';
+import {callSubscriptionList} from '../forms/subscription-list';
+import {h6, joinLines} from '../utils/markdown';
 
 export const addWebhookSubscription = async (request: Request, response: Response) => {
    const call: AppCallRequest = request.body;
@@ -25,7 +28,7 @@ export const addWebhookSubscription = async (request: Request, response: Respons
       callResponse = newOKCallResponseWithMarkdown("Subscription will be created");
       response.json(callResponse);
    } catch (error: any) {
-      callResponse = newErrorCallResponseWithMessage(errorWithMessage(error.response, 'Unable to add subscription'));
+      callResponse = showMessageToMattermost(error);
       response.json(callResponse);
    }
 }

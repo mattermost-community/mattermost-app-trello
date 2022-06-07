@@ -3,15 +3,14 @@ import {StoreKeys} from "../constant";
 import {Exception} from "./exception";
 import {
     newErrorCallResponseWithMessage,
-    newOKCallResponse,
     newOKCallResponseWithMarkdown
 } from "./call-responses";
-import {ExceptionLevel} from "../constant/exception-level";
+import {ExceptionType} from "../constant";
 import config from "../config";
-import {UserProfile} from "../types";
+import {AppCallResponse, UserProfile} from "../types";
 
 export function isUserSystemAdmin(actingUser: UserProfile): boolean {
-    return Boolean(actingUser.roles && actingUser.roles.includes('system-admin'));
+    return Boolean(actingUser.roles && actingUser.roles.includes('system_admin'));
 }
 
 export function baseUrlFromContext(mattermostSiteUrl: string): string {
@@ -45,30 +44,42 @@ export async function tryPromiseOpsgenieWithMessage(p: Promise<any>, message: st
 
 export async function tryGetUserOauthToken(kvClient: KVStoreClient, key: string) {
     const user_oauth_token = await kvClient.getOauth2User(key);
-    if (JSON.stringify(user_oauth_token) === '{}')
-        throw new Exception(ExceptionLevel.WARNING, 'You are not logged in.')
+    if (!Object.keys(user_oauth_token).length)
+        throw new Exception(ExceptionType.MARKDOWN, 'You are not logged in.')
 
     return user_oauth_token;
 }
 
 export async function tryGetTrelloConfig(kvClient: KVStoreClient) {
     const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-    if (JSON.stringify(trelloConfig) === '{}')
-        throw new Exception(ExceptionLevel.WARNING, 'Initial configuration is not done.')
+    if (!Object.keys(trelloConfig).length)
+        throw new Exception(ExceptionType.MARKDOWN, 'Initial configuration is not done.')
 
     return trelloConfig;
 }
 
-export function tryPromise(p: Promise<any>, level: ExceptionLevel, message: string) {
+export function tryPromise(p: Promise<any>, exceptionType: ExceptionType, message: string) {
     return p.catch((error) => {
-        throw new Exception(level, message);
+        throw new Exception(exceptionType, message);
     });
 }
 
-export function showMessageByException(exception: Exception, message: string) {
-    switch (exception.level) {
-        case ExceptionLevel.ERROR: newOKCallResponse(); break;
-        case ExceptionLevel.WARNING: newOKCallResponseWithMarkdown(message); break;
-        default: newErrorCallResponseWithMessage(message); break;
+export function showMessageToMattermost(exception: Exception | Error): AppCallResponse {
+    if (!(exception instanceof Exception)) {
+        return newErrorCallResponseWithMessage(exception.message);
     }
+
+    switch (exception.type) {
+        case ExceptionType.TEXT_ERROR: return newErrorCallResponseWithMessage(exception.message);
+        case ExceptionType.MARKDOWN: return newOKCallResponseWithMarkdown(exception.message);
+        default: return newErrorCallResponseWithMessage(exception.message);
+    }
+}
+
+export function getHTTPPath(): string {
+    if (`${config.APP.HOST}`.includes('127.0.0.1') || `${config.APP.HOST}`.includes('localhost')) {
+        return config.APP.HOST;
+    }
+
+    return `${config.APP.HOST}:${Number(process.env.PORT) || config.APP.PORT}`;
 }

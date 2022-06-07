@@ -1,12 +1,20 @@
 import {Request, Response} from "express";
-import {AppCallResponse, AppContext, Manifest, MattermostPluginWebhook, PostCreate} from "../types";
+import {
+    AppCallResponse,
+    AppContext,
+    Manifest,
+    MattermostPluginWebhook,
+    PostCreate,
+    TrelloAction,
+    TrelloApiUrlParams,
+    TrelloModel,
+    TrelloWebhookResponse
+} from "../types";
 import {errorDataMessage, newErrorCallResponseWithMessage, newOKCallResponse} from "../utils";
 import {h5} from "../utils/markdown";
-import {TrelloAction, TrelloApiUrlParams, TrelloModel, TrelloWebhookResponse} from "../types/trello";
 import {MattermostClient, MattermostOptions} from "../clients/mattermost";
-import { trelloWebhookResponse } from "../forms/trello-webhook";
 import manifest from "../manifest.json";
-import { Routes } from "../constant";
+import {Routes} from "../constant";
 import config from "../config";
 
 async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext) {
@@ -37,7 +45,7 @@ async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext
     };
     
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-    const s = await mattermostClient.createPost(payload);
+    await mattermostClient.createPost(payload);
 }
 
 async function notifyCardCreated(event: TrelloWebhookResponse, context: AppContext) {
