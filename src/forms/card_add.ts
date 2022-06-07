@@ -104,7 +104,46 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, card_name?: strin
   return form;
 }
 
-async function getBoardOptionList(trelloOptions: TrelloOptions): Promise<AppSelectOption[]> {
+export async function addFromCommand(call: AppCallRequest) {
+  const mattermostUrl: string | undefined = call.context.mattermost_site_url;
+  const botAccessToken: string | undefined = call.context.bot_access_token;
+  const board_name = call.values?.board_name;
+  const card_name = call.values?.card_name;
+  const list_name = call.values?.list_name;
+  const user_id = call.context.acting_user?.id;
+
+  const options: KVStoreOptions = {
+    mattermostUrl: <string>mattermostUrl,
+    accessToken: <string>botAccessToken,
+  };
+  
+  const kvClient = new KVStoreClient(options);
+  const trelloConfig: ConfigStoreProps = await tryGetTrelloConfig(kvClient);
+  const user_oauth_token = await tryGetUserOauthToken(kvClient, <string>user_id)
+
+  const trelloOptions = {
+    apiKey: trelloConfig.trello_apikey,
+    token: user_oauth_token.oauth_token,
+    workspace: trelloConfig.trello_workspace
+  }
+
+  const boards = await getBoardOptionList(trelloOptions);
+  const board = boards.find((b) => b.label == board_name);
+  if (board) {
+    const lists = await getListOptionList(board.value, trelloOptions);
+    const list = lists.find((l) => l.label == list_name);
+    if (list) {
+      const trelloClient =  new TrelloClient(trelloOptions);
+      await trelloClient.sendCreateCardRequest(list.value, card_name);
+    } else {
+      throw Error(`List ${list_name} not found.`)
+    }
+  } else {
+    throw Error(`Board ${board_name} not found.`)
+  }
+}
+
+export async function getBoardOptionList(trelloOptions: TrelloOptions): Promise<AppSelectOption[]> {
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
   const boards = await trelloClient.searchBoardsInOrganization();
@@ -115,7 +154,7 @@ async function getBoardOptionList(trelloOptions: TrelloOptions): Promise<AppSele
   return options;
 }
 
-async function getListOptionList(boardId: string, trelloOptions: TrelloOptions): Promise<AppSelectOption[]> {
+export async function getListOptionList(boardId: string, trelloOptions: TrelloOptions): Promise<AppSelectOption[]> {
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
   const boards = await trelloClient.getListByBoard(boardId);

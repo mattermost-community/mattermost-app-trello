@@ -1,6 +1,9 @@
 import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
-import { AppBinding, AppContext } from '../types/apps';
+import { AppBinding, AppContext, AppSelectOption } from '../types/apps';
 import {SubscriptionCreateForm, SubscriptionRemoveForm} from "../constant/forms";
+import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import { tryGetTrelloConfig, tryGetUserOauthToken } from '../utils';
+import { getBoardOptionList } from '../forms/card_add';
 
 export const getHelpBinding = (): any => {
     return {
@@ -31,7 +34,7 @@ export const getHelpBinding = (): any => {
     };
 };
 
-export const getCardBinding = (): any => {
+export const getCardBinding = () => {
     return {
         icon: TrelloIcon,
         label: Commands.CARD,
@@ -43,7 +46,7 @@ export const getCardBinding = (): any => {
     }
 }
 
-export const getCardCreateBinding = (): any => {
+export const getCardCreateBinding = () => {
     return {
         icon: TrelloIcon,
         label: Commands.CREATE,
@@ -54,20 +57,34 @@ export const getCardCreateBinding = (): any => {
             submit: {
                 path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
                 expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
                     channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
                 }
-            }
+            },
+            fields: [
+                {
+                    type: AppFieldTypes.TEXT,
+                    name: 'card_name',
+                    modal_label: 'Card Name',
+                    description: 'Name of the card',
+                },
+                {
+                    type: AppFieldTypes.TEXT,
+                    name: 'board_name',
+                    modal_label: 'Board Name',
+                    description: 'Name of the board',
+                },
+                {
+                    type: AppFieldTypes.TEXT,
+                    name: 'list_name',
+                    modal_label: 'List Name',
+                    description: 'Name of the list',
+                },
+            ]
         }
     };
 }
@@ -238,18 +255,12 @@ export const getAccountLoginBinding = (): any => {
             submit: {
                 path: `${Routes.App.BindingPathLogin}`,
                 expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
                     channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
                 }
             }
         }
@@ -267,18 +278,12 @@ export const getAccountLogoutBinding = (): any => {
             submit: {
                 path: `${Routes.App.BindingPathLogout}`,
                 expand: {
-                    app: AppExpandLevels.EXPAND_ALL,
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
                     channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
                 }
             }
         }

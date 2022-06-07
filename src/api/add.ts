@@ -5,10 +5,8 @@ import {
   newOKCallResponseWithMarkdown
 } from "../utils";
 import { AppCallRequest, AppCallResponse } from "../types";
-import config from '../config';
-import { TrelloClient, TrelloOptions } from '../clients/trello';
-import { cardAddFromStepOne, cardAddFromStepTwo } from '../forms/card_add';
-import { MattermostClient, MattermostOptions } from '../clients/mattermost';
+import { TrelloClient } from '../clients/trello';
+import { addFromCommand, cardAddFromStepOne, cardAddFromStepTwo } from '../forms/card_add';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { StoreKeys } from '../constant';
 
@@ -16,12 +14,16 @@ export const getAdd = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
 
   let callResponse: AppCallResponse;
-
   try {
-    const form = await cardAddFromStepOne(call);
-    callResponse = newFormCallResponse(form);
+    if (call.values?.card_name && call.values?.board_name && call.values?.list_name) {
+      await addFromCommand(call);
+      callResponse = newOKCallResponseWithMarkdown('Card created')
+    }
+    else {
+      const form = await cardAddFromStepOne(call);
+      callResponse = newFormCallResponse(form);
+    }
   } catch(error: any) {
-    console.log('error', error);
     callResponse = newErrorCallResponseWithMessage('Unable to create card form: ' + error.message);
   }
   return response.json(callResponse)
@@ -48,7 +50,6 @@ export const formStepTwo = async (request: Request, response: Response) => {
   const list_id = call.values?.list_select.value;
   const card_name = call.values?.card_name;
   const mattermostUrl = call.context.mattermost_site_url ?? '' ;
-  const bot_token = call.context.bot_access_token;
   const user_id = call.context.acting_user?.id;
 
   const options: KVStoreOptions = {
@@ -73,7 +74,6 @@ export const formStepTwo = async (request: Request, response: Response) => {
     const resultTrello = await trelloClient.sendCreateCardRequest(list_id, card_name);
     callResponse = newOKCallResponseWithMarkdown('Card created')
   } catch(error: any) {
-    console.log('error', error);
     callResponse = newErrorCallResponseWithMessage('Unable to continue: ' + error.message);
   }
 

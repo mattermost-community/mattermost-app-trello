@@ -29,6 +29,7 @@ export class MattermostClient {
 
     public createPost(post: PostCreate): Promise<any> {
         const url: string = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.PostsPath}`;
+        console.log('createPost URL: ', url)
         return axios.post(url, post, {
             headers: {
                 Authorization: `Bearer ${this.config.accessToken}`
@@ -79,6 +80,7 @@ export class MattermostClient {
 
     public webhookPlugin(pluginData: MattermostPluginWebhook, data: any): Promise<string> {
         const url = `${pluginData.mattermostUrl}plugins/${AppsPluginName}/apps/${pluginData.appID}${pluginData.whPath}?secret=${pluginData.whSecret}`
+        console.log('webhook plugin: ', url)
         
         return axios.post(`${url}`, data)
             .then((response: AxiosResponse<any>) => response.data);
