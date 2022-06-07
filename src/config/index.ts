@@ -1,7 +1,7 @@
 export default {
     APP: {
         PORT: 4002,
-        HOST: 'http://172.19.96.1'
+        HOST: 'https://7a3b-201-160-207-97.ngrok.io'
     },
     TRELLO: {
         URL: 'https://api.trello.com/1/',
@@ -10,7 +10,7 @@ export default {
         WORKSPACE: 'integrationancient'
     },
     MATTERMOST: {
-        URL: 'http://[::1]:8065',
+        URL: 'http://[::1]:8066',
         USE: true
     }
 }

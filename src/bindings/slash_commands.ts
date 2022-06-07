@@ -44,7 +44,7 @@ export const getCommandBindings = async (context: any): Promise<AppsState> => {
     if (JSON.stringify(trelloConfig) != '{}') {
         if (JSON.stringify(oauthToken) != '{}') {
             bindings.push(getCardBinding());
-            bindings.push(await getSubscriptionBinding(context));
+            bindings.push(await getSubscriptionBinding());
         }
         bindings.push(getAccountBinding());
     }

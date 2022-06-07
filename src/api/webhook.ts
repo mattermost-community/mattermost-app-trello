@@ -7,6 +7,7 @@ import {MattermostClient, MattermostOptions} from "../clients/mattermost";
 import { trelloWebhookResponse } from "../forms/trello-webhook";
 import manifest from "../manifest.json";
 import { Routes } from "../constant";
+import config from "../config";
 
 async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext) {
     const mattermostUrl: string | undefined = context.mattermost_site_url;
@@ -36,7 +37,7 @@ async function notifyCardMoved(event: TrelloWebhookResponse, context: AppContext
     };
     
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-    await mattermostClient.createPost(payload);
+    const s = await mattermostClient.createPost(payload);
 }
 
 async function notifyCardCreated(event: TrelloWebhookResponse, context: AppContext) {
@@ -86,41 +87,17 @@ export const incomingWebhook = async (request: Request, response: Response) => {
         callResponse = newOKCallResponse();
         response.json(callResponse);
     } catch (error: any) {
-        //console.log(error);
         callResponse = newErrorCallResponseWithMessage('Error webhook: ' + error.message);
         response.json(callResponse);
     }
 };
 
-export const createWebohookNotification = async (req: Request, res: Response) => {
-    console.log(req.body);
-    const call: TrelloWebhookResponse = req.body as TrelloWebhookResponse;
-    const splitURL = req.url.split('/');
-    const hookID = splitURL[splitURL.length - 1];
-    const mattermostOptions: MattermostOptions = {
-        accessToken: '',
-        mattermostUrl: ''
-    }
-    let callResponse: AppCallResponse;
-
-    try {
-        const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-        const hookMessage = trelloWebhookResponse(call);
-        //const postCreated = await mattermostClient.incomingWebhook(hookID, hookMessage);
-        //res.json(postCreated);
-    } catch (error: any) {
-        callResponse = newErrorCallResponseWithMessage(errorDataMessage(error.response));
-        return res.json(callResponse);
-    }
-}
-
 export const notificationToMattermost = async (req: Request, res: Response) => {
     const m: Manifest = manifest;
     const call: TrelloWebhookResponse = req.body as TrelloWebhookResponse;
-    //console.log(call);
     const splitURL = req.url.split('/');
     const pluginWebhook = getUrlData(splitURL);
-    console.log(pluginWebhook);
+    
     const mattermostOptions: MattermostOptions = {
         accessToken: '',
         mattermostUrl: ''
@@ -159,8 +136,8 @@ const getUrlData = (dataURL: string[]): TrelloApiUrlParams => {
 }
 
 const createContext = (plugin: TrelloApiUrlParams): string => {
-    if (plugin.context === 'localhost') {
-        return 'http://[::1]:8065';
+    if (config.MATTERMOST.USE) {
+        return config.MATTERMOST.URL;
     }
     
     return new URL(plugin.context).href;
