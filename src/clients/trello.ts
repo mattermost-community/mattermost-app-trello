@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import queryString from "query-string";
 import config from '../config';
 import { Routes } from '../constant';
-import { TrelloWebhook } from '../types/trello';
+import { TrelloOrganization, TrelloWebhook } from '../types/trello';
 import {SearchResponse, WebhookCreate} from "../types/trello";
 
 export interface TrelloOptions {
@@ -23,23 +23,35 @@ export class TrelloClient {
       key: this.config.apiKey,
       token: this.config.token
     });
-    const url: string = `${config.TRELLO.URL}boards/${boardId}/lists?${queryParams}`;
+    const url: string = `${config.TRELLO.URL}${Routes.TP.boards}/${boardId}/${Routes.TP.lists}?${queryParams}`;
     
     return axios.get(url)
         .then((response:  AxiosResponse<any>) => response.data);
   }
 
-  public searchBoardByName(boardName: string): Promise<SearchResponse> {
+  public searchBoardByName(boardName: string, idOrganizations: string): Promise<SearchResponse> {
     const queryParams: string = queryString.stringify({
       key: this.config.apiKey,
       token: this.config.token,
       query: boardName,
-      modelTypes: 'boards'
+      modelTypes: Routes.TP.boards,
+      idOrganizations: idOrganizations
     });
-    const url: string = `${config.TRELLO.URL}search?${queryParams}`;
+    const url: string = `${config.TRELLO.URL}${Routes.TP.search}?${queryParams}`;
     
     return axios.get(url)
-        .then((response:  AxiosResponse<any>) => response.data);
+      .then((response:  AxiosResponse<any>) => response.data);
+  }
+
+  public getOrganizationId(): Promise<TrelloOrganization> {
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token
+    });
+    const url: string = `${config.TRELLO.URL}${Routes.TP.organizations}/${this.config.workspace}?${queryParams}`;
+
+    return axios.get(url)
+      .then((response: AxiosResponse<any>) => response.data);
   }
 
   public searchBoardsInOrganization(): Promise<any> {
@@ -47,7 +59,7 @@ export class TrelloClient {
       key: this.config.apiKey,
       token: this.config.token
     });
-    const url: string = `${config.TRELLO.URL}organizations/${this.config.workspace}/boards?${queryParams}`;
+    const url: string = `${config.TRELLO.URL}${Routes.TP.organizations}/${this.config.workspace}/${Routes.TP.boards}?${queryParams}`;
     
     return axios.get(url)
         .then((response:  AxiosResponse<any>) => response.data);
@@ -60,7 +72,7 @@ export class TrelloClient {
       name: cardName,
       idList: listId
     });
-    const url: string = `${config.TRELLO.URL}cards?${queryParams}`;
+    const url: string = `${config.TRELLO.URL}${Routes.TP.cards}?${queryParams}`;
     
     return axios.post(url)
         .then((response:  AxiosResponse<any>) => response.data);

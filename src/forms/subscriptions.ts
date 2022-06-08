@@ -39,32 +39,27 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
       workspace: trelloConfig.trello_workspace
    };
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-
-   const searchResponse = await getBoardOptionList(trelloOptions);
-   const board: AppSelectOption | undefined = searchResponse.find((b) => b.label == boardName);
+   const idOrganization = (await trelloClient.getOrganizationId())?.id;
+   
+   const searchResponse: SearchResponse = await trelloClient.searchBoardByName(boardName, idOrganization);
+   const board: Board | undefined = head(searchResponse.boards);
 
    if (!board) {
-      throw new Error(`Not found board with name "${boardName}"`);
+      throw new Error(`Not found board with name "${boardName}" in current workspace (${trelloOptions.workspace})`);
    }
-
-   const pluginName = m.app_id;
-   const whPath = Routes.App.CallPathIncomingWebhookPath;
-   const params = queryString.stringify({
-      secret: whSecret
-   });
 
    const trelloAPiParams: TrelloApiUrlParams = {
       context: (new URL(<string>mattermostUrl)).hostname,
       secret: <string>whSecret,
-      idModel: board.value,
+      idModel: board.id,
       channel: channelId
    }
    
    const url: string = TrelloAPIWebhook(trelloAPiParams);
 
    const payload: WebhookCreate = {
-      description: `Channel: ${channelName} - Board: ${board?.label}`,
-      idModel: board.value,
+      description: `Channel: ${channelName} - Board: ${board?.name}`,
+      idModel: board.id,
       callbackURL: url
    };
    await trelloClient.createTrelloWebhook(payload);
