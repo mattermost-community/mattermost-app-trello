@@ -3,7 +3,6 @@ import { AppBinding, AppContext, AppSelectOption } from '../types/apps';
 import {SubscriptionCreateForm, SubscriptionRemoveForm} from "../constant/forms";
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { tryGetTrelloConfig, tryGetUserOauthToken } from '../utils';
-import { getBoardOptionList } from '../forms/card_add';
 
 export const getHelpBinding = (): any => {
     return {

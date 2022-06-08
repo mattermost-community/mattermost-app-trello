@@ -10,6 +10,7 @@ import manifest from "../manifest.json";
 import { TrelloAPIWebhook } from "../constant/trello-webhook";
 import { callSubscriptionList } from "./subscription-list";
 import { h6, joinLines } from "../utils/markdown";
+import { getBoardOptionList } from "./card_add";
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
@@ -39,10 +40,11 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    };
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
-   const searchResponse: SearchResponse = await trelloClient.searchBoardByName(boardName);
-   const board: Board | undefined = head(searchResponse.boards);
+   const searchResponse = await getBoardOptionList(trelloOptions);
+   const board: AppSelectOption | undefined = searchResponse.find((b) => b.label == boardName);
+
    if (!board) {
-      throw new Error(`Not found board with name ${boardName}`);
+      throw new Error(`Not found board with name "${boardName}"`);
    }
 
    const pluginName = m.app_id;
@@ -54,15 +56,15 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const trelloAPiParams: TrelloApiUrlParams = {
       context: (new URL(<string>mattermostUrl)).hostname,
       secret: <string>whSecret,
-      idModel: board.id,
+      idModel: board.value,
       channel: channelId
    }
    
    const url: string = TrelloAPIWebhook(trelloAPiParams);
 
    const payload: WebhookCreate = {
-      description: `Channel: ${channelName} - Board: ${board?.name}`,
-      idModel: board.id,
+      description: `Channel: ${channelName} - Board: ${board?.label}`,
+      idModel: board.value,
       callbackURL: url
    };
    await trelloClient.createTrelloWebhook(payload);

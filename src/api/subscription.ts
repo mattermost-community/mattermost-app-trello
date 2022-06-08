@@ -25,7 +25,7 @@ export const addWebhookSubscription = async (request: Request, response: Respons
       callResponse = newOKCallResponseWithMarkdown("Subscription will be created");
       response.json(callResponse);
    } catch (error: any) {
-      callResponse = newErrorCallResponseWithMessage(errorWithMessage(error.response, 'Unable to add subscription'));
+      callResponse = newErrorCallResponseWithMessage(errorWithMessage(error?.response || error.message, 'Unable to add subscription'));
       response.json(callResponse);
    }
 }
