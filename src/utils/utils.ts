@@ -34,18 +34,8 @@ export function replace(value: string, searchValue: string, replaceValue: string
 }
 
 export function errorDataMessage(error: Exception | Error | any): string {
-    const errorMessage: string = error?.response?.data || error?.response.data?.message || error?.message || error;
+    const errorMessage: string = error?.response?.data || error?.response?.data?.message || error?.message || error;
     return `${errorMessage}`;
-}
-
-export function errorWithMessage(error: Error | any, message: string): string {
-    return `"${message}".  ${errorDataMessage(error)}`;
-}
-
-export async function tryPromiseWithMessage(p: Promise<any>, message: string): Promise<any> {
-    return p.catch((error) => {
-        throw new Error(errorWithMessage(error, message));
-    });
 }
 
 export function tryPromise(p: Promise<any>, exceptionType: ExceptionType, message: string) {

@@ -10,7 +10,7 @@ import {
     TrelloModel,
     TrelloWebhookResponse
 } from "../types";
-import {errorDataMessage, newErrorCallResponseWithMessage, newOKCallResponse} from "../utils";
+import {newErrorCallResponseWithMessage, newOKCallResponse} from "../utils";
 import {h5} from "../utils/markdown";
 import {MattermostClient, MattermostOptions} from "../clients/mattermost";
 import manifest from "../manifest.json";
@@ -122,10 +122,11 @@ export const notificationToMattermost = async (req: Request, res: Response) => {
             whSecret: pluginWebhook.secret
         }
         call.channel_id = pluginWebhook.channel;
-        const postCreated = await mattermostClient.webhookPlugin(pluginData, call);
-        res.json(postCreated);
+        await mattermostClient.webhookPlugin(pluginData, call);
+        callResponse = newOKCallResponse();
+        res.json(callResponse);
     } catch (error: any) {
-        callResponse = newErrorCallResponseWithMessage(errorDataMessage(error.response));
+        callResponse = newErrorCallResponseWithMessage('Error webhook: ' + error.message);
         return res.json(callResponse);
     }
 }
