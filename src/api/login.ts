@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { AppCallRequest, AppCallResponse } from "../types";
-import { newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown } from '../utils';
+import { newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown, showMessageToMattermost } from '../utils';
 import { getLoginForm, loginFormSaveToken } from '../forms/login';
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 
@@ -10,12 +10,13 @@ export const getLogin = async (request: Request, response: Response) => {
   let callResponse: AppCallResponse;
 
   try {
-      const form = await getLoginForm(call);
-      callResponse = newFormCallResponse(form);
-  } catch(error: any) { 
-    callResponse = newErrorCallResponseWithMessage('Unable to create login form: ' + error.message);
+    const form = await getLoginForm(call);
+    callResponse = newFormCallResponse(form);
+    return response.json(callResponse);
+  } catch(error: any) {
+    callResponse = showMessageToMattermost(error);
+    return response.json(callResponse);
   }
-  return response.json(callResponse)
 }
 
 export const saveToken = async (request: Request, response: Response) => {
@@ -25,10 +26,11 @@ export const saveToken = async (request: Request, response: Response) => {
   try {
     await loginFormSaveToken(call);
     callResponse = newOKCallResponseWithMarkdown('Auth Token stored.');
-  } catch (e: any) {
-    callResponse = newErrorCallResponseWithMessage('Login could not be completed. '+ e.message);
+    return response.json(callResponse);
+  } catch (error: any) {
+    callResponse = showMessageToMattermost(error);
+    return response.json(callResponse);
   }
-  return response.json(callResponse)
 }
 
 export const getLogout = async (request: Request, response: Response) => {

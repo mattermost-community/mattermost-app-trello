@@ -5,7 +5,7 @@ import {Routes, StoreKeys} from "../constant";
 import {AppCallRequest, AppCallValues} from "../types";
 import {SubscriptionCreateForm, ExceptionType} from "../constant";
 import {Board, SearchResponse, WebhookCreate} from "../types";
-import {getHTTPPath} from "../utils";
+import {getHTTPPath, tryPromise} from "../utils";
 import {Exception} from "../utils/exception";
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
@@ -48,5 +48,5 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
       idModel: board.id,
       callbackURL
    };
-   await trelloClient.createTrelloWebhook(payload);
+   await tryPromise(trelloClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, 'Trello failed ');
 }

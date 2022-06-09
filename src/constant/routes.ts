@@ -61,8 +61,8 @@ const TrelloPaths = {
   getMembers: 'members/me',
   webhooks: 'webhooks',
   tokens: 'tokens',
-  organizations: 'organizations'
-
+  organizations: 'organizations',
+  authorize: 'authorize'
 };
 
 export const Routes = {

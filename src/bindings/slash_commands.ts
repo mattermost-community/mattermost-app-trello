@@ -1,5 +1,4 @@
-import {AppBinding, AppsState} from '../types';
-
+import {AppActingUser, AppBinding, AppCallRequest, AppsState} from '../types';
 import {
     getHelpBinding,
     getSubscriptionBinding,
@@ -11,21 +10,15 @@ import {
     AppBindingLocations,
     Commands,
     CommandTrigger,
-    StoreKeys,
     TrelloIcon
 } from "../constant";
-import {ConfigStoreProps, KVStoreClient, KVStoreOptions, StoredOauthUserToken} from '../clients/kvstore';
-import {isUserSystemAdmin} from "../utils";
+import {
+    KVStoreClient, 
+    KVStoreOptions, 
+} from '../clients/kvstore';
+import {existsKvOauthToken, existsKvTrelloConfig, isUserSystemAdmin} from "../utils";
 
-const newCommandBindings = (bindings: AppBinding[]): AppsState => {
-    const commands: string[] = [
-        Commands.HELP,
-        Commands.CARD,
-        Commands.SUBSCRIPTION,
-        Commands.CONFIGURE,
-        Commands.ACCOUNT
-    ];
-
+const newCommandBindings = (bindings: AppBinding[], commands: string[]): AppsState => {
     return {
         location: AppBindingLocations.COMMAND,
         bindings: [
@@ -39,31 +32,39 @@ const newCommandBindings = (bindings: AppBinding[]): AppsState => {
     };
 };
 
-export const getCommandBindings = async (context: any): Promise<AppsState> => {
-    const mattermostUrl: string | undefined = context.mattermost_site_url;
-    const botAccessToken: string | undefined = context.bot_access_token;
+export const getCommandBindings = async (call: AppCallRequest): Promise<AppsState> => {
+    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
+    const botAccessToken: string | undefined = call.context.bot_access_token;
+    const actingUser: AppActingUser | undefined = call.context.acting_user;
+
     const options: KVStoreOptions = {
         mattermostUrl: <string>mattermostUrl,
         accessToken: <string>botAccessToken,
     };
     const kvClient = new KVStoreClient(options);
-    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-    const oauthToken: StoredOauthUserToken = await kvClient.getOauth2User(context.acting_user.id)
     
     const bindings: AppBinding[] = [];
+    const commands: string[] = [
+        Commands.HELP
+    ];
+
     bindings.push(getHelpBinding());
 
-    if (isUserSystemAdmin(context.acting_user)) {
+    if (isUserSystemAdmin(<AppActingUser>actingUser)) {
         bindings.push(getConfigureBinding());
-    } else if (Object.keys(trelloConfig).length) {
-        if (Object.keys(oauthToken).length) {
+        commands.push(Commands.CONFIGURE);
+    } else if (await existsKvTrelloConfig(kvClient)) {
+        if (await existsKvOauthToken(kvClient)) {
+            commands.push(Commands.CARD);
+            commands.push(Commands.SUBSCRIPTION);
             bindings.push(getCardBinding());
             bindings.push(getSubscriptionBinding());
         }
 
+        commands.push(Commands.ACCOUNT);
         bindings.push(getAccountBinding());
     }
 
-    return newCommandBindings(bindings);
+    return newCommandBindings(bindings, commands);
 };
 

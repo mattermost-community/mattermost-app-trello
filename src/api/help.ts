@@ -1,6 +1,9 @@
 import {Request, Response} from 'express';
 import manifest from '../manifest.json';
-import {isUserSystemAdmin, newOKCallResponseWithMarkdown} from "../utils";
+import {
+    isUserSystemAdmin, 
+    newOKCallResponseWithMarkdown
+} from "../utils";
 import {AppCallRequest, AppCallResponse, ExpandedBotActingUser} from "../types";
 import {addBulletSlashCommand, h5, joinLines} from "../utils/markdown";
 import {Commands} from "../constant";
@@ -21,7 +24,7 @@ function getHeader(): string {
 
 function getCommands(call: AppCallRequest): string {
     const context = call.context as ExpandedBotActingUser;
-
+    
     return isUserSystemAdmin(context.acting_user)
         ? getAdminCommands()
         : getUserCommands();
@@ -29,6 +32,7 @@ function getCommands(call: AppCallRequest): string {
 
 function getUserCommands(): string {
     const homepageUrl: string = manifest.homepage_url;
+
     return `${joinLines(
         addBulletSlashCommand(Commands.HELP, `Launch the Jira plugin command line help syntax, check out the [documentation](${homepageUrl}).`),
         addBulletSlashCommand(Commands.CARD, `Create a new card`),
@@ -39,9 +43,9 @@ function getUserCommands(): string {
 
 function getAdminCommands(): string {
     const homepageUrl: string = manifest.homepage_url;
+
     return `${joinLines(
         addBulletSlashCommand(Commands.HELP, `Launch the Jira plugin command line help syntax, check out the [documentation](${homepageUrl}).`),
-        addBulletSlashCommand(Commands.CARD, `Create a new card`),
         addBulletSlashCommand(Commands.CONFIGURE, `Configure Trello workspace`),
     )}\n`;
 }

@@ -5,19 +5,17 @@ import {
 import { newConfigForm } from '../forms/trello_config';
 import { 
    CallResponseHandler, 
-   errorDataMessage, 
-   errorWithMessage, 
-   newErrorCallResponseWithFieldErrors, 
    newErrorCallResponseWithMessage, 
    newFormCallResponse, 
-   newOKCallResponseWithMarkdown 
+   newOKCallResponseWithMarkdown, 
+   showMessageToMattermost, 
+   tryPromise
 } from '../utils';
 import { baseUrlFromContext } from '../utils';
 import config from '../config';
 import {TrelloClient, TrelloOptions} from '../clients/trello';
 import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from '../clients/kvstore';
-import {StoreKeys} from '../constant';
-import { ConfigureWorkspaceForm } from '../constant/forms';
+import {ExceptionType, StoreKeys} from '../constant';
 
 export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
    let callResponse: AppCallResponse;
@@ -49,23 +47,19 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
       workspace: values.trello_workspace
    }
 
-   let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Trello configuration');
+   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
+
+   let callResponse: AppCallResponse;
    
    try {
-      await verifyToken(trelloOptions);
+      await tryPromise(trelloClient.validateToken(trelloOptions.workspace), ExceptionType.TEXT_ERROR, 'Unable to submit configuration form: Trello failed ');
+
       await kvStoreClient.kvSet(StoreKeys.config, values);
-   } catch (err: any) {
-      callResponse = newErrorCallResponseWithMessage(errorWithMessage(err.message, 'Unable to submit configuration form'));
-   }
 
-   res.json(callResponse);
-};
-
-const verifyToken = async (trelloOpt: TrelloOptions) => {
-   try {
-      const trelloClient: TrelloClient = new TrelloClient(trelloOpt);
-      await trelloClient.validateToken(trelloOpt.workspace);
-   } catch (err: any) {
-      throw new Error(`${errorDataMessage(err.response)}`);
+      callResponse = newOKCallResponseWithMarkdown('Successfully updated Trello configuration');
+      res.json(callResponse);
+   } catch (error: any) {
+      callResponse = showMessageToMattermost(error);
+      res.json(callResponse);
    }
 };

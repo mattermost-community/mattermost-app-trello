@@ -1,12 +1,11 @@
-
 import {
-   AppCallRequest, AppContext, AppSelectOption,
+   AppContext, 
+   AppSelectOption,
 } from '../types';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { StoreKeys } from '../constant';
-import { errorDataMessage, errorWithMessage, tryPromiseOpsgenieWithMessage } from '../utils/utils';
+import { errorWithMessage } from '../utils/utils';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
-import { TrelloWebhook } from '../types/trello';
 
 export async function callSubscriptionList(context: AppContext): Promise<AppSelectOption[]> {
    const mattermostUrl: string | undefined = context.mattermost_site_url;

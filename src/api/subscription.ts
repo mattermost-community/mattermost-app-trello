@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import {
    errorDataMessage,
-   errorWithMessage,
    newErrorCallResponseWithMessage,
    newOKCallResponseWithMarkdown,
-   showMessageToMattermost
+   showMessageToMattermost,
+   tryPromise
 } from "../utils";
 import {
    AppCallRequest,
@@ -13,7 +13,7 @@ import {
    AppSelectOption
 } from "../types";
 import {addSubscriptionCall} from '../forms/subscriptions';
-import {StoreKeys} from '../constant';
+import {ExceptionType, StoreKeys} from '../constant';
 import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from '../clients/kvstore';
 import {TrelloClient, TrelloOptions} from '../clients/trello';
 import {callSubscriptionList} from '../forms/subscription-list';
@@ -28,6 +28,7 @@ export const addWebhookSubscription = async (request: Request, response: Respons
       callResponse = newOKCallResponseWithMarkdown("Subscription will be created");
       response.json(callResponse);
    } catch (error: any) {
+      console.log('error', error);
       callResponse = showMessageToMattermost(error);
       response.json(callResponse);
    }
@@ -51,15 +52,17 @@ export const removeWebhookSubscription = async (req: Request, res: Response) => 
       workspace: trelloConfig.trello_workspace
    };
 
-   let callResponse: AppCallResponse = newOKCallResponseWithMarkdown(`Subscription ID "${subscription}" removed sucessfully!`);
+   let callResponse: AppCallResponse;
    try {
       const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-      await trelloClient.deleteTrelloWebhook(subscription);
+      await tryPromise(trelloClient.deleteTrelloWebhook(subscription), ExceptionType.MARKDOWN, 'Trello failed ');
+
+      callResponse = newOKCallResponseWithMarkdown(`Subscription ID "${subscription}" removed sucessfully!`);
+      res.json(callResponse);
    } catch (error: any) {
-      callResponse = newErrorCallResponseWithMessage(errorWithMessage(error.response, 'Unable to remove subscription'));
-   }
-   
-   res.json(callResponse);
+      callResponse = showMessageToMattermost(error);
+      res.json(callResponse);
+   }   
 }
 
 

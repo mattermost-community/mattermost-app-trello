@@ -1,5 +1,5 @@
 export const ConfigureForm = {
-    API_KEY: 'opsgenie_api_key'
+    API_KEY: 'Trello_api_key'
 }
 
 export const SubscriptionCreateForm = {
