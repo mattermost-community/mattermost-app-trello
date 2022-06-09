@@ -61,8 +61,11 @@ const TrelloPaths = {
   getMembers: 'members/me',
   webhooks: 'webhooks',
   tokens: 'tokens',
-  organizations: 'organizations'
-  
+  organizations: 'organizations',
+  boards: 'boards',
+  search: 'search',
+  lists: 'lists',
+  cards: 'cards'
 
 };
 

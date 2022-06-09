@@ -143,3 +143,11 @@ export type TrelloApiUrlParams = {
    idModel: string,
    channel: string
 }
+
+export type TrelloOrganization = {
+   id: string,
+   name: string,
+   displayName: string,
+   desc: string,
+   url: string,
+}

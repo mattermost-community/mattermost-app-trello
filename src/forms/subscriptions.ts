@@ -10,6 +10,7 @@ import manifest from "../manifest.json";
 import { TrelloAPIWebhook } from "../constant/trello-webhook";
 import { callSubscriptionList } from "./subscription-list";
 import { h6, joinLines } from "../utils/markdown";
+import { getBoardOptionList } from "./card_add";
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
@@ -38,18 +39,14 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
       workspace: trelloConfig.trello_workspace
    };
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-
-   const searchResponse: SearchResponse = await trelloClient.searchBoardByName(boardName);
+   const idOrganization = (await trelloClient.getOrganizationId())?.id;
+   
+   const searchResponse: SearchResponse = await trelloClient.searchBoardByName(boardName, idOrganization);
    const board: Board | undefined = head(searchResponse.boards);
-   if (!board) {
-      throw new Error(`Not found board with name ${boardName}`);
-   }
 
-   const pluginName = m.app_id;
-   const whPath = Routes.App.CallPathIncomingWebhookPath;
-   const params = queryString.stringify({
-      secret: whSecret
-   });
+   if (!board) {
+      throw new Error(`Not found board with name "${boardName}" in current workspace (${trelloOptions.workspace})`);
+   }
 
    const trelloAPiParams: TrelloApiUrlParams = {
       context: (new URL(<string>mattermostUrl)).hostname,
