@@ -10,7 +10,9 @@ moving from the Mattermost window.
 ## Manual Installation
 *  Download latest versionDownload the latest repository release.
 
-*  Install librariesMove project directory an execute npm install to download all dependency libraries
+* It is necessary to have at least the version of node 12 installed
+
+*  Install libraries move project directory an execute npm install to download all dependency libraries
 
 *  Update the environment configuration file. The .env file must be modified or added to set the environment variables, it must be in the root of the repository.
 
