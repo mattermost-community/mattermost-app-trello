@@ -17,9 +17,6 @@ pipeline {
             agent { label agentLabel }
             steps {
                 bitbucketStatusNotify ( buildState: 'INPROGRESS' )
-                dir("${workspace}") {
-                    unstash 'modifiedenv'
-                }
                 script {
                     try {
                         sh './build.sh'
