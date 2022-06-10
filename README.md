@@ -8,11 +8,11 @@ Also, allows the user to create new cards without
 moving from the Mattermost window.
 
 ## Manual Installation
-*  Download latest versionDownload the latest repository release.
+*  Download the latest repository release.
 
-* It is necessary to have at least the version of node 12 installed
+* It is necessary to have installed at least node version 12 and maximum version 12
 
-*  Install libraries move project directory an execute npm install to download all dependency libraries
+*  Install libraries, move project directory and execute npm install to download all dependency libraries
 
 *  Update the environment configuration file. The .env file must be modified or added to set the environment variables, it must be in the root of the repository.
 
