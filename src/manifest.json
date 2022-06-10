@@ -1,0 +1,35 @@
+{
+  "app_id": "Trello",
+  "version": "0.0.1",
+  "homepage_url": "https://bitbucket.org/dominion-ancient/mattermost-app-trello",
+  "display_name": "Trello",
+  "description": "Trello cloud app for Mattermost",
+  "icon": "trello.png",
+  "on_install": {
+        "expand": {
+            "app": "all"
+        },
+        "path": "/install"
+    },
+  "bindings": {
+      "path": "/bindings",
+      "expand": {
+          "acting_user": "all",
+          "oauth2_app": "all",
+          "oauth2_user": "all"
+      }
+  },
+  "requested_permissions": [
+      "act_as_user",
+      "act_as_bot",
+      "remote_webhooks",
+      "remote_oauth2"
+  ],
+  "requested_locations": [
+      "/command",
+      "/in_post"
+  ],
+  "http": {
+      "root_url": ""
+  }
+}
