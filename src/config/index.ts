@@ -10,6 +10,6 @@ export default {
     },
     MATTERMOST: {
         URL: process.env.MATTERMOST_SERVER_URL || 'http://[::1]:8066',
-        USE: true
+        USE: process.env.MATTERMOST_USE === 'true'
     }
 }
