@@ -14,7 +14,6 @@ import {h5} from "../utils/markdown";
 import {MattermostClient, MattermostOptions} from "../clients/mattermost";
 
 async function notifyCardMoved(event: WebhookRequest<TrelloWebhookResponse>, context: AppContext) {
-    console.log('notifiy card', event);
     const mattermostUrl: string | undefined = context.mattermost_site_url;
     const botAccessToken: string | undefined = context.bot_access_token;
     const action: TrelloAction = event.data.action;
@@ -46,8 +45,6 @@ async function notifyCardMoved(event: WebhookRequest<TrelloWebhookResponse>, con
     };
     
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-    console.log('payload', payload);
-    console.log('mattermostOptions', mattermostOptions);
     await mattermostClient.createPost(payload);
 }
 
@@ -82,7 +79,8 @@ async function notifyCardCreated(event: WebhookRequest<TrelloWebhookResponse>, c
         accessToken: <string>botAccessToken
     };
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-
+    console.log('payload', payload);
+    console.log('mattermostOptions', mattermostOptions);
     await mattermostClient.createPost(payload);
 }
 
@@ -92,7 +90,6 @@ const WEBHOOKS_ACTIONS: { [key: string]: Function } = {
 };
 
 export const incomingWebhook = async (request: Request, response: Response) => {
-    console.log('incomingWebhook', request.body);
     const webhookRequest: WebhookRequest<any> = request.body.values;
     const context: AppContext = request.body.context;
     
@@ -113,7 +110,6 @@ export const incomingWebhook = async (request: Request, response: Response) => {
 
 export const notificationToMattermost = async (req: Request, res: Response) => {
     const pluginWebhook: ParsedQuery = queryString.parse(queryString.extract(req.url));
-    console.log('data webhook', pluginWebhook);
 
     let callResponse: AppCallResponse;
 

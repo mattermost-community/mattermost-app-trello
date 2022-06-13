@@ -1,6 +1,5 @@
 import {Request, Response} from 'express';
 import {
-  newErrorCallResponseWithMessage,
   newFormCallResponse,
   newOKCallResponseWithMarkdown,
   showMessageToMattermost,
