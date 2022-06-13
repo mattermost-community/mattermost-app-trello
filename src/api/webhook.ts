@@ -14,6 +14,7 @@ import {h5} from "../utils/markdown";
 import {MattermostClient, MattermostOptions} from "../clients/mattermost";
 
 async function notifyCardMoved(event: WebhookRequest<TrelloWebhookResponse>, context: AppContext) {
+    console.log('notifiy card', event);
     const mattermostUrl: string | undefined = context.mattermost_site_url;
     const botAccessToken: string | undefined = context.bot_access_token;
     const action: TrelloAction = event.data.action;
@@ -45,6 +46,8 @@ async function notifyCardMoved(event: WebhookRequest<TrelloWebhookResponse>, con
     };
     
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
+    console.log('payload', payload);
+    console.log('mattermostOptions', mattermostOptions);
     await mattermostClient.createPost(payload);
 }
 
