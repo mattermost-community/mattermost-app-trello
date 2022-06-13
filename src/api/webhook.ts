@@ -89,6 +89,7 @@ const WEBHOOKS_ACTIONS: { [key: string]: Function } = {
 };
 
 export const incomingWebhook = async (request: Request, response: Response) => {
+    console.log('incomingWebhook', request.body);
     const webhookRequest: WebhookRequest<any> = request.body.values;
     const context: AppContext = request.body.context;
     
@@ -109,6 +110,7 @@ export const incomingWebhook = async (request: Request, response: Response) => {
 
 export const notificationToMattermost = async (req: Request, res: Response) => {
     const pluginWebhook: ParsedQuery = queryString.parse(queryString.extract(req.url));
+    console.log('data webhook', pluginWebhook);
 
     let callResponse: AppCallResponse;
 

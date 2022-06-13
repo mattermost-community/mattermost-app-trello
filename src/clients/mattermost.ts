@@ -38,7 +38,7 @@ export class MattermostClient {
             channelId
         });
         const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}/apps/${m.app_id}${Routes.App.CallPathIncomingWebhookPath}?${params}`
-        
+        console.log('createWebhook url', url);
         return axios.post(`${url}`, eventData)
             .then((response: AxiosResponse<any>) => response.data);
     }
