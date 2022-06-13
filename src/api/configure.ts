@@ -55,7 +55,7 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
    let callResponse: AppCallResponse;
    
    try {
-      await tryPromise(trelloClient.validateToken(configStore.trello_workspace), ExceptionType.TEXT_ERROR, 'Unable to submit configuration form: Trello failed ');
+      await tryPromise(trelloClient.validateToken(workspace), ExceptionType.TEXT_ERROR, 'Unable to submit configuration form: Trello failed ');
 
       const kvProps: ConfigStoreProps = {
          trello_apikey: apiKey,
