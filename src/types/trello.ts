@@ -152,7 +152,7 @@ export type TrelloOrganization = {
 }
 
 export type WebhookRequest<T> = {
-   data: WebhookData<T>,
+   data: any,
    headers: {
        Accept: string;
        'Accept-Encoding': string;
