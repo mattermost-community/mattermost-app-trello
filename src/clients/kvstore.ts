@@ -1,6 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
 import {AppsPluginName, Routes} from '../constant';
-import config from '../config';
 
 export interface KVStoreOptions {
     mattermostUrl: string;
@@ -23,7 +22,6 @@ export class KVStoreClient {
     constructor(
         _config: KVStoreOptions
     ) {
-        if (config.MATTERMOST.USE) _config.mattermostUrl = config.MATTERMOST.URL;
         this.config = _config;
     }
 

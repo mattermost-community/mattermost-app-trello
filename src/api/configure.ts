@@ -1,21 +1,19 @@
 import { 
    AppCallRequestWithValues, 
-   AppCallResponse
+   AppCallResponse,
+   AppCallValues
 } from '../types';
 import { newConfigForm } from '../forms/trello_config';
 import { 
    CallResponseHandler, 
-   newErrorCallResponseWithMessage, 
    newFormCallResponse, 
    newOKCallResponseWithMarkdown, 
    showMessageToMattermost, 
    tryPromise
 } from '../utils';
-import { baseUrlFromContext } from '../utils';
-import config from '../config';
 import {TrelloClient, TrelloOptions} from '../clients/trello';
 import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from '../clients/kvstore';
-import {ExceptionType, StoreKeys} from '../constant';
+import {ConfigureWorkspaceForm, ExceptionType, StoreKeys} from '../constant';
 
 export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
    let callResponse: AppCallResponse;
@@ -25,36 +23,46 @@ export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
       callResponse = newFormCallResponse(form);
       res.json(callResponse);
    } catch (error: any) {
-      callResponse = newErrorCallResponseWithMessage('Unable to open configuration form: ' + error.message);
+      callResponse = showMessageToMattermost(error);
       res.json(callResponse);
    }
 };
 
 export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
    const call: AppCallRequestWithValues = req.body;
-   const values = call.values as ConfigStoreProps;
+   const mattemrostUrl: string | undefined = call.context.mattermost_site_url;
+   const botAccessToken: string | undefined = call.context.bot_access_token;
+   const values: AppCallValues = call.values;
+
+   const apiKey: string = values[ConfigureWorkspaceForm.TRELLO_APIKEY];
+   const token: string = values[ConfigureWorkspaceForm.TRELLO_TOKEN];
+   const workspace: string = values[ConfigureWorkspaceForm.TRELLO_WORKSPACE];
 
    const options: KVStoreOptions = {
-      mattermostUrl: <string>baseUrlFromContext(config.MATTERMOST.URL),
-      accessToken: <string>call.context.bot_access_token,
+      mattermostUrl: <string>mattemrostUrl,
+      accessToken: <string>botAccessToken,
    };
-   
    const kvStoreClient = new KVStoreClient(options);
 
-   const trelloOptions: TrelloOptions = {
-      apiKey: values.trello_apikey,
-      token: values.trello_oauth_access_token,
-      workspace: values.trello_workspace
-   }
+   const configStore: ConfigStoreProps = await kvStoreClient.kvGet(StoreKeys.config);
 
+   const trelloOptions: TrelloOptions = {
+      apiKey,
+      token,
+   };
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
    let callResponse: AppCallResponse;
    
    try {
-      await tryPromise(trelloClient.validateToken(trelloOptions.workspace), ExceptionType.TEXT_ERROR, 'Unable to submit configuration form: Trello failed ');
+      await tryPromise(trelloClient.validateToken(configStore.trello_workspace), ExceptionType.TEXT_ERROR, 'Unable to submit configuration form: Trello failed ');
 
-      await kvStoreClient.kvSet(StoreKeys.config, values);
+      const kvProps: ConfigStoreProps = {
+         trello_apikey: apiKey,
+         trello_oauth_access_token: token,
+         trello_workspace: workspace
+      };
+      await kvStoreClient.kvSet(StoreKeys.config, kvProps);
 
       callResponse = newOKCallResponseWithMarkdown('Successfully updated Trello configuration');
       res.json(callResponse);

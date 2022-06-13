@@ -29,15 +29,12 @@ router.post(`${Routes.App.BindingPathLogout}`, cLogin.getLogout)
 router.post(`${Routes.App.CallPathConfigOpenForm}`, cConfigure.openTrelloConfigForm);
 router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, cConfigure.submitTrelloConfig);
 
-
-// SUBCRIPTIONS
 router.post(`${Routes.App.CallSubscriptionAdd}`, cSubscription.addWebhookSubscription);
 router.post(`${Routes.App.CallSubscriptionList}`, cSubscription.getWebhookSubscriptions);
 router.post(`${Routes.App.CallSubscriptionRemove}`, cSubscription.removeWebhookSubscription);
 
-// TRELLO -> MATTERMOST WEBHOOK
-router.post(`${Routes.App.CallReceiveNotification}/context_:context/secret_:whSecret/model_:idModel/channel_:idChannel`, cWebhook.notificationToMattermost);
-router.get(`${Routes.App.CallReceiveNotification}/context_:context/secret_:whSecret/model_:idModel/channel_:idChannel`, cWebhook.notificationToMattermost);
+router.post(`${Routes.App.CallSubscriptionReceiveNotification}`, cWebhook.notificationToMattermost);
+router.get(`${Routes.App.CallSubscriptionReceiveNotification}`, cWebhook.notificationToMattermost);
 
 router.post(`${Routes.App.CallPathIncomingWebhookPath}`, cWebhook.incomingWebhook);
 
