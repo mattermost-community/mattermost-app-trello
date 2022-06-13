@@ -79,7 +79,8 @@ async function notifyCardCreated(event: WebhookRequest<TrelloWebhookResponse>, c
         accessToken: <string>botAccessToken
     };
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-
+    console.log('payload', payload);
+    console.log('mattermostOptions', mattermostOptions);
     await mattermostClient.createPost(payload);
 }
 
