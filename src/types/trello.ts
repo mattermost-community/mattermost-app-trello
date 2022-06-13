@@ -1,7 +1,6 @@
 export type TrelloWebhookResponse = {
    model: TrelloModel,
-   action: TrelloAction,
-   channel_id: string
+   action: TrelloAction
 }
 
 export type TrelloModel = {
@@ -150,4 +149,20 @@ export type TrelloOrganization = {
    displayName: string,
    desc: string,
    url: string,
+}
+
+export type WebhookRequest<T> = {
+   data: WebhookData<T>,
+   headers: {
+       Accept: string;
+       'Accept-Encoding': string;
+       'Content-Length': string;
+       'Content-Type': string;
+       'Mattermost-Session-Id': string;
+       'User-Agent': string;
+       'X-Forwarded-For': string;
+       'X-Forwarded-Proto': string;
+   }
+   httpMethod: string;
+   rawQuery: string;
 }

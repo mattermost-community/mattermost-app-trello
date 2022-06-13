@@ -25,10 +25,6 @@ export async function existsKvOauthToken(kvClient: KVStoreClient): Promise<boole
     return Boolean(Object.keys(oauth2).length);
 };
 
-export function baseUrlFromContext(mattermostSiteUrl: string): string {
-    return mattermostSiteUrl || config.MATTERMOST.URL;
-}
-
 export function replace(value: string, searchValue: string, replaceValue: string): string {
     return value.replace(searchValue, replaceValue);
 }
@@ -40,6 +36,7 @@ export function errorDataMessage(error: Exception | Error | any): string {
 
 export function tryPromise(p: Promise<any>, exceptionType: ExceptionType, message: string) {
     return p.catch((error) => {
+        console.log('Api error', error);
         const errorMessage: string = errorDataMessage(error);
         throw new Exception(exceptionType, `${message} ${errorMessage}`);
     });
@@ -58,8 +55,11 @@ export function showMessageToMattermost(exception: Exception | Error): AppCallRe
 }
 
 export function getHTTPPath(): string {
-    if (`${config.APP.HOST}`.includes('127.0.0.1') || `${config.APP.HOST}`.includes('localhost')) {
-        return `${config.APP.HOST}:${Number(process.env.PORT) || config.APP.PORT}`;
+    const host: string = config.APP.HOST;
+    const ip: string = host.replace(/^(http:\/\/|https:\/\/|)/g, '');
+    
+    if (/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)) {
+        return `${config.APP.HOST}:${config.APP.PORT}`;
     }
 
     return config.APP.HOST;

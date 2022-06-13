@@ -8,7 +8,6 @@ import {SearchResponse, WebhookCreate} from "../types/trello";
 export interface TrelloOptions {
   apiKey: string;
   token: string;
-  workspace: string;
 }
 
 export class TrelloClient {
@@ -43,23 +42,23 @@ export class TrelloClient {
       .then((response:  AxiosResponse<any>) => response.data);
   }
 
-  public getOrganizationId(): Promise<TrelloOrganization> {
+  public getOrganizationId(workspace: string): Promise<TrelloOrganization> {
     const queryParams: string = queryString.stringify({
       key: this.config.apiKey,
       token: this.config.token
     });
-    const url: string = `${config.TRELLO.URL}${Routes.TP.organizations}/${this.config.workspace}?${queryParams}`;
+    const url: string = `${config.TRELLO.URL}${Routes.TP.organizations}/${workspace}?${queryParams}`;
 
     return axios.get(url)
       .then((response: AxiosResponse<any>) => response.data);
   }
 
-  public searchBoardsInOrganization(): Promise<any> {
+  public searchBoardsInOrganization(workspace: string): Promise<any> {
     const queryParams: string = queryString.stringify({
       key: this.config.apiKey,
       token: this.config.token
     });
-    const url: string = `${config.TRELLO.URL}${Routes.TP.organizations}/${this.config.workspace}/${Routes.TP.boards}?${queryParams}`;
+    const url: string = `${config.TRELLO.URL}${Routes.TP.organizations}/${workspace}/${Routes.TP.boards}?${queryParams}`;
     
     return axios.get(url)
         .then((response:  AxiosResponse<any>) => response.data);
@@ -92,13 +91,11 @@ export class TrelloClient {
   public createTrelloWebhook(payload: WebhookCreate): Promise<any> {
     const queryParams: string = queryString.stringify({
       key: this.config.apiKey,
-      token: this.config.token,
-      callbackURL: payload.callbackURL,
-      idModel: payload.idModel,
-      description: payload.description
+      token: this.config.token
     });
-    const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}?${queryParams}`;
-    return axios.post(url)
+    const url: string = `${config.TRELLO.URL}${Routes.TP.tokens}/${this.config.token}/${Routes.TP.webhooks}?${queryParams}`;
+  
+    return axios.post(url, payload)
       .then((response: AxiosResponse<any>) => response.data);
   }
 
@@ -113,7 +110,7 @@ export class TrelloClient {
       .then((response: AxiosResponse<TrelloWebhook[]>) => response.data);
   }
 
-  public deleteTrelloWebhook(hookId: string) {
+  public deleteTrelloWebhook(hookId: string): Promise<any> {
     const queryParams: string = queryString.stringify({
       key: this.config.apiKey,
       token: this.config.token

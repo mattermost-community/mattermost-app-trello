@@ -1,10 +1,11 @@
 import axios, {AxiosResponse} from 'axios';
+import queryString from 'query-string';
 import {
-    MattermostPluginWebhook,
+    Manifest,
     PostCreate,
 } from '../types';
 import {AppsPluginName, Routes} from '../constant';
-import config from '../config';
+import manifest from "../manifest.json";
 
 export interface MattermostOptions {
     mattermostUrl: string;
@@ -17,7 +18,6 @@ export class MattermostClient {
     constructor(
         _config: MattermostOptions
     ) {
-        if (config.MATTERMOST.USE) _config.mattermostUrl = config.MATTERMOST.URL;
         this.config = _config;
     }
 
@@ -31,10 +31,15 @@ export class MattermostClient {
         }).then((response: AxiosResponse<any>) => response.data);
     }
 
-    public webhookPlugin(pluginData: MattermostPluginWebhook, data: any): Promise<string> {
-        const url = `${pluginData.mattermostUrl}plugins/${AppsPluginName}/apps/${pluginData.appID}${pluginData.whPath}?secret=${pluginData.whSecret}`
-
-        return axios.post(`${url}`, data)
+    public createWebhook(secret: string, channelId: string, eventData: any): Promise<string> {
+        const m: Manifest = manifest;
+        const params: string = queryString.stringify({
+            secret,
+            channelId
+        });
+        const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}/apps/${m.app_id}${Routes.App.CallPathIncomingWebhookPath}?${params}`
+        
+        return axios.post(`${url}`, eventData)
             .then((response: AxiosResponse<any>) => response.data);
     }
 }

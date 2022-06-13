@@ -26,11 +26,11 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
     throw new Exception(ExceptionType.MARKDOWN, 'You are not logged in.');
   }
 
-  return await getCreateCardForm({
+  const trelloOptions: TrelloOptions = {
     apiKey: trelloConfig.trello_apikey,
-    token: user_oauth_token.oauth_token,
-    workspace: trelloConfig.trello_workspace
-  });
+    token: user_oauth_token.oauth_token
+  };
+  return await getCreateCardForm(trelloOptions, trelloConfig.trello_workspace);
 }
 
 export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm> {
@@ -58,15 +58,14 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
 
   const trelloOptions = {
     apiKey: trelloConfig.trello_apikey,
-    token: user_oauth_token.oauth_token,
-    workspace: trelloConfig.trello_workspace
+    token: user_oauth_token.oauth_token
   }
 
-  return await getCreateCardForm(trelloOptions, card_name, board);
+  return await getCreateCardForm(trelloOptions, trelloConfig.trello_workspace, card_name, board);
 }
 
-async function getCreateCardForm(trelloOptions: TrelloOptions, card_name?: string, board?: AppSelectOption): Promise<AppForm> {
-  const board_options: AppSelectOption[] = await getBoardOptionList(trelloOptions);
+async function getCreateCardForm(trelloOptions: TrelloOptions, workspace: string, card_name?: string, board?: AppSelectOption): Promise<AppForm> {
+  const board_options: AppSelectOption[] = await getBoardOptionList(trelloOptions, workspace);
   let list_options: AppSelectOption[] = [];
   if (board) {
     list_options = await getListOptionList(board?.value, trelloOptions);
@@ -149,11 +148,10 @@ export async function addFromCommand(call: AppCallRequest) {
 
   const trelloOptions: TrelloOptions = {
     apiKey: trelloConfig.trello_apikey,
-    token: user_oauth_token.oauth_token,
-    workspace: trelloConfig.trello_workspace
+    token: user_oauth_token.oauth_token
   }
 
-  const boards = await getBoardOptionList(trelloOptions);
+  const boards = await getBoardOptionList(trelloOptions, trelloConfig.trello_workspace);
   const board = boards.find((b) => b.label == board_name);
   if (board) {
     const lists = await getListOptionList(board.value, trelloOptions);
@@ -169,10 +167,10 @@ export async function addFromCommand(call: AppCallRequest) {
   }
 }
 
-export async function getBoardOptionList(trelloOptions: TrelloOptions): Promise<AppSelectOption[]> {
+export async function getBoardOptionList(trelloOptions: TrelloOptions, workspace: string): Promise<AppSelectOption[]> {
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
-  const boards = await tryPromise(trelloClient.searchBoardsInOrganization(), ExceptionType.MARKDOWN, 'Trello failed ');
+  const boards = await tryPromise(trelloClient.searchBoardsInOrganization(workspace), ExceptionType.MARKDOWN, 'Trello failed ');
 
   const options: AppSelectOption[] = [...boards.map((b: any) =>  { return { label: b.name, value: b.id}})];
 

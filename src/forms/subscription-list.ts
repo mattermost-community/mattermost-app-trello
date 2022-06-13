@@ -1,6 +1,5 @@
 import {
    AppContext, 
-   AppSelectOption,
    TrelloWebhook,
 } from '../types';
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
@@ -8,7 +7,7 @@ import { ExceptionType, StoreKeys } from '../constant';
 import { tryPromise } from '../utils/utils';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 
-export async function callSubscriptionList(context: AppContext): Promise<AppSelectOption[]> {
+export async function callSubscriptionList(context: AppContext): Promise<TrelloWebhook[]> {
    const mattermostUrl: string | undefined = context.mattermost_site_url;
    const botAccessToken: string | undefined = context.bot_access_token;
    const user_id: string | undefined = context.acting_user?.id;
@@ -23,18 +22,11 @@ export async function callSubscriptionList(context: AppContext): Promise<AppSele
 
    const trelloOptions: TrelloOptions = {
       apiKey: configStore.trello_apikey,
-      token: user_oauth_token.oauth_token, 
-      workspace: configStore.trello_workspace
+      token: user_oauth_token.oauth_token
    }
 
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
    const responseIntegration: TrelloWebhook[] = await tryPromise(trelloClient.getTrelloActiveWebhooks(), ExceptionType.MARKDOWN, 'Trello failed ');
-   const options: AppSelectOption[] = responseIntegration.map((res: TrelloWebhook) => {
-      return {
-         label: res.description,
-         value: res.id
-      } as AppSelectOption;
-   });
-      
-   return options;
+ 
+   return responseIntegration;
 }
