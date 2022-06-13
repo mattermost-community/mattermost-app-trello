@@ -36,7 +36,6 @@ export function errorDataMessage(error: Exception | Error | any): string {
 
 export function tryPromise(p: Promise<any>, exceptionType: ExceptionType, message: string) {
     return p.catch((error) => {
-        console.log('Api error', error);
         const errorMessage: string = errorDataMessage(error);
         throw new Exception(exceptionType, `${message} ${errorMessage}`);
     });
