@@ -13,10 +13,20 @@ pipeline {
                 }
             }
         }
+        stage ('PREPARE ENV'){
+            steps {
+                dir("${workspace}") {
+                    stash name: 'modifiedenv', includes: '.env'
+                }
+            }
+        }
         stage ('BUILD') {
             agent { label agentLabel }
             steps {
                 bitbucketStatusNotify ( buildState: 'INPROGRESS' )
+                dir("${workspace}") {
+                    unstash 'modifiedenv'
+                }
                 script {
                     try {
                         sh './build.sh'
