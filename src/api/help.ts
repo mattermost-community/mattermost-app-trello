@@ -23,6 +23,7 @@ function getHeader(): string {
 }
 
 function getCommands(call: AppCallRequest): string {
+    console.log('call', call);
     const context = call.context as ExpandedBotActingUser;
     
     return isUserSystemAdmin(context.acting_user)

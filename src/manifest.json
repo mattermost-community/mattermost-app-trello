@@ -16,7 +16,9 @@
       "expand": {
           "acting_user": "all",
           "oauth2_app": "all",
-          "oauth2_user": "all"
+          "oauth2_user": "all",
+          "post": "all",
+          "acting_user_access_token": "all"
       }
   },
   "requested_permissions": [
