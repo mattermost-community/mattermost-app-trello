@@ -8,7 +8,8 @@
   "on_install": {
         "expand": {
             "app": "all",
-            "post": "all"
+            "post": "all",
+            "acting_user_access_token": "all"
         },
         "path": "/install"
     },
@@ -19,7 +20,8 @@
           "oauth2_app": "all",
           "oauth2_user": "all",
           "post": "all",
-          "acting_user_access_token": "all"
+          "acting_user_access_token": "all",
+          "admin_access_token": "all"
       }
   },
   "requested_permissions": [
