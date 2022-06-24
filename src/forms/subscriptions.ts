@@ -90,11 +90,10 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
    const kvClient: KVStoreClient = new KVStoreClient(kvOpts);
 
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-   const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>user_id)
 
    const trelloOptions: TrelloOptions = {
       apiKey: trelloConfig.trello_apikey,
-      token: user_oauth_token.oauth_token
+      token: trelloConfig.trello_oauth_access_token
    };
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
