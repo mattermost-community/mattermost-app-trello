@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import {AppCallResponse, AppCallRequest} from '../types';
 import {newOKCallResponseWithMarkdown} from '../utils';
 import {MattermostClient, MattermostOptions} from '../clients/mattermost';
+import {joinLines} from '../utils/markdown'
 import manifest from '../manifest.json';
 
 export const getInstall = async (request: Request, response: Response) => {
@@ -16,7 +17,11 @@ export const getInstall = async (request: Request, response: Response) => {
     };
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOpts);
 
-    await mattermostClient.updateRolesByUser(<string>userId, 'system_user system_post_all');
+    try {
+        await mattermostClient.updateRolesByUser(<string>userId, 'system_user system_post_all');
+    } catch (error) {
+        console.log('error', error);
+    }
 
     const helpText: string = [
         getCommands()
@@ -31,8 +36,4 @@ function getCommands(): string {
     return `${joinLines(
         `To finish configuring the Trello app please read the [Quick Start](${homepageUrl}#quick-start) section of the README`
     )}\n`;
-}
-
-function joinLines(...lines: string[]): string {
-    return lines.join('\n');
 }
