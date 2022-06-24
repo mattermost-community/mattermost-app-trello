@@ -38,20 +38,25 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
    const user_oauth_token = await kvClient.getOauth2User(<string>user_id)
    
-   const trelloOptions: TrelloOptions = {
+   const trelloOAuthOptions: TrelloOptions = {
       apiKey: trelloConfig.trello_apikey,
       token: user_oauth_token.oauth_token
    };
-   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-   const organization: TrelloOrganization = await tryPromise(trelloClient.getOrganizationId(trelloConfig.trello_workspace), ExceptionType.MARKDOWN, 'Trello failed ');
+   const trelloOauthClient: TrelloClient = new TrelloClient(trelloOAuthOptions);
+   const organization: TrelloOrganization = await tryPromise(trelloOauthClient.getOrganizationId(trelloConfig.trello_workspace), ExceptionType.MARKDOWN, 'Trello failed ');
    const idOrganization = organization?.id;
    
-   const searchResponse: SearchResponse = await tryPromise(trelloClient.searchBoardByName(boardName, idOrganization), ExceptionType.MARKDOWN, 'Trello failed ');
+   const searchResponse: SearchResponse = await tryPromise(trelloOauthClient.searchBoardByName(boardName, idOrganization), ExceptionType.MARKDOWN, 'Trello failed ');
    const board: Board | undefined = head(searchResponse.boards);
 
    if (!board) {
       throw new Exception(ExceptionType.MARKDOWN, `Not found board with name ${boardName}`);
    }
+   const trelloOptions: TrelloOptions = {
+      apiKey: trelloConfig.trello_apikey,
+      token: user_oauth_token.oauth_token
+   };
+   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
    const idModel: string = board.id;
    const params: string = queryString.stringify({
