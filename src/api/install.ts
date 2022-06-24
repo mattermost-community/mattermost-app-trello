@@ -17,11 +17,7 @@ export const getInstall = async (request: Request, response: Response) => {
     };
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOpts);
 
-    try {
-        await mattermostClient.updateRolesByUser(<string>userId, 'system_user system_post_all');
-    } catch (error) {
-        console.log('error', error);
-    }
+    await mattermostClient.updateRolesByUser(<string>userId, 'system_user system_post_all');
 
     const helpText: string = [
         getCommands()
