@@ -18,11 +18,10 @@ export async function callSubscriptionList(context: AppContext): Promise<TrelloW
    };
    const kvStore: KVStoreClient = new KVStoreClient(kvOptions);
    const configStore: ConfigStoreProps = await kvStore.kvGet(StoreKeys.config);
-   const user_oauth_token = await kvStore.getOauth2User(<string>user_id)
 
    const trelloOptions: TrelloOptions = {
       apiKey: configStore.trello_apikey,
-      token: user_oauth_token.oauth_token
+      token: configStore.trello_oauth_access_token
    }
 
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
