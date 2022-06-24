@@ -45,6 +45,7 @@ const AppPaths = {
 
 const MattermostPaths = {
   PathKV: '/kv',
+  UsersUpdateRolePath: `/users/${PathsVariable.Identifier}/roles`,
   PostsPath: '/posts',
   PostPath: `/posts/${PathsVariable.Identifier}`,
   UserPath: `/users/${PathsVariable.Identifier}`,

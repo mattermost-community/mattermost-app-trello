@@ -5,7 +5,8 @@ import {
     PostCreate,
 } from '../types';
 import {AppsPluginName, Routes} from '../constant';
-import manifest from "../manifest.json";
+import {replace} from '../utils';
+import manifest from '../manifest.json';
 
 export interface MattermostOptions {
     mattermostUrl: string;
@@ -19,6 +20,16 @@ export class MattermostClient {
         _config: MattermostOptions
     ) {
         this.config = _config;
+    }
+
+    public updateRolesByUser(userId: string, roles: string): Promise<any> {
+        const url: string = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.UsersUpdateRolePath}`;
+
+        return axios.put(replace(url, Routes.PathsVariable.Identifier, userId), { roles }, {
+            headers: {
+                Authorization: `Bearer ${this.config.accessToken}`
+            }
+        }).then((response: AxiosResponse<any>) => response.data);
     }
 
     public createPost(post: PostCreate): Promise<any> {
@@ -38,7 +49,6 @@ export class MattermostClient {
             channelId
         });
         const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}/apps/${m.app_id}${Routes.App.CallPathIncomingWebhookPath}?${params}`
-        console.log('createWebhook url', url);
         return axios.post(`${url}`, eventData)
             .then((response: AxiosResponse<any>) => response.data);
     }

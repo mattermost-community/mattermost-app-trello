@@ -1,13 +1,15 @@
 {
   "app_id": "Trello",
   "version": "0.0.1",
-  "homepage_url": "https://bitbucket.org/dominion-ancient/mattermost-app-trello",
+  "homepage_url": "https://github.com/development-ancient/mattermost_app_trello/wiki/Configuration-for-user",
   "display_name": "Trello",
   "description": "Trello cloud app for Mattermost",
   "icon": "trello.png",
   "on_install": {
         "expand": {
-            "app": "all"
+            "app": "all",
+            "post": "all",
+            "acting_user_access_token": "all"
         },
         "path": "/install"
     },
@@ -18,7 +20,8 @@
           "oauth2_app": "all",
           "oauth2_user": "all",
           "post": "all",
-          "acting_user_access_token": "all"
+          "acting_user_access_token": "all",
+          "admin_access_token": "all"
       }
   },
   "requested_permissions": [
