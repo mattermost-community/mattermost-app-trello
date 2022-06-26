@@ -1,29 +1,24 @@
 import queryString from 'query-string';
 import {head} from "lodash";
-import {ConfigStoreProps, KVStoreClient, KVStoreOptions, StoredOauthUserToken} from "../clients/kvstore";
+import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from "../clients/kvstore";
 import {TrelloClient, TrelloOptions} from "../clients/trello";
 import {
    SubscriptionCreateForm, 
    ExceptionType, 
    StoreKeys, 
    Routes, 
-   SubscriptionRemoveForm, 
-   AppsPluginName
+   SubscriptionRemoveForm
 } from "../constant";
-import {Board, Manifest, SearchResponse, TrelloOrganization, WebhookCreate} from "../types";
+import {Board, SearchResponse, TrelloOrganization, WebhookCreate} from "../types";
 import {getHTTPPath, tryPromise} from "../utils";
 import {Exception} from "../utils/exception";
 import {AppCallRequest, AppCallValues} from "../types";
-import manifest from "../manifest.json";
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
    const botAccessToken: string | undefined = call.context.bot_access_token;
-   const user_id: string | undefined = call.context.acting_user?.id;
    const whSecret: string | undefined = call.context.app?.webhook_secret;
    const values: AppCallValues | undefined = call.values;
-
-   const m: Manifest = manifest;
 
    const boardName: string = values?.[SubscriptionCreateForm.BOARD_NAME];
    const channelId: string = values?.[SubscriptionCreateForm.CHANNEL_ID].value;
@@ -36,11 +31,10 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const kvClient: KVStoreClient = new KVStoreClient(kvOpts);
 
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-   const user_oauth_token = await kvClient.getOauth2User(<string>user_id)
    
    const trelloOAuthOptions: TrelloOptions = {
       apiKey: trelloConfig.trello_apikey,
-      token: user_oauth_token.oauth_token
+      token: trelloConfig.trello_oauth_access_token
    };
    const trelloOauthClient: TrelloClient = new TrelloClient(trelloOAuthOptions);
    const organization: TrelloOrganization = await tryPromise(trelloOauthClient.getOrganizationId(trelloConfig.trello_workspace), ExceptionType.MARKDOWN, 'Trello failed ');
@@ -54,7 +48,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    }
    const trelloOptions: TrelloOptions = {
       apiKey: trelloConfig.trello_apikey,
-      token: user_oauth_token.oauth_token
+      token: trelloConfig.trello_oauth_access_token
    };
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
@@ -78,7 +72,6 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
 export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
    const botAccessToken: string | undefined = call.context.bot_access_token;
-   const user_id: string | undefined = call.context.acting_user?.id;
    const values: AppCallValues | undefined = call.values;
 
    const subscription: string = values?.[SubscriptionRemoveForm.SUBSCRIPTION];

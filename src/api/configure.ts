@@ -44,8 +44,6 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
    };
    const kvStoreClient = new KVStoreClient(options);
 
-   const configStore: ConfigStoreProps = await kvStoreClient.kvGet(StoreKeys.config);
-
    const trelloOptions: TrelloOptions = {
       apiKey,
       token,
