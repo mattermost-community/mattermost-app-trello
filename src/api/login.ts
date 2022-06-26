@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { AppCallRequest, AppCallResponse } from "../types";
-import { newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown, showMessageToMattermost } from '../utils';
+import { newFormCallResponse, newOKCallResponseWithMarkdown, showMessageToMattermost } from '../utils';
 import { getLoginForm, loginFormSaveToken } from '../forms/login';
 import { KVStoreClient, KVStoreOptions, StoredOauthUserToken } from '../clients/kvstore';
 import { Exception } from '../utils/exception';
@@ -58,11 +58,12 @@ export const getLogout = async (request: Request, response: Response) => {
  
 
     await kvClient.kvDelete(<string>userId);
-    callResponse = newOKCallResponseWithMarkdown('Logged out successfully.')
+    callResponse = newOKCallResponseWithMarkdown('Logged out successfully.');
+    response.json(callResponse);
   } catch(error: any) { 
-    callResponse = newErrorCallResponseWithMessage('Unable to logout: ' + error.message);
+    callResponse = showMessageToMattermost(error);
+    response.json(callResponse);
   }
-  return response.json(callResponse)
 }
 
 
