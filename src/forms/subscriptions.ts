@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 import {head} from "lodash";
-import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from "../clients/kvstore";
+import {ConfigStoreProps, KVStoreClient, KVStoreOptions, StoredOauthUserToken} from "../clients/kvstore";
 import {TrelloClient, TrelloOptions} from "../clients/trello";
 import {
    SubscriptionCreateForm, 
@@ -17,6 +17,7 @@ import {AppCallRequest, AppCallValues} from "../types";
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
    const botAccessToken: string | undefined = call.context.bot_access_token;
+   const user_id: string | undefined = call.context.acting_user?.id;
    const whSecret: string | undefined = call.context.app?.webhook_secret;
    const values: AppCallValues | undefined = call.values;
 
@@ -30,8 +31,13 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    };
    const kvClient: KVStoreClient = new KVStoreClient(kvOpts);
 
+   const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>user_id);
+   if (!Object.keys(user_oauth_token).length) {
+     throw new Exception(ExceptionType.MARKDOWN, 'You are not logged in.');
+   }
+
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-   
+
    const trelloOAuthOptions: TrelloOptions = {
       apiKey: trelloConfig.trello_apikey,
       token: trelloConfig.trello_oauth_access_token
@@ -72,6 +78,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
 export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
    const botAccessToken: string | undefined = call.context.bot_access_token;
+   const user_id: string | undefined = call.context.acting_user?.id;
    const values: AppCallValues | undefined = call.values;
 
    const subscription: string = values?.[SubscriptionRemoveForm.SUBSCRIPTION];
@@ -81,6 +88,11 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
       accessToken: <string>botAccessToken
    };
    const kvClient: KVStoreClient = new KVStoreClient(kvOpts);
+
+   const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>user_id);
+   if (!Object.keys(user_oauth_token).length) {
+     throw new Exception(ExceptionType.MARKDOWN, 'You are not logged in.');
+   }
 
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
 

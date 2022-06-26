@@ -2,7 +2,9 @@ import { Request, Response } from 'express'
 import { AppCallRequest, AppCallResponse } from "../types";
 import { newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown, showMessageToMattermost } from '../utils';
 import { getLoginForm, loginFormSaveToken } from '../forms/login';
-import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import { KVStoreClient, KVStoreOptions, StoredOauthUserToken } from '../clients/kvstore';
+import { Exception } from '../utils/exception';
+import { ExceptionType } from '../constant';
 
 export const getLogin = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
@@ -35,21 +37,28 @@ export const saveToken = async (request: Request, response: Response) => {
 
 export const getLogout = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
+  const bot_token: string | undefined = call.context.bot_access_token;
+  const mattermost_url: string | undefined = call.context.mattermost_site_url;
+  const userId: string | undefined = call.context.acting_user?.id;
+
 
   let callResponse: AppCallResponse;
 
-  const userId = call.context.acting_user?.id;
-  const bot_token = call.context.bot_access_token;
-  const mattermost_url = call.context.mattermost_site_url;
-
   try {
     const kvOptions: KVStoreOptions = {
-      accessToken: bot_token ?? '',
-      mattermostUrl: mattermost_url ?? ''
+      accessToken: <string>bot_token,
+      mattermostUrl: <string>mattermost_url
     }
     const kvClient: KVStoreClient = new KVStoreClient(kvOptions);
+
+    const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>userId);
+    if (!Object.keys(user_oauth_token).length) {
+      throw new Exception(ExceptionType.MARKDOWN, 'You are not logged in.');
+    }
+ 
+
     await kvClient.kvDelete(<string>userId);
-    callResponse = newOKCallResponseWithMarkdown('Logged out successfully .')
+    callResponse = newOKCallResponseWithMarkdown('Logged out successfully.')
   } catch(error: any) { 
     callResponse = newErrorCallResponseWithMessage('Unable to logout: ' + error.message);
   }
