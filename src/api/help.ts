@@ -53,8 +53,8 @@ async function getCommands(call: AppCallRequest): Promise<string> {
             commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} remove`, 'Stop receiving Trello board\'s notifications'));
         }
 
-        commands.push(addBulletSlashCommand(`${Commands.ACCOUNT} login`, 'Log to your Trello account'));
-        commands.push(addBulletSlashCommand(`${Commands.ACCOUNT} logout`, 'Log out from your Trello account'));
+        commands.push(addBulletSlashCommand(`${Commands.CONNECT}`, 'Log in to your Trello account'));
+        commands.push(addBulletSlashCommand(`${Commands.DISCONNECT}`, 'Log out from your Trello account'));
     }
 
     return `${joinLines(...commands)}`;

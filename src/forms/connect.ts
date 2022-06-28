@@ -5,11 +5,11 @@ import { Routes, TrelloIcon, AppFieldTypes, TRELLO_OAUTH, ExceptionType, StoreKe
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { tryPromise } from '../utils';
 import { TrelloClient } from '../clients/trello';
-import { LoginForm } from '../constant/forms';
+import { ConnectForm } from '../constant/forms';
 import config from '../config';
 import { Exception } from '../utils/exception';
 
-export async function getLoginForm(call: AppCallRequest): Promise<AppForm> {
+export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
    const context = call.context as ExpandedBotActingUser;
    const mattermostUrl: string | undefined =  context.mattermost_site_url;
    const botAccessToken: string | undefined = context.bot_access_token;
@@ -40,7 +40,7 @@ export async function getLoginForm(call: AppCallRequest): Promise<AppForm> {
    const fields = [
       {
          type: AppFieldTypes.TEXT,
-         name: LoginForm.TOKEN,
+         name: ConnectForm.TOKEN,
          modal_label: 'OAuth Token',
          value: user_oauth_token?.oauth_token ? user_oauth_token.oauth_token : '',
          hint: `token`,
@@ -55,7 +55,7 @@ export async function getLoginForm(call: AppCallRequest): Promise<AppForm> {
       icon: TrelloIcon,
       fields,
       submit: {
-         path: `${Routes.App.BindingPathLogin}${Routes.App.Submit}`,
+         path: `${Routes.App.BindingPathConnect}${Routes.App.Submit}`,
          expand: {
           acting_user: 'summary',
           acting_user_access_token: 'summary'
@@ -64,13 +64,13 @@ export async function getLoginForm(call: AppCallRequest): Promise<AppForm> {
    } as AppForm;
 }
 
-export async function loginFormSaveToken(call: AppCallRequest) {
+export async function connectFormSaveToken(call: AppCallRequest) {
    const userId: string | undefined = call.context.acting_user?.id;
    const bot_token: string | undefined = call.context.bot_access_token;
    const mattermost_url: string | undefined = call.context.mattermost_site_url;
    const values: AppCallValues | undefined = call.values;
 
-   const token: string = values?.[LoginForm.TOKEN];
+   const token: string = values?.[ConnectForm.TOKEN];
 
    const kvOptions: KVStoreOptions = {
       accessToken: <string>bot_token,

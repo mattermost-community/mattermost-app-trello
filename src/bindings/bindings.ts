@@ -220,34 +220,17 @@ export const getConfigureBinding = (): any => {
     }
 };
 
-export const getAccountBinding = (): any => {
-    const commands: string[] = [
-        Commands.LOGIN,
-        Commands.LOGOUT
-    ];
 
+export const getAccountConnectBinding = (): any => {
     return {
         icon: TrelloIcon,
-        label: Commands.ACCOUNT,
-        description: 'Configure your trello account',
-        hint: `[${commands.join(' | ')}]`,
-        bindings: [
-            getAccountLoginBinding(),
-            getAccountLogoutBinding()
-        ]
-    }
-}
-
-export const getAccountLoginBinding = (): any => {
-    return {
-        icon: TrelloIcon,
-        label: Commands.LOGIN,
+        label: Commands.CONNECT,
         description: 'Configure your Trello credentials',
         form: {
             title: 'Configure your Trello credentials',
             icon: TrelloIcon,
             submit: {
-                path: `${Routes.App.BindingPathLogin}`,
+                path: `${Routes.App.BindingPathConnect}`,
                 expand: {
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
@@ -261,16 +244,16 @@ export const getAccountLoginBinding = (): any => {
     };
 }
 
-export const getAccountLogoutBinding = (): any => {
+export const getAccountDisconnectBinding = (): any => {
     return {
         icon: TrelloIcon,
-        label: Commands.LOGOUT,
+        label: Commands.DISCONNECT,
         description: 'Remove your Trello credentials',
         form: {
             title: 'Remove your Trello credentials',
             icon: TrelloIcon,
             submit: {
-                path: `${Routes.App.BindingPathLogout}`,
+                path: `${Routes.App.BindingPathDisconnect}`,
                 expand: {
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,

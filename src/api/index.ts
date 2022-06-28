@@ -6,7 +6,7 @@ import * as cHelp from './help';
 import * as cAdd from './add';
 import * as cInstall from './install';
 import * as cConfigure from './configure';
-import * as cLogin from './login';
+import * as cConnect from './connect';
 import * as cSubscription from './subscription';
 import * as cWebhook from './webhook';
 
@@ -22,9 +22,9 @@ router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`, cAdd.getAd
 router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Submit}`, cAdd.formStepTwo);
 router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Form}`, cAdd.formStepOne);
 
-router.post(`${Routes.App.BindingPathLogin}`, cLogin.getLogin);
-router.post(`${Routes.App.BindingPathLogin}${Routes.App.Submit}`, cLogin.saveToken)
-router.post(`${Routes.App.BindingPathLogout}`, cLogin.getLogout)
+router.post(`${Routes.App.BindingPathConnect}`, cConnect.getConnect);
+router.post(`${Routes.App.BindingPathConnect}${Routes.App.Submit}`, cConnect.saveToken)
+router.post(`${Routes.App.BindingPathDisconnect}`, cConnect.getDisconnect)
 
 router.post(`${Routes.App.CallPathConfigOpenForm}`, cConfigure.openTrelloConfigForm);
 router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, cConfigure.submitTrelloConfig);

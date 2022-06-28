@@ -11,7 +11,7 @@ export const SubscriptionRemoveForm = {
     SUBSCRIPTION: 'subscription'
 }
 
-export const LoginForm = {
+export const ConnectForm = {
     TOKEN: 'token'
 }
 export const ConfigureWorkspaceForm = {
