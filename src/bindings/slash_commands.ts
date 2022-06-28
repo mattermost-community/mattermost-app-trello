@@ -36,6 +36,7 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
     const mattermostUrl: string | undefined = call.context.mattermost_site_url;
     const botAccessToken: string | undefined = call.context.bot_access_token;
     const actingUser: AppActingUser | undefined = call.context.acting_user;
+    const actingUserID: string | undefined = call.context.acting_user?.id; 
 
     const options: KVStoreOptions = {
         mattermostUrl: <string>mattermostUrl,
@@ -53,8 +54,9 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
     if (isUserSystemAdmin(<AppActingUser>actingUser)) {
         bindings.push(getConfigureBinding());
         commands.push(Commands.CONFIGURE);
-    } else if (await existsKvTrelloConfig(kvClient)) {
-        if (await existsKvOauthToken(kvClient)) {
+    }  
+    if (await existsKvTrelloConfig(kvClient)) {
+        if (await existsKvOauthToken(kvClient, <string>actingUserID)) {
             commands.push(Commands.CARD);
             commands.push(Commands.SUBSCRIPTION);
             bindings.push(getCardBinding());
