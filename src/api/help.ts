@@ -40,7 +40,7 @@ async function getCommands(call: AppCallRequest): Promise<string> {
     };
     const kvClient = new KVStoreClient(options);
     
-    commands.push(addBulletSlashCommand(Commands.HELP, `Launch the Jira plugin command line help syntax, check out the [documentation](${homepageUrl}).`));
+    commands.push(addBulletSlashCommand(Commands.HELP, `Launch the Trello plugin command line help syntax, check out the [documentation](${homepageUrl}).`));
 
     if (isUserSystemAdmin(<AppActingUser>actingUser)) {
         commands.push(addBulletSlashCommand(Commands.CONFIGURE, `Configure Trello workspace`));
