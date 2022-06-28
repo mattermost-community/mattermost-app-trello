@@ -48,5 +48,9 @@ function getAdminCommands(): string {
     return `${joinLines(
         addBulletSlashCommand(Commands.HELP, `Launch the Jira plugin command line help syntax, check out the [documentation](${homepageUrl}).`),
         addBulletSlashCommand(Commands.CONFIGURE, `Configure Trello workspace`),
+        addBulletSlashCommand(Commands.HELP, `Launch the Jira plugin command line help syntax, check out the [documentation](${homepageUrl}).`),
+        addBulletSlashCommand(Commands.CARD, `Create a new card`),
+        addBulletSlashCommand(Commands.SUBSCRIPTION, 'Subscribe channel to receive Trello notifications'),
+        addBulletSlashCommand(Commands.ACCOUNT, 'log in and out with trello'),
     )}\n`;
 }

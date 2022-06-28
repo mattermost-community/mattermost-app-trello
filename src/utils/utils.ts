@@ -19,8 +19,8 @@ export async function existsKvTrelloConfig(kvClient: KVStoreClient): Promise<boo
     return Boolean(Object.keys(trelloConfig).length);
 };
 
-export async function existsKvOauthToken(kvClient: KVStoreClient): Promise<boolean> {
-    const oauth2: StoredOauthUserToken = await kvClient.getOauth2User(StoreKeys.config);
+export async function existsKvOauthToken(kvClient: KVStoreClient, userId: string): Promise<boolean> {
+    const oauth2: StoredOauthUserToken = await kvClient.getOauth2User(<string>userId);
 
     return Boolean(Object.keys(oauth2).length);
 };
