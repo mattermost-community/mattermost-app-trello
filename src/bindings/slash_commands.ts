@@ -4,7 +4,8 @@ import {
     getSubscriptionBinding,
     getConfigureBinding,
     getCardBinding,
-    getAccountBinding
+    getAccountConnectBinding,
+    getAccountDisconnectBinding
 } from "./bindings";
 import {
     AppBindingLocations,
@@ -63,8 +64,10 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
             bindings.push(getSubscriptionBinding());
         }
 
-        commands.push(Commands.ACCOUNT);
-        bindings.push(getAccountBinding());
+        commands.push(Commands.CONNECT);
+        commands.push(Commands.DISCONNECT);
+        bindings.push(getAccountConnectBinding());
+        bindings.push(getAccountDisconnectBinding());
     }
 
     return newCommandBindings(bindings, commands);

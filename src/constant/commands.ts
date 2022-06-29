@@ -8,7 +8,6 @@ export const Commands = {
   LIST: 'list',
   REMOVE: 'remove',
   CREATE: 'create',
-  ACCOUNT: 'account',
-  LOGIN: 'login',
-  LOGOUT: 'logout'
+  CONNECT: 'connect',
+  DISCONNECT: 'disconnect',
 }
