@@ -1,16 +1,50 @@
 # Mattermost/Trello Integration
 
-This application allows you to integrate Trello to your 
-Mattermost instance, letting you know when a new 
-card is created, as well as getting notified about card 
-updates. 
-Also, allows the user to create new cards without 
-moving from the Mattermost window.
+* [Feature summary](#feature-summary)
+* [Setting up](#setting-up)
+  * [Installation](#installation)
+  * [Configuration](#configuration)
+* [Admin guide](#admin-guide)
+  * [Slash commands](#slash-commands)
+* [End user guide](#end-user-guide)
+  * [Getting started](#getting-started)
+  * [Using /trello commands](#using-trello-commands)
+* [Development](#development)
+  * [Manual installation](#manual-installation)
+  * [Running the local development environment](#running-the-local-development-environment)
+  * [Running the local development environment with docker](#running-the-local-development-environment-with-docker)
 
-## Manual Installation
+This application allows you to integrate Trello to your Mattermost instance, letting you know when a new card is created, as well as getting notified about card updates. Also, allows the user to create new cards without moving from the Mattermost window.
+
+# Feature summary
+
+# Setting up
+
+## Installation
+
+## Configuration
+
+## Updating the plugin
+
+# Admin guide
+
+## Slash commands
+
+/trello configure: This command will enable all the other commands; it asks the administrator for an API key (which will be used to execute calls to Trello’s API) and a token.
+
+# End user guide
+
+## Getting started
+
+## Using /trello commands
+
+# Development
+
+## Manual installation
+
 *  Download the latest repository release.
 
-### Running local development environment
+### Running the local development environment
 
 * It is necessary to have installed at least node version 12 and maximum version 18.
 On the next page you can download the latest lts version of node for the required operating system https://nodejs.org/es/download/
