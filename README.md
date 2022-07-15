@@ -14,11 +14,11 @@
   * [Running the local development environment](#running-the-local-development-environment)
   * [Running the local development environment with docker](#running-the-local-development-environment-with-docker)
 
-This application allows you to integrate Trello to your Mattermost instance, letting you know when a new card is created, as well as getting notified about card updates. Also, allows the user to create new cards without moving from the Mattermost window.
+This application allows you to integrate Trello with your Mattermost instance. letting you know when a new card is created, as well as getting notified about card updates. Also, allows the user to create new cards without moving from the Mattermost window.
 
 # Feature summary
 
-**Trello to Mattermost Notifications:** Link your Mattermost channels with the Trello boards you want to see, so you and your team can get notifications about the creation and position update of each card.
+**Trello to Mattermost notifications:** Link your Mattermost channels with the Trello boards you want to see, so you and your team can get notifications about the creation and position update of each card.
 
 **Manage card creation on Mattermost:** Create new cards from Mattermost (via modal or command), assigning the board and the list to which you want to add the card.
 
@@ -26,7 +26,7 @@ This application allows you to integrate Trello to your Mattermost instance, let
 
 ## Installation
 
-Requirement Mattermost instance with the ``/apps install`` command enabled.
+This plugin requires that your Mattermost workspace has the ``/apps install`` command enabled.
 
 To install, as a super admin user role, execute command /apps install http TRELLO_API_URL in any channel. Trello command should be available after the configuration has been successfully installed. TRELLO_API_URL should be replaced with the URL where the Trello API instance is running. Example: /apps install http https://mattermost-trello-dev.ancient.mx/manifest.json
 
