@@ -40,7 +40,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
 
    const trelloOAuthOptions: TrelloOptions = {
       apiKey: trelloConfig.trello_apikey,
-      token: trelloConfig.trello_oauth_access_token
+      token: user_oauth_token.oauth_token
    };
    const trelloOauthClient: TrelloClient = new TrelloClient(trelloOAuthOptions);
    const organization: TrelloOrganization = await tryPromise(trelloOauthClient.getOrganizationId(trelloConfig.trello_workspace), ExceptionType.MARKDOWN, 'Trello failed ');
@@ -50,7 +50,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const board: Board | undefined = head(searchResponse.boards);
 
    if (!board) {
-      throw new Exception(ExceptionType.MARKDOWN, `Not found board with name ${boardName}`);
+      throw new Exception(ExceptionType.MARKDOWN, `Not found board with name "${boardName}"`);
    }
    const trelloOptions: TrelloOptions = {
       apiKey: trelloConfig.trello_apikey,
