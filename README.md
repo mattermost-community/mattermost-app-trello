@@ -50,8 +50,8 @@ paste in the modal the generated token.
 ## Using /trello commands
 
 - /trello help: This command will show all current commands available for this application.
-- /trello account login: Will display a new modal were a user token will be needed. It is required before any other action.
-- /trello account logout: Will erase current user oauth token.
+- /trello connect: Will display a new modal were a user token will be needed. It is required before any other action.
+- /trello disconnect: Will erase current user oauth token.
 - /trello card create: Allow any user to create a new card in any board they want (boards are listed as they have access to them from Trello). Both, command and modal options are available.
 - /trello subscription add: Creates a new subscription for notifications: choose a board and a channel and get notified of the updates in that board. You can subscribe more than one board per channel.
 - /trello subscription list: Show the list of all subscriptions made in all of your channels.
