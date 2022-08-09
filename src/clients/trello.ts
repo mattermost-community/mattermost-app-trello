@@ -28,6 +28,17 @@ export class TrelloClient {
         .then((response:  AxiosResponse<any>) => response.data);
   }
 
+  public getBoardById(boardId: string): Promise<any> {
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token
+    });
+    const url: string = `${config.TRELLO.URL}${Routes.TP.boards}/${boardId}?${queryParams}`;
+
+    return axios.get(url)
+      .then((response: AxiosResponse<any>) => response.data);
+  }
+
   public searchBoardByName(boardName: string, idOrganizations: string): Promise<SearchResponse> {
     const queryParams: string = queryString.stringify({
       key: this.config.apiKey,
@@ -118,5 +129,15 @@ export class TrelloClient {
     const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}/${hookId}?${queryParams}`;
     return axios.delete(url)
       .then((response: AxiosResponse<TrelloWebhook[]>) => response.data);
+  }
+
+  public getTrelloWebhookByID(hookId: string): Promise<TrelloWebhook> {
+    const queryParams: string = queryString.stringify({
+      key: this.config.apiKey,
+      token: this.config.token
+    });
+    const url: string = `${config.TRELLO.URL}${Routes.TP.webhooks}/${hookId}?${queryParams}`;
+    return axios.get(url)
+      .then((response: AxiosResponse<TrelloWebhook>) => response.data);
   }
 }
