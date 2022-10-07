@@ -18,8 +18,12 @@ import {
     KVStoreOptions, 
 } from '../clients/kvstore';
 import {existsKvOauthToken, existsKvTrelloConfig, isUserSystemAdmin} from "../utils";
+import { AppContext } from '../types/apps';
+import { configureI18n } from '../utils/translations';
 
-const newCommandBindings = (bindings: AppBinding[], commands: string[]): AppsState => {
+const newCommandBindings = (context: AppContext, bindings: AppBinding[], commands: string[]): AppsState => {
+    const i18nObj = configureI18n(context);
+
     return {
         location: AppBindingLocations.COMMAND,
         bindings: [
@@ -27,6 +31,7 @@ const newCommandBindings = (bindings: AppBinding[], commands: string[]): AppsSta
                 icon: TrelloIcon,
                 label: CommandTrigger,
                 hint: `[${commands.join(' | ')}]`,
+                description: i18nObj.__('bindings-descriptions.bindings'),
                 bindings,
             },
         ],
@@ -38,6 +43,7 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
     const botAccessToken: string | undefined = call.context.bot_access_token;
     const actingUser: AppActingUser | undefined = call.context.acting_user;
     const actingUserID: string | undefined = call.context.acting_user?.id; 
+    const context = call.context as AppContext;
 
     const options: KVStoreOptions = {
         mattermostUrl: <string>mattermostUrl,
@@ -50,26 +56,26 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
         Commands.HELP
     ];
 
-    bindings.push(getHelpBinding());
+    bindings.push(getHelpBinding(context));
 
     if (isUserSystemAdmin(<AppActingUser>actingUser)) {
-        bindings.push(getConfigureBinding());
+        bindings.push(getConfigureBinding(context));
         commands.push(Commands.CONFIGURE);
     }  
     if (await existsKvTrelloConfig(kvClient)) {
         if (await existsKvOauthToken(kvClient, <string>actingUserID)) {
             commands.push(Commands.CARD);
             commands.push(Commands.SUBSCRIPTION);
-            bindings.push(getCardBinding());
-            bindings.push(getSubscriptionBinding());
+            bindings.push(getCardBinding(context));
+            bindings.push(getSubscriptionBinding(context));
         }
 
         commands.push(Commands.CONNECT);
         commands.push(Commands.DISCONNECT);
-        bindings.push(getAccountConnectBinding());
-        bindings.push(getAccountDisconnectBinding());
+        bindings.push(getAccountConnectBinding(context));
+        bindings.push(getAccountDisconnectBinding(context));
     }
 
-    return newCommandBindings(bindings, commands);
+    return newCommandBindings(context, bindings, commands);
 };
 

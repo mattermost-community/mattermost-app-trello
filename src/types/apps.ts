@@ -133,6 +133,7 @@ export type ContextChannel = {
 export type AppContext = {
   app_id: string;
   location?: string;
+  locale?: string;
   acting_user_id?: string;
   bot_user_id?: string;
   user_id?: string;
