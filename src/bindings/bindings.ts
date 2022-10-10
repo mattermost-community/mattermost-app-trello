@@ -1,8 +1,8 @@
 import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
-import {AppBinding} from '../types';
+import {AppBinding, AppContext} from '../types';
 import {SubscriptionCreateForm, SubscriptionRemoveForm} from "../constant/forms";
 
-export const getHelpBinding = (): any => {
+export const getHelpBinding = (context: AppContext): any => {
     return {
         icon: TrelloIcon,
         label: Commands.HELP,
@@ -20,7 +20,7 @@ export const getHelpBinding = (): any => {
     };
 };
 
-export const getCardBinding = () => {
+export const getCardBinding = (context: AppContext) => {
     const commands: string[] = [
         Commands.CREATE
     ];
@@ -79,7 +79,7 @@ export const getCardCreateBinding = () => {
     };
 }
 
-export const getSubscriptionBinding = (): any => {
+export const getSubscriptionBinding = (context: AppContext): any => {
     const subCommands: string[] = [
         Commands.ADD,
         Commands.LIST,
@@ -87,9 +87,9 @@ export const getSubscriptionBinding = (): any => {
     ];
 
     const bindings: AppBinding[] = [
-        getAddSubBinding(),
-        getListSubBinding(),
-        getRemoveSubBinding()
+        getAddSubBinding(context),
+        getListSubBinding(context),
+        getRemoveSubBinding(context)
     ];
 
     return {
@@ -101,7 +101,7 @@ export const getSubscriptionBinding = (): any => {
     }
 }
 
-export const getAddSubBinding = (): any => {
+export const getAddSubBinding = (context: AppContext): any => {
     return {
         icon: TrelloIcon,
         label: Commands.ADD,
@@ -139,7 +139,7 @@ export const getAddSubBinding = (): any => {
     }
 }
 
-export const  getListSubBinding = (): any => {
+export const  getListSubBinding = (context: AppContext): any => {
     return {
         icon: TrelloIcon,
         label: Commands.LIST,
@@ -157,7 +157,7 @@ export const  getListSubBinding = (): any => {
     }
 }
 
-export const getRemoveSubBinding = (): any => {
+export const getRemoveSubBinding = (context: AppContext): any => {
     return {
         icon: TrelloIcon,
         label: Commands.REMOVE,
@@ -191,7 +191,7 @@ export const getRemoveSubBinding = (): any => {
     }
 }
 
-export const getConfigureBinding = (): any => {
+export const getConfigureBinding = (context: AppContext): any => {
     return {
         icon: TrelloIcon,
         label: Commands.CONFIGURE,
@@ -221,7 +221,7 @@ export const getConfigureBinding = (): any => {
 };
 
 
-export const getAccountConnectBinding = (): any => {
+export const getAccountConnectBinding = (context: AppContext): any => {
     return {
         icon: TrelloIcon,
         label: Commands.CONNECT,
@@ -244,7 +244,7 @@ export const getAccountConnectBinding = (): any => {
     };
 }
 
-export const getAccountDisconnectBinding = (): any => {
+export const getAccountDisconnectBinding = (context: AppContext): any => {
     return {
         icon: TrelloIcon,
         label: Commands.DISCONNECT,

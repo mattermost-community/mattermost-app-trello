@@ -21,7 +21,8 @@
           "oauth2_user": "all",
           "post": "all",
           "acting_user_access_token": "all",
-          "admin_access_token": "all"
+          "admin_access_token": "all",
+          "locale": "all"
       }
   },
   "requested_permissions": [
