@@ -52,5 +52,8 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+*.zip
 
 #Environment variables
+.env
+
