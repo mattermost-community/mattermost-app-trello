@@ -7,16 +7,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rm -rf dist node_modules",
     "build": "tsc -p .",
-    "start": "tsc -p . && node dist/index.js",
+    "start": "tsc -p . && cp -r src/locales dist/ && node dist/index.js",
     "dev": "ts-node-dev src/index.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/dominion-ancient/mattermost-app-trello.git"
+    "url": "git+https://github.com/development-ancient/mattermost-app-trello.git"
   },
   "author": "Santiago Benavides Juan Carlos <santiago.benavides@ancient.mx>",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/dominion-ancient/mattermost-app-trello#readme",
+  "homepage": "https://github.com/development-ancient/mattermost-app-trello.git#readme",
   "dependencies": {
     "@types/i18n": "^0.13.4",
     "@types/morgan": "^1.9.3",
