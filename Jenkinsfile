@@ -13,6 +13,14 @@ pipeline {
                 }
             }
         }
+        stage('develop') {
+            when {
+                expression {env.GIT_BRANCH == 'origin/develop'}
+            }
+            steps {
+                sh "cp './.env.dev' './.env'"
+            }
+        }
         stage ('PREPARE ENV'){
             steps {
                 dir("${workspace}") {
@@ -29,7 +37,7 @@ pipeline {
                 }
                 script {
                     try {
-                        sh './build.sh'
+                        sh './run-server.sh'
                         bitbucketStatusNotify( buildState: 'SUCCESSFUL' )
                     } catch (Exception e) {
                         bitbucketStatusNotify( buildState: 'FAILED' )
