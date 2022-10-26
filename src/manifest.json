@@ -1,11 +1,11 @@
 {
-  "app_id": "Trello",
-  "version": "0.0.1",
-  "homepage_url": "https://github.com/development-ancient/mattermost_app_trello/wiki/Configuration-for-user",
-  "display_name": "Trello",
-  "description": "Trello cloud app for Mattermost",
-  "icon": "trello.png",
-  "on_install": {
+    "app_id": "trello",
+    "version": "0.0.1",
+    "homepage_url": "https://github.com/development-ancient/mattermost_app_trello/wiki/Configuration-for-user",
+    "display_name": "Trello",
+    "description": "Trello cloud app for Mattermost",
+    "icon": "trello.png",
+    "on_install": {
         "expand": {
             "app": "all",
             "post": "all",
@@ -13,29 +13,39 @@
         },
         "path": "/install"
     },
-  "bindings": {
-      "path": "/bindings",
-      "expand": {
-          "acting_user": "all",
-          "oauth2_app": "all",
-          "oauth2_user": "all",
-          "post": "all",
-          "acting_user_access_token": "all",
-          "admin_access_token": "all",
-          "locale": "all"
-      }
-  },
-  "requested_permissions": [
-      "act_as_user",
-      "act_as_bot",
-      "remote_webhooks",
-      "remote_oauth2"
-  ],
-  "requested_locations": [
-      "/command",
-      "/in_post"
-  ],
-  "http": {
-      "root_url": ""
-  }
+    "bindings": {
+        "path": "/bindings",
+        "expand": {
+            "acting_user": "all",
+            "oauth2_app": "all",
+            "oauth2_user": "all",
+            "post": "all",
+            "acting_user_access_token": "all",
+            "admin_access_token": "all",
+            "locale": "all"
+        }
+    },
+    "requested_permissions": [
+        "act_as_user",
+        "act_as_bot",
+        "remote_webhooks",
+        "remote_oauth2"
+    ],
+    "requested_locations": [
+        "/command",
+        "/in_post"
+    ],
+    "http": {
+        "root_url": "https://mattermost-trello-dev.ancient.mx"
+    },
+    "aws_lambda": {
+        "functions": [
+            {
+                "path": "/",
+                "name": "trello",
+                "handler": "trello/index.handler",
+                "runtime": "nodejs16.x"
+            }
+        ]
+    }
 }
