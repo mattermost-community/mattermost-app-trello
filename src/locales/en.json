@@ -2,9 +2,6 @@
   "error": {
     "trello": "Trello failed "
   },
-   "bindings-descriptions": {
-      "bindings": "Manage Trello App"
-   },
   "api": {
     "add": "Card created",
     "form_step_two_exception": "List or Board not provided",
@@ -57,7 +54,43 @@
     "create": {
       "decription": "Add a new Card To Board",
       "card_name": "Card Name",
-      "card_description": "Name of the card"
+      "card_description": "Name of the card",
+      "board_name": "Board Name",
+      "board_description": "Name of the board",
+      "list_name": "List Name",
+      "list_description": "Name of the list"
+    },
+    "subscription": {
+      "get": "Subscribe current channel to a Trello board"
+    },
+    "add": {
+      "description": "Subscribe current channel to a Trello board",
+      "title": "Subscribe channel to Trello board",
+      "board_name": "Board name",
+      "channel": "Channel"
+    },
+    "sub_list": {
+      "description": "Get list of Trello boards subscribed to current channel"
+    },
+    "remove": {
+      "description": "Remove subscription from current channel",
+      "title": "Unsubscribe from Trello board notifications",
+      "subcription": "Subscription ID"
+    },
+    "configure": {
+      "description": "Configure the installed Trello account",
+      "title": "Show Trello Help Title"
+    },
+    "account": {
+      "description": "Configure your Trello credentials",
+      "title": "Configure your Trello credentials"
+    },
+    "disconnect": {
+      "description": "Remove your Trello credentials",
+      "title": "Remove your Trello credentials"
+    },
+    "bindings-descriptions": {
+      "bindings": "Manage Trello App"
     }
   }
 }

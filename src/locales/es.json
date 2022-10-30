@@ -2,9 +2,6 @@
   "error": {
     "trello": "Trello falló "
   },
-  "bindings-descriptions": {
-    "bindings": "Administrar la App de Trello"
-  },
   "api": {
     "add": "Tarjeta creada",
     "form_step_two_exception": "Lista o tablero no proporcionado",
@@ -57,7 +54,43 @@
     "create": {
       "decription": "Agregar una nueva tarjeta al tablero",
       "card_name": "Nombre de tarjeta",
-      "card_description": "Name of the card"
+      "card_description": "Nombre de la tarjeta",
+      "board_name": "Nombre del tablero",
+      "board_description": "Nombre del tablero",
+      "list_name": "Lista de nombres",
+      "list_description": "Nombre de la lista"
+    },
+    "subscription": {
+      "get": "Suscríbete al canal actual a un tablero de Trello"
+    },
+    "add": {
+      "description": "Suscríbete al canal actual a un tablero de Trello",
+      "title": "Subscribe channel to Trello board",
+      "board_name": "Nombre del tablero",
+      "channel": "Canal"
+    },
+    "sub_list": {
+      "description": "Obtener una lista de los tableros de Trello suscritos al canal actual"
+    },
+    "remove": {
+      "description": "Eliminar suscripción del canal actual",
+      "title": "Darse de baja de las notificaciones del tablero de Trello",
+      "subcription": "ID de suscripción"
+    },
+    "configure": {
+      "description": "Configurar la cuenta de Trello instalada",
+      "title": "Mostrar título de ayuda de Trello"
+    },
+    "account": {
+      "description": "Configura tus credenciales de Trello",
+      "title": "Configura tus credenciales de Trello"
+    },
+    "disconnect": {
+      "description": "Elimina tus credenciales de Trello",
+      "title": "Elimina tus credenciales de Trello"
+    },
+    "bindings-descriptions": {
+      "bindings": "Administrar la App de Trello"
     }
   }
 }

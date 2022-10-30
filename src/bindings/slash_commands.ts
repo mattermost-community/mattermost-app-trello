@@ -31,7 +31,7 @@ const newCommandBindings = (context: AppContext, bindings: AppBinding[], command
                 icon: TrelloIcon,
                 label: CommandTrigger,
                 hint: `[${commands.join(' | ')}]`,
-                description: i18nObj.__('bindings-descriptions.bindings'),
+                description: i18nObj.__('binding.bindings-descriptions.bindings'),
                 bindings,
             },
         ],
