@@ -1,14 +1,17 @@
 import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
 import {AppBinding, AppContext} from '../types';
 import {SubscriptionCreateForm, SubscriptionRemoveForm} from "../constant/forms";
+import { configureI18n } from "../utils/translations";
 
 export const getHelpBinding = (context: AppContext): any => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.HELP,
-        description: 'Show Trello Help',
+        description: i18nObj.__('binding.help.description'),
         form: {
-            title: "Show Trello Help Title",
+            title: i18nObj.__('binding.help.title'),
             icon: TrelloIcon,
             submit: {
                 path: Routes.App.BindingPathHelp,
@@ -21,6 +24,8 @@ export const getHelpBinding = (context: AppContext): any => {
 };
 
 export const getCardBinding = (context: AppContext) => {
+		const i18nObj = configureI18n(context);
+
     const commands: string[] = [
         Commands.CREATE
     ];
@@ -28,21 +33,23 @@ export const getCardBinding = (context: AppContext) => {
     return {
         icon: TrelloIcon,
         label: Commands.CARD,
-        description: 'Add a new Card To Board',
+        description: i18nObj.__('binding.get.description'),
         hint: `[${commands.join(' | ')}]`,
         bindings: [
-            getCardCreateBinding(),
+            getCardCreateBinding(context),
         ]
     }
 }
 
-export const getCardCreateBinding = () => {
+export const getCardCreateBinding = (context: AppContext) => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.CREATE,
-        description: 'Add a new Card To Board',
+        description: i18nObj.__('binding.create.decription'),
         form: {
-            title: 'Add a new Card to Board',
+            title: i18nObj.__('binding.create.decription'),
             icon: TrelloIcon,
             submit: {
                 path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
@@ -59,7 +66,7 @@ export const getCardCreateBinding = () => {
                 {
                     type: AppFieldTypes.TEXT,
                     name: 'card_name',
-                    modal_label: 'Card Name',
+                    modal_label: i18nObj.__('binding.create.card_name'),
                     description: 'Name of the card',
                 },
                 {

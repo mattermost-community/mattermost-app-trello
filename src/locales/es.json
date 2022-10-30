@@ -40,10 +40,24 @@
     "webhook": {
       "error": "Error webhook: {{ error }}",
       "card_moved": "Tarjeta movida {{ card }} (\"{{ board }}\" Junta)",
-      "board": "Junta {{ name }}",
+      "board": "Tablero {{ name }}",
       "text_moved": "La tarjeta \" {{ card }}\" se movió (de la lista \" {{ listBefore }}\" a la lista \"{{ listAfter }}\")",
       "message_created": "Tarjeta creada \"{{ card }}\" (\"{{ board }}\" Junta)",
       "text_created": "Card \"{{ card }}\" was created (in \"{{ list }}\" list)"
+    }
+  },
+  "binding": {
+    "help": {
+      "description": "Mostrar ayuda de Trello",
+      "title": "Mostrar título de ayuda de Trello"
+    },
+    "get": {
+      "description": "Agregar una nueva tarjeta al tablero"
+    },
+    "create": {
+      "decription": "Agregar una nueva tarjeta al tablero",
+      "card_name": "Nombre de tarjeta",
+      "card_description": "Name of the card"
     }
   }
 }

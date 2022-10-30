@@ -45,5 +45,19 @@
       "message_created": "Card created \"{{ card }}\"  (\"{{ board }}\" Board)",
       "text_created": "Card \"{{ card }}\" was created (in \"{{ list }}\" list)"
     }
+  },
+  "binding": {
+    "help": {
+      "description": "Show Trello Help",
+      "title": "Show Trello Help Title"
+    },
+    "get": {
+      "description": "Add a new Card To Board"
+    },
+    "create": {
+      "decription": "Add a new Card To Board",
+      "card_name": "Card Name",
+      "card_description": "Name of the card"
+    }
   }
 }
