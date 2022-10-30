@@ -1,5 +1,49 @@
 {
-   "bindings-descriptions": {
-      "bindings": "Administrar la App de Trello"
-   }
+  "error": {
+    "trello": "Trello falló "
+  },
+  "bindings-descriptions": {
+    "bindings": "Administrar la App de Trello"
+  },
+  "api": {
+    "add": "Tarjeta creada",
+    "form_step_two_exception": "Lista o tablero no proporcionado",
+    "configure": {
+      "config_failed": "No se puede enviar el formulario de configuración: Trello falló ",
+      "config_success": "Configuración de Trello actualizada con éxito"
+    },
+    "connect": {
+      "save": "Cuenta de Trello conectada correctamente!",
+      "disconnect_exception": "No estás conectado a una cuenta de Trello.",
+      "disconnect_success": "Cuenta de Trello desconectada con éxito!"
+    },
+    "help": {
+      "header": "Complemento Mattermost Trello - Ayuda con el comando Slash",
+      "command_help": "Inicie la sintaxis de ayuda de la línea de comandos del complemento de Trello, consulte la [documentación]({{ homepageUrl }}).",
+      "command_configure": "Configurar el espacio de trabajo de Trello",
+      "command_create_description": "Crear una nueva tarjeta",
+      "command_add_subcription": "Suscríbete al canal para recibir notificaciones de un tablero de Trello",
+      "command_list_subcription": "Mostrar todas sus suscripciones actuales",
+      "command_stop_subcription": "Dejar de recibir notificaciones del tablero de Trello",
+      "command_connect": "Inicie sesión en su cuenta de Trello",
+      "command_disconnect": "Sal de tu cuenta de Trello"
+    },
+    "install": {
+      "description": "Para terminar de configurar la aplicación Trello, lea la sección [Inicio rápido]({{ homepageUrl }}#quick-start) del LÉAME."
+    },
+    "subscription": {
+      "response_add": "Se creará la suscripción",
+      "response_remove": "Se eliminará la suscripción",
+      "response_get": "Lista de suscripciones: se encontraron {{ count }} suscripciones abiertas.",
+      "response_subcription": "- ID de suscripción: {{ id }} - {{ description }}"
+    },
+    "webhook": {
+      "error": "Error webhook: {{ error }}",
+      "card_moved": "Tarjeta movida {{ card }} (\"{{ board }}\" Junta)",
+      "board": "Junta {{ name }}",
+      "text_moved": "La tarjeta \" {{ card }}\" se movió (de la lista \" {{ listBefore }}\" a la lista \"{{ listAfter }}\")",
+      "message_created": "Tarjeta creada \"{{ card }}\" (\"{{ board }}\" Junta)",
+      "text_created": "Card \"{{ card }}\" was created (in \"{{ list }}\" list)"
+    }
+  }
 }

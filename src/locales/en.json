@@ -1,5 +1,49 @@
-{ 
+{
+  "error": {
+    "trello": "Trello failed "
+  },
    "bindings-descriptions": {
       "bindings": "Manage Trello App"
-   }
+   },
+  "api": {
+    "add": "Card created",
+    "form_step_two_exception": "List or Board not provided",
+    "configure": {
+      "config_failed": "Unable to submit configuration form: Trello failed ",
+      "config_success": "Successfully updated Trello configuration"
+    },
+    "connect": {
+      "save": "Trello account successfully connected!",
+      "disconnect_exception": "You are not connect to a Trello account.",
+      "disconnect_success": "Trello account successfully disconnected!"
+    },
+    "help": {
+      "header": "Mattermost Trello Plugin - Slash Command Help",
+      "command_help": "Launch the Trello plugin command line help syntax, check out the [documentation]({{ homepageUrl }}).",
+      "command_configure": "Configure Trello workspace",
+      "command_create_description": "Create a new card",
+      "command_add_subcription": "Subscribe channel to receive notifications from a Trello board",
+      "command_list_subcription": "Show all your current subscriptions",
+      "command_stop_subcription": "Stop receiving Trello board's notifications",
+      "command_connect": "Log in to your Trello account",
+      "command_disconnect": "Log out from your Trello account"
+    },
+    "install": {
+      "description": "To finish configuring the Trello app please read the [Quick Start]({{ homepageUrl }}#quick-start) section of the README"
+    },
+    "subscription": {
+      "response_add": "Subscription will be created",
+      "response_remove": "Subscription will be deleted",
+      "response_get": "Subscription List: Found {{ count }} open subscriptions.",
+      "response_subcription": "- Subscription ID: {{ id }} - {{ description }}"
+    },
+    "webhook": {
+      "error": "Error webhook: {{ error }}",
+      "card_moved": "Card moved {{ card }} (\"{{ board }}\" Board)",
+      "board": "Board {{ name }}",
+      "text_moved": "Card \" {{ card }}\" was moved (from \" {{ listBefore }}\" list to \"{{ listAfter }}\" list)",
+      "message_created": "Card created \"{{ card }}\"  (\"{{ board }}\" Board)",
+      "text_created": "Card \"{{ card }}\" was created (in \"{{ list }}\" list)"
+    }
+  }
 }
