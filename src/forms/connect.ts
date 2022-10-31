@@ -8,11 +8,13 @@ import { TrelloClient } from '../clients/trello';
 import { ConnectForm } from '../constant/forms';
 import config from '../config';
 import { Exception } from '../utils/exception';
+import { configureI18n } from "../utils/translations";
 
 export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
    const context = call.context as ExpandedBotActingUser;
    const mattermostUrl: string | undefined =  context.mattermost_site_url;
    const botAccessToken: string | undefined = context.bot_access_token;
+	 const i18nObj = configureI18n(call.context);
 
    const user_id = call.context.acting_user?.id;
 
@@ -26,7 +28,7 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
 
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
    if (!Object.keys(trelloConfig).length) {
-      throw new Exception(ExceptionType.MARKDOWN, 'Initial configuration is not done.');
+      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
    }
 
    const queryParams: string = queryString.stringify({
@@ -41,24 +43,24 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
       {
          type: AppFieldTypes.TEXT,
          name: ConnectForm.TOKEN,
-         modal_label: 'OAuth Token',
+         modal_label: i18nObj.__('forms.connect.label_token'),
          value: user_oauth_token?.oauth_token ? user_oauth_token.oauth_token : '',
-         hint: `token`,
-         description: `To get your token [Follow this link](${url})`,
+         hint: i18nObj.__('forms.connect.hint_token'),
+         description: i18nObj.__('forms.connect.description_token', { url: url }),
          is_required: true,
       }
    ];
 
    return {
-      title: 'Authorize Trello',
-      header: 'Provide your Trello OAuth Token.',
+      title: i18nObj.__('forms.connect.title_trello'),
+      header: i18nObj.__('forms.connect.header_trello'),
       icon: TrelloIcon,
       fields,
       submit: {
          path: `${Routes.App.BindingPathConnect}${Routes.App.Submit}`,
          expand: {
-          acting_user: 'summary',
-          acting_user_access_token: 'summary'
+          acting_user: i18nObj.__('forms.connect.user_summary'),
+          acting_user_access_token: i18nObj.__('forms.connect.user_summary')
         }
       },
    } as AppForm;
@@ -69,6 +71,7 @@ export async function connectFormSaveToken(call: AppCallRequest) {
    const bot_token: string | undefined = call.context.bot_access_token;
    const mattermost_url: string | undefined = call.context.mattermost_site_url;
    const values: AppCallValues | undefined = call.values;
+	 const i18nObj = configureI18n(call.context);
 
    const token: string = values?.[ConnectForm.TOKEN];
 
@@ -80,7 +83,7 @@ export async function connectFormSaveToken(call: AppCallRequest) {
    const kvClient = new KVStoreClient(kvOptions);
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
    if (!Object.keys(trelloConfig).length) {
-      throw new Exception(ExceptionType.MARKDOWN, 'Initial configuration is not done.');
+      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
    }
 
    const trelloOptions = {
@@ -89,7 +92,7 @@ export async function connectFormSaveToken(call: AppCallRequest) {
       workspace: trelloConfig.trello_workspace
    }
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-   await tryPromise(trelloClient.validateToken(trelloOptions.workspace), ExceptionType.TEXT_ERROR, 'Trello failed ');
+   await tryPromise(trelloClient.validateToken(trelloOptions.workspace), ExceptionType.TEXT_ERROR, i18nObj.__('error.trello'));
    
    await kvClient.storeOauth2User(<string>userId, { oauth_token: token });
 }
