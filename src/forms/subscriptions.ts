@@ -13,6 +13,7 @@ import {Board, SearchResponse, TrelloOrganization, TrelloWebhook, WebhookCreate}
 import {getHTTPPath, tryPromise} from "../utils";
 import {Exception} from "../utils/exception";
 import {AppCallRequest, AppCallValues} from "../types";
+import { configureI18n } from "../utils/translations";
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
@@ -20,6 +21,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const user_id: string | undefined = call.context.acting_user?.id;
    const whSecret: string | undefined = call.context.app?.webhook_secret;
    const values: AppCallValues | undefined = call.values;
+	 const i18nObj = configureI18n(call.context);
 
    const boardName: string = values?.[SubscriptionCreateForm.BOARD_NAME];
    const channelId: string = values?.[SubscriptionCreateForm.CHANNEL_ID].value;
@@ -33,7 +35,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
 
    const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>user_id);
    if (!Object.keys(user_oauth_token).length) {
-     throw new Exception(ExceptionType.MARKDOWN, 'You are not logged in.');
+     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
    }
 
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
@@ -43,14 +45,14 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
       token: user_oauth_token.oauth_token
    };
    const trelloOauthClient: TrelloClient = new TrelloClient(trelloOAuthOptions);
-   const organization: TrelloOrganization = await tryPromise(trelloOauthClient.getOrganizationId(trelloConfig.trello_workspace), ExceptionType.MARKDOWN, 'Trello failed: ');
+   const organization: TrelloOrganization = await tryPromise(trelloOauthClient.getOrganizationId(trelloConfig.trello_workspace), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
    const idOrganization = organization?.id;
    
-   const searchResponse: SearchResponse = await tryPromise(trelloOauthClient.searchBoardByName(boardName, idOrganization), ExceptionType.MARKDOWN, 'Trello failed: ');
+   const searchResponse: SearchResponse = await tryPromise(trelloOauthClient.searchBoardByName(boardName, idOrganization), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
    const board: Board | undefined = head(searchResponse.boards);
 
    if (!board) {
-      throw new Exception(ExceptionType.MARKDOWN, `Not found board with name "${boardName}"`);
+      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.subcription.board_not_found', { name: boardName }));
    }
    const trelloOptions: TrelloOptions = {
       apiKey: trelloConfig.trello_apikey,
@@ -68,11 +70,11 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const url: string = `${getHTTPPath()}${Routes.App.CallSubscriptionReceiveNotification}?${params}`
 
    const payload: WebhookCreate = {
-      description: `Channel: ${channelName} - Board: ${board?.name}`,
+      description: i18nObj.__('forms.subcription.description', { channel: channelName, board: board?.name }),
       idModel: board.id,
       callbackURL: url
    };
-   await tryPromise(trelloClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, 'Trello failed: ');
+   await tryPromise(trelloClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
 }
 
 export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
@@ -81,6 +83,7 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
    const user_id: string | undefined = call.context.acting_user?.id;
    const values: AppCallValues | undefined = call.values;
    const subscriptionID: string = values?.[SubscriptionRemoveForm.SUBSCRIPTION];
+	 const i18nObj = configureI18n(call.context);
 
    const kvOpts: KVStoreOptions = {
       mattermostUrl: <string>mattermostUrl,
@@ -90,7 +93,7 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
 
    const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>user_id);
    if (!Object.keys(user_oauth_token).length) {
-     throw new Exception(ExceptionType.MARKDOWN, 'You are not logged in.');
+     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
    }
 
    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
@@ -100,7 +103,7 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
       token: trelloConfig.trello_oauth_access_token
    };
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-   const subscription: TrelloWebhook = await tryPromise(trelloClient.getTrelloWebhookByID(subscriptionID), ExceptionType.MARKDOWN, 'Trello failed: ');
+   const subscription: TrelloWebhook = await tryPromise(trelloClient.getTrelloWebhookByID(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
    const subParams = new URL(<string>subscription.callbackURL)?.searchParams;
    const trelloOAuthOptions: TrelloOptions = {
       apiKey: trelloConfig.trello_apikey,
@@ -108,6 +111,6 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
    };
 
    const trelloOauthClient: TrelloClient = new TrelloClient(trelloOAuthOptions);
-   await tryPromise(trelloOauthClient.getBoardById(<string>subParams.get('idModel')), ExceptionType.MARKDOWN, 'Trello failed: ');
-   await tryPromise(trelloClient.deleteTrelloWebhook(subscriptionID), ExceptionType.MARKDOWN, 'Trello failed: ');
+   await tryPromise(trelloOauthClient.getBoardById(<string>subParams.get('idModel')), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+   await tryPromise(trelloClient.deleteTrelloWebhook(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
 }

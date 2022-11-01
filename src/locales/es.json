@@ -92,5 +92,55 @@
     "bindings-descriptions": {
       "bindings": "Administrar la App de Trello"
     }
+  },
+  "forms": {
+    "card_add": {
+      "add_form": {
+        "step_exception_1": "No se realiza la configuración inicial.",
+        "step_exception_2": "Usted no se ha identificado."
+      },
+      "create": {
+        "label_card": "Nombre de tarjeta",
+        "description_card": "Nombre de la tarjeta",
+        "label_board": "Seleccionar tablero",
+        "label_select": "Seleccionar lista",
+        "extra_text": " No tienes tableros, pide ayuda a tu administrador",
+        "new_card": "Crear nueva tarjeta",
+        "header_card": "Rellena el formulario con los datos de la tarjeta."
+      },
+      "add": {
+        "list_not_found": "Lista {{ name }} no encontrada.",
+        "board_not_found": "Tablero {{ nombre }} no encontrado."
+      }
+    },
+    "connect": {
+      "label_token": "OAuth Token",
+      "hint_token": "token",
+      "description_token": "Para obtener su token [Siga este enlace]({{ url }})",
+      "title_trello": "Autorizar Trello",
+      "header_trello": "Proporcione su token OAuth de Trello.",
+      "user_summary": "resumen"
+    },
+    "subcription": {
+      "board_not_found": "Tablero no encontrado con el nombre \"{{ name }}\"",
+      "description": "Canal: {{ channel }} - Tablero: {{ board }}"
+    },
+    "config": {
+      "title": "Configurar Trello",
+      "header": "Configure la aplicación Trello con la siguiente información.",
+      "workspace": {
+        "label": "Espacio de trabajo",
+        "hint": "Ej. https://trello.com/tuEspacioDeTrabajo",
+        "description": "Espacio de trabajo de Trello, en `Ej. https://trello.com/tuEspacioDeTrabajo`, el espacio de trabajo sería `tuEspacioDeTrabajo`"
+      },
+      "apikey": {
+        "label": "Clave API",
+        "description": "Clave API de desarrollador obtenida de Trello https://trello.com/app-key"
+      },
+      "token": {
+        "label": "Token API",
+        "description": "Token de API de desarrollador obtenido de Trello https://trello.com/app-key"
+      }
+    }
   }
 }
