@@ -1,17 +1,19 @@
 import {Request, Response} from "express";
 import queryString, { ParsedQuery } from 'query-string';
 import {
-    AppCallResponse,
-    AppContext,
-    PostCreate,
-    TrelloAction,
-    TrelloModel,
-    TrelloWebhookResponse,
-    WebhookRequest
+		AppCallRequest,
+		AppCallResponse,
+		AppContext,
+		PostCreate,
+		TrelloAction,
+		TrelloModel,
+		TrelloWebhookResponse,
+		WebhookRequest
 } from "../types";
 import {newErrorCallResponseWithMessage, newOKCallResponse} from "../utils";
 import {h5} from "../utils/markdown";
 import {MattermostClient, MattermostOptions} from "../clients/mattermost";
+import { configureI18n } from "../utils/translations";
 
 async function notifyCardMoved(event: WebhookRequest<TrelloWebhookResponse>, context: AppContext) {
     const mattermostUrl: string | undefined = context.mattermost_site_url;
@@ -19,21 +21,22 @@ async function notifyCardMoved(event: WebhookRequest<TrelloWebhookResponse>, con
     const action: TrelloAction = event.data.action;
     const cardModel: TrelloModel = event.data.model;
     const rawQuery: string = event.rawQuery;
+		const i18nObj = configureI18n(context);
 
     const parsedQuery: ParsedQuery = queryString.parse(rawQuery);
     const channelId: string = <string>parsedQuery['channelId'];
 
     const payload: PostCreate = {
-        message: h5(`Card moved "${action.data.card.name}"  ("${action.data.board.name}" Board)`),
+        message: h5(i18nObj.__('api.webhook.card_moved', { card: action.data.card.name,  board: action.data.board.name })),
         channel_id: channelId,
         props: {
             attachments: [
                 {
                     author_icon: `${action.memberCreator.avatarUrl}/30.png`,
                     author_name: `${action.memberCreator.fullName}`,
-                    title: `Board "${action.data.board.name}"`,
+                    title: i18nObj.__('api.webhook.board', { name: action.data.board.name }),
                     title_link: cardModel.url,
-                    text: `Card "${action.data.card.name}" was moved (from "${action.data.listBefore.name}" list to "${action.data.listAfter.name}" list)`,
+										text: i18nObj.__('api.webhook.text_moved', { card: action.data.card.name, listBefore: action.data.listBefore.name, listAfter: action.data.listAfter.name })
                 }
             ]
         }
@@ -54,21 +57,22 @@ async function notifyCardCreated(event: WebhookRequest<TrelloWebhookResponse>, c
     const action: TrelloAction = event.data.action;
     const cardModel: TrelloModel = event.data.model;
     const rawQuery: string = event.rawQuery;
+		const i18nObj = configureI18n(context);
 
     const parsedQuery: ParsedQuery = queryString.parse(rawQuery);
     const channelId: string = <string>parsedQuery['channelId'];
 
     const payload: PostCreate = {
-        message: h5(`Card created "${action.data.card.name}"  ("${action.data.board.name}" Board)`),
+        message: h5(i18nObj.__('api.webhook.message_created', { card: action.data.card.name, board: action.data.board.name })),
         channel_id: channelId,
         props: {
             attachments: [
                 {
                     author_icon: `${action.memberCreator.avatarUrl}/30.png`,
                     author_name: `${action.memberCreator.fullName}`,
-                    title: `Board "${action.data.board.name}"`,
+                    title: i18nObj.__('api.webhook.board', { name: action.data.board.name }),
                     title_link: cardModel.url,
-                    text: `Card "${action.data.card.name}" was created (in "${action.data.list.name}" list)`,
+                    text: i18nObj.__('api.webhook.text_created', { card: action.data.card.name, list: action.data.list.name }),
                 }
             ]
         }
@@ -91,6 +95,7 @@ const WEBHOOKS_ACTIONS: { [key: string]: Function } = {
 export const incomingWebhook = async (request: Request, response: Response) => {
     const webhookRequest: WebhookRequest<any> = request.body.values;
     const context: AppContext = request.body.context;
+		const i18nObj = configureI18n(context);
     
     let callResponse: AppCallResponse;
 
@@ -102,14 +107,15 @@ export const incomingWebhook = async (request: Request, response: Response) => {
         callResponse = newOKCallResponse();
         response.json(callResponse);
     } catch (error: any) {
-        callResponse = newErrorCallResponseWithMessage('Error webhook: ' + error.message);
+        callResponse = newErrorCallResponseWithMessage(i18nObj.__('api.webhook.error', { error: error.message }));
         response.json(callResponse);
     }
 };
 
 export const notificationToMattermost = async (req: Request, res: Response) => {
     const pluginWebhook: ParsedQuery = queryString.parse(queryString.extract(req.url));
-
+		const call: AppCallRequest = req.body;
+		const i18nObj = configureI18n(call.context);
     let callResponse: AppCallResponse;
 
     try {
@@ -124,7 +130,7 @@ export const notificationToMattermost = async (req: Request, res: Response) => {
         callResponse = newOKCallResponse();
         res.json(callResponse);
     } catch (error: any) {
-        callResponse = newErrorCallResponseWithMessage('Error webhook: ' + error.message);
+        callResponse = newErrorCallResponseWithMessage(i18nObj.__('api.webhook.error', { error: error.message }));
         res.json(callResponse);
     }
 }

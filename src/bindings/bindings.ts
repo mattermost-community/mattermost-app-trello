@@ -1,14 +1,17 @@
 import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
 import {AppBinding, AppContext} from '../types';
 import {SubscriptionCreateForm, SubscriptionRemoveForm} from "../constant/forms";
+import { configureI18n } from "../utils/translations";
 
 export const getHelpBinding = (context: AppContext): any => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.HELP,
-        description: 'Show Trello Help',
+        description: i18nObj.__('binding.help.description'),
         form: {
-            title: "Show Trello Help Title",
+            title: i18nObj.__('binding.help.title'),
             icon: TrelloIcon,
             submit: {
                 path: Routes.App.BindingPathHelp,
@@ -21,6 +24,8 @@ export const getHelpBinding = (context: AppContext): any => {
 };
 
 export const getCardBinding = (context: AppContext) => {
+		const i18nObj = configureI18n(context);
+
     const commands: string[] = [
         Commands.CREATE
     ];
@@ -28,21 +33,23 @@ export const getCardBinding = (context: AppContext) => {
     return {
         icon: TrelloIcon,
         label: Commands.CARD,
-        description: 'Add a new Card To Board',
+        description: i18nObj.__('binding.get.description'),
         hint: `[${commands.join(' | ')}]`,
         bindings: [
-            getCardCreateBinding(),
+            getCardCreateBinding(context),
         ]
     }
 }
 
-export const getCardCreateBinding = () => {
+export const getCardCreateBinding = (context: AppContext) => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.CREATE,
-        description: 'Add a new Card To Board',
+        description: i18nObj.__('binding.create.decription'),
         form: {
-            title: 'Add a new Card to Board',
+            title: i18nObj.__('binding.create.decription'),
             icon: TrelloIcon,
             submit: {
                 path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
@@ -59,20 +66,20 @@ export const getCardCreateBinding = () => {
                 {
                     type: AppFieldTypes.TEXT,
                     name: 'card_name',
-                    modal_label: 'Card Name',
-                    description: 'Name of the card',
+                    modal_label: i18nObj.__('binding.create.card_name'),
+                    description: i18nObj.__('binding.create.card_description'),
                 },
                 {
                     type: AppFieldTypes.TEXT,
                     name: 'board_name',
-                    modal_label: 'Board Name',
-                    description: 'Name of the board',
+                    modal_label: i18nObj.__('binding.create.board_name'),
+                    description: i18nObj.__('binding.create.board_description'),
                 },
                 {
                     type: AppFieldTypes.TEXT,
                     name: 'list_name',
-                    modal_label: 'List Name',
-                    description: 'Name of the list',
+                    modal_label: i18nObj.__('binding.create.list_name'),
+                    description: i18nObj.__('binding.create.list_description'),
                 },
             ]
         }
@@ -80,6 +87,8 @@ export const getCardCreateBinding = () => {
 }
 
 export const getSubscriptionBinding = (context: AppContext): any => {
+		const i18nObj = configureI18n(context);
+
     const subCommands: string[] = [
         Commands.ADD,
         Commands.LIST,
@@ -95,19 +104,21 @@ export const getSubscriptionBinding = (context: AppContext): any => {
     return {
         icon: TrelloIcon,
         label: Commands.SUBSCRIPTION,
-        description: 'Subscribe current channel to a Trello board',
+        description: i18nObj.__('binding.subscription.get'),
         hint: `[${subCommands.join(' | ')}]`,
         bindings: bindings
     }
 }
 
 export const getAddSubBinding = (context: AppContext): any => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.ADD,
-        description: 'Subscribe current channel to a Trello board',
+        description: i18nObj.__('binding.add.description'),
         form: {
-            title: 'Subscribe channel to Trello board',
+            title: i18nObj.__('binding.add.title'),
             icon: TrelloIcon,
             submit: {
                 path: Routes.App.CallSubscriptionAdd,
@@ -120,7 +131,7 @@ export const getAddSubBinding = (context: AppContext): any => {
             },
             fields: [
                 {
-                    modal_label: 'Board name',
+                    modal_label: i18nObj.__('binding.add.board_name'),
                     name: SubscriptionCreateForm.BOARD_NAME,
                     type: AppFieldTypes.TEXT,
                     is_required: true,
@@ -128,7 +139,7 @@ export const getAddSubBinding = (context: AppContext): any => {
                     max_length: 100
                 },
                 {
-                    modal_label: 'Channel',
+                    modal_label: i18nObj.__('binding.add.channel'),
                     name: SubscriptionCreateForm.CHANNEL_ID,
                     type: AppFieldTypes.CHANNEL,
                     is_required: true,
@@ -140,10 +151,12 @@ export const getAddSubBinding = (context: AppContext): any => {
 }
 
 export const  getListSubBinding = (context: AppContext): any => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.LIST,
-        description: 'Get list of Trello boards subscribed to current channel',
+        description: i18nObj.__('binding.sub_list.description'),
         form: {
             submit: {
                 path: Routes.App.CallSubscriptionList,
@@ -158,12 +171,14 @@ export const  getListSubBinding = (context: AppContext): any => {
 }
 
 export const getRemoveSubBinding = (context: AppContext): any => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.REMOVE,
-        description: 'Remove subscription from current channel',
+        description: i18nObj.__('binding.remove.description'),
         form: {
-            title: 'Unsubscribe from Trello board notifications',
+            title: i18nObj.__('binding.remove.title'),
             icon: TrelloIcon,
             submit: {
                 path: Routes.App.CallSubscriptionRemove,
@@ -179,7 +194,7 @@ export const getRemoveSubBinding = (context: AppContext): any => {
             },
             fields: [
                 {
-                    modal_label: 'Subscription ID',
+                    modal_label: i18nObj.__('binding.remove.subcription'),
                     name: SubscriptionRemoveForm.SUBSCRIPTION,
                     type: AppFieldTypes.TEXT,
                     is_required: true,
@@ -192,12 +207,14 @@ export const getRemoveSubBinding = (context: AppContext): any => {
 }
 
 export const getConfigureBinding = (context: AppContext): any => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.CONFIGURE,
-        description: 'Configure the installed Trello account',
+        description: i18nObj.__('binding.configure.description'),
         form: {
-            title: "Show Trello Help Title",
+            title: i18nObj.__('binding.configure.title'),
             icon: TrelloIcon,
             submit: {
                 path: Routes.App.CallPathConfigOpenForm,
@@ -222,12 +239,14 @@ export const getConfigureBinding = (context: AppContext): any => {
 
 
 export const getAccountConnectBinding = (context: AppContext): any => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.CONNECT,
-        description: 'Configure your Trello credentials',
+        description: i18nObj.__('binding.account.description'),
         form: {
-            title: 'Configure your Trello credentials',
+            title: i18nObj.__('binding.account.title'),
             icon: TrelloIcon,
             submit: {
                 path: `${Routes.App.BindingPathConnect}`,
@@ -245,12 +264,14 @@ export const getAccountConnectBinding = (context: AppContext): any => {
 }
 
 export const getAccountDisconnectBinding = (context: AppContext): any => {
+		const i18nObj = configureI18n(context);
+
     return {
         icon: TrelloIcon,
         label: Commands.DISCONNECT,
-        description: 'Remove your Trello credentials',
+        description: i18nObj.__('binding.disconnect.description'),
         form: {
-            title: 'Remove your Trello credentials',
+            title: i18nObj.__('binding.disconnect.title'),
             icon: TrelloIcon,
             submit: {
                 path: `${Routes.App.BindingPathDisconnect}`,

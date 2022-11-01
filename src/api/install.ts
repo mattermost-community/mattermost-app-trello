@@ -4,6 +4,7 @@ import {newOKCallResponseWithMarkdown} from '../utils';
 import {MattermostClient, MattermostOptions} from '../clients/mattermost';
 import {joinLines} from '../utils/markdown'
 import manifest from '../manifest.json';
+import { configureI18n } from "../utils/translations";
 
 export const getInstall = async (request: Request, response: Response) => {
     const call: AppCallRequest = request.body;
@@ -20,16 +21,17 @@ export const getInstall = async (request: Request, response: Response) => {
     await mattermostClient.updateRolesByUser(<string>userId, 'system_user system_post_all');
 
     const helpText: string = [
-        getCommands()
+        getCommands(request.body)
     ].join('');
     const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
 
     response.json(callResponse);
 };
 
-function getCommands(): string {
+function getCommands(call: AppCallRequest): string {
+		const i18nObj = configureI18n(call.context);
     const homepageUrl: string = manifest.homepage_url;
     return `${joinLines(
-        `To finish configuring the Trello app please read the [Quick Start](${homepageUrl}#quick-start) section of the README`
+        i18nObj.__('api.install.description', {homepageUrl: homepageUrl})
     )}\n`;
 }

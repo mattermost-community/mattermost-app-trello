@@ -10,10 +10,13 @@ import {AppActingUser, AppCallRequest, AppCallResponse, ExpandedBotActingUser} f
 import {addBulletSlashCommand, h5, joinLines} from "../utils/markdown";
 import {Commands} from "../constant";
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import { configureI18n } from "../utils/translations";
 
 export const getHelp = async (request: Request, response: Response) => {
+		const call = request.body as AppCallRequest;
+
     const helpText = [
-        getHeader(),
+        getHeader(call),
         await getCommands(request.body)
     ].join('');
     const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
@@ -21,8 +24,9 @@ export const getHelp = async (request: Request, response: Response) => {
     response.json(callResponse);
 };
 
-function getHeader(): string {
-    return h5(`Mattermost Trello Plugin - Slash Command Help`);
+function getHeader(call: AppCallRequest): string {
+		const i18nObj = configureI18n(call.context);
+    return h5(i18nObj.__('api.help.header'));
 }
 
 async function getCommands(call: AppCallRequest): Promise<string> {
@@ -33,6 +37,7 @@ async function getCommands(call: AppCallRequest): Promise<string> {
     const actingUser: AppActingUser | undefined = context.acting_user;
     const actingUserID: string | undefined = actingUser.id;
     const commands: string[] = [];
+		const i18nObj = configureI18n(call.context);
 
     const options: KVStoreOptions = {
         mattermostUrl: <string>mattermostUrl,
@@ -40,21 +45,21 @@ async function getCommands(call: AppCallRequest): Promise<string> {
     };
     const kvClient = new KVStoreClient(options);
     
-    commands.push(addBulletSlashCommand(Commands.HELP, `Launch the Trello plugin command line help syntax, check out the [documentation](${homepageUrl}).`));
+    commands.push(addBulletSlashCommand(Commands.HELP, i18nObj.__('api.help.')));
 
     if (isUserSystemAdmin(<AppActingUser>actingUser)) {
-        commands.push(addBulletSlashCommand(Commands.CONFIGURE, `Configure Trello workspace`));
+        commands.push(addBulletSlashCommand(Commands.CONFIGURE, i18nObj.__('api.help.command_configure')));
     }
     if (await existsKvTrelloConfig(kvClient)) {
         if (await existsKvOauthToken(kvClient, <string>actingUserID)) {
-            commands.push(addBulletSlashCommand(`${Commands.CARD} create`, `Create a new card`));
-            commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} add`, 'Subscribe channel to receive notifications from a Trello board'));
-            commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} list`, 'Show all your current subscriptions'));
-            commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} remove`, 'Stop receiving Trello board\'s notifications'));
+            commands.push(addBulletSlashCommand(`${Commands.CARD} create`, i18nObj.__('api.help.command_create_description.command_add_subcription')));
+            commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} add`, i18nObj.__('api.help.command_add_subcription')));
+            commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} list`, i18nObj.__('api.help.command_list_subcription')));
+            commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} remove`, i18nObj.__('api.help.command_stop_subcription')));
         }
 
-        commands.push(addBulletSlashCommand(`${Commands.CONNECT}`, 'Log in to your Trello account'));
-        commands.push(addBulletSlashCommand(`${Commands.DISCONNECT}`, 'Log out from your Trello account'));
+        commands.push(addBulletSlashCommand(`${Commands.CONNECT}`, i18nObj.__('api.help.command_connect')));
+        commands.push(addBulletSlashCommand(`${Commands.DISCONNECT}`, i18nObj.__('api.help.command_disconnect')));
     }
 
     return `${joinLines(...commands)}`;
