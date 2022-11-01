@@ -40,7 +40,7 @@
       "board": "Tablero {{ name }}",
       "text_moved": "La tarjeta \" {{ card }}\" se movió (de la lista \" {{ listBefore }}\" a la lista \"{{ listAfter }}\")",
       "message_created": "Tarjeta creada \"{{ card }}\" (\"{{ board }}\" Junta)",
-      "text_created": "Card \"{{ card }}\" was created (in \"{{ list }}\" list)"
+      "text_created": "Se creó la tarjeta \"{{ card }}\" (en la lista \"{{ list }}\")"
     }
   },
   "binding": {
