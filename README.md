@@ -12,7 +12,7 @@
 * [Development](#development)
   * [Manual installation](#manual-installation)
   * [Run the local development environment](#run-the-local-development-environment)
-  * [Run the local development environment with docker](#run-the-local-development-environment-with-docker)
+  * [Run the local development environment with Docker](#run-the-local-development-environment-with-docker)
 
 This application allows you to integrate Trello with your Mattermost instance. letting you know when a new card is created, as well as getting notified about card updates. Also, allows the user to create new cards without moving from the Mattermost window.
 
@@ -34,7 +34,7 @@ The ``TRELLO_API_URL`` should be replaced with the URL where the Trello API inst
 
 ## Configuration
 
-1. First install the app in your current Mattermost instance (refer to Installation) so that the ``/trello`` command is available.
+1. First, install the app in your current Mattermost instance (refer to [Installation](#installation)) so that the ``/trello`` command is available.
 2. Next, configure your Trello workspace. As a super admin user, run the ``/trello configure`` command.
 3. In the confirmation modal, enter your workspace, API key and API token which you can find at https://trello.com/app-key.
 4. When you've completed the configuration, the ``/trello account`` command will be enabled. 
@@ -45,7 +45,7 @@ The ``TRELLO_API_URL`` should be replaced with the URL where the Trello API inst
 
 ## Slash commands
 
-/trello configure: This command will enable all the other commands; it asks the administrator for an API key (which will be used to execute calls to Trello’s API) and a token.
+- ``/trello configure``: This command will enable all the other commands; it asks the administrator for an API key (which will be used to execute calls to Trello’s API) and a token.
 
 # End user guide
 
@@ -69,7 +69,7 @@ The ``TRELLO_API_URL`` should be replaced with the URL where the Trello API inst
 
 ### Run the local development environment
 
-* You need to have installed at least node version 12 and maximum version 18. You can download the latest lts version of node for the required operating system hereL https://nodejs.org/es/download/
+* You need to have installed at least node version 12 and maximum version 18. You can download the latest lts version of node for the required operating system here https://nodejs.org/es/download/
 
 *  Install libraries: ``cd`` to the project directory and execute ``npm install`` to download all dependency libraries.
 
@@ -99,7 +99,7 @@ Variable definition
 $ npm run dev
 ```
 
-### Run the local development environment with docker
+### Run the local development environment with Docker
 
 * You need to have Docker installed. You can find the necessary steps to install Docker for the following operating systems:
 
