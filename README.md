@@ -89,9 +89,9 @@ HOST=https://mattermost-trello-dev.ancient.mx
 
 Variable definition
 
-- PROJECT: In case of executing the project with docker using the .build.sh this variable will be used for the name of the container
+- PROJECT: In case of executing the project with Docker using the ``.build.sh`` file, this variable will be used for the name of the container
 - PORT: Port number on which the Trello integration is listening
-- HOST: Trello api usage URL
+- HOST: Trello API usage URL
 
 * Finally, the project must be executed.
 
@@ -103,9 +103,9 @@ $ npm run dev
 
 * You need to have Docker installed. You can find the necessary steps to install Docker for the following operating systems:
 
-https://docs.docker.com/engine/install/ubuntu/ - Ubuntu
-https://docs.docker.com/desktop/mac/install/ - Mac
-https://docs.docker.com/desktop/windows/install/ - Windows
+[Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+[Mac](https://docs.docker.com/desktop/mac/install/)
+[Windows](https://docs.docker.com/desktop/windows/install/)
 
 * Once you have Docker installed, the next step would be to run the ``./build.sh`` file to create the API container and expose it locally or on the server, depending on the case required.
 
@@ -113,4 +113,4 @@ https://docs.docker.com/desktop/windows/install/ - Windows
 $ ./build
 ```
 
-When the container is created correctly, the api will be running at the url http://127.0.0.1:4002 in such a way that the installation can be carried out in Mattermost.
+When the container is created correctly, the API will be running at the url http://127.0.0.1:4002 in such a way that the installation can be carried out in Mattermost.
