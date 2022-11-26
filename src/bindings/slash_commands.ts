@@ -17,8 +17,8 @@ import {
     KVStoreClient, 
     KVStoreOptions, 
 } from '../clients/kvstore';
-import {existsKvOauthToken, existsKvTrelloConfig, isUserSystemAdmin} from "../utils";
-import { AppContext } from '../types/apps';
+import {existsKvOauthToken, existsKvTrelloConfig, existsOauth2App, isUserSystemAdmin} from "../utils";
+import { AppContext, Oauth2App } from '../types/apps';
 import { configureI18n } from '../utils/translations';
 
 const newCommandBindings = (context: AppContext, bindings: AppBinding[], commands: string[]): AppsState => {
@@ -44,6 +44,7 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
     const actingUser: AppActingUser | undefined = call.context.acting_user;
     const actingUserID: string | undefined = call.context.acting_user?.id; 
     const context = call.context as AppContext;
+    const oauth2 = call.context.oauth2 as Oauth2App;
 
     const options: KVStoreOptions = {
         mattermostUrl: <string>mattermostUrl,
@@ -62,7 +63,7 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
         bindings.push(getConfigureBinding(context));
         commands.push(Commands.CONFIGURE);
     }  
-    if (await existsKvTrelloConfig(kvClient)) {
+    if (existsOauth2App(oauth2)) {
         if (await existsKvOauthToken(kvClient, <string>actingUserID)) {
             commands.push(Commands.CARD);
             commands.push(Commands.SUBSCRIPTION);

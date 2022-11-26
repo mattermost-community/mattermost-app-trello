@@ -207,7 +207,7 @@ export const getRemoveSubBinding = (context: AppContext): any => {
 }
 
 export const getConfigureBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -220,14 +220,8 @@ export const getConfigureBinding = (context: AppContext): any => {
                 path: Routes.App.CallPathConfigOpenForm,
                 expand: {
                     app: AppExpandLevels.EXPAND_ALL,
-                    acting_user: AppExpandLevels.EXPAND_ALL,
+                    acting_user: AppExpandLevels.SUMMARY,
                     acting_user_access_token: AppExpandLevels.EXPAND_ALL,
-                    admin_access_token: AppExpandLevels.EXPAND_ALL,
-                    channel: AppExpandLevels.EXPAND_ALL,
-                    post: AppExpandLevels.EXPAND_ALL,
-                    root_post: AppExpandLevels.EXPAND_ALL,
-                    team: AppExpandLevels.EXPAND_ALL,
-                    user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
                     locale: AppExpandLevels.EXPAND_ALL

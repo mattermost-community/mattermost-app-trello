@@ -3,7 +3,7 @@ import {
    AppCallResponse,
    AppCallValues
 } from '../types';
-import { newConfigForm } from '../forms/trello_config';
+import { newConfigForm, submitConfigForm } from '../forms/trello_config';
 import { 
    CallResponseHandler, 
    newFormCallResponse, 
@@ -30,6 +30,17 @@ export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
 };
 
 export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
+   let callResponse: AppCallResponse;
+
+   try {
+      const message = await submitConfigForm(req.body);
+      callResponse = newOKCallResponseWithMarkdown(message);
+      res.json(callResponse);
+   } catch (error: any) {
+      callResponse = showMessageToMattermost(error);
+      res.json(callResponse);
+   }
+   /*
    const call: AppCallRequestWithValues = req.body;
    const mattemrostUrl: string | undefined = call.context.mattermost_site_url;
    const botAccessToken: string | undefined = call.context.bot_access_token;
@@ -70,4 +81,5 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
       callResponse = showMessageToMattermost(error);
       res.json(callResponse);
    }
+   */
 };

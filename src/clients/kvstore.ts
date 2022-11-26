@@ -1,5 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import {AppsPluginName, Routes} from '../constant';
+import { Oauth2App } from '../types';
 
 export interface KVStoreOptions {
     mattermostUrl: string;
@@ -68,6 +69,16 @@ export class KVStoreClient {
     public kvDelete(key: string): Promise<void> {
         const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathKV}/${key}`;
         return axios.delete(url, {
+            headers: {
+                Authorization: `BEARER ${this.config.accessToken}`,
+                'content-type': 'application/json; charset=UTF-8',
+            },
+        }).then((response: AxiosResponse<any>) => response.data);
+    }
+
+    public storeOauth2App(data: Oauth2App): Promise<any> {
+        const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathOAuth2App}`;
+        return axios.post(url, data, {
             headers: {
                 Authorization: `BEARER ${this.config.accessToken}`,
                 'content-type': 'application/json; charset=UTF-8',
