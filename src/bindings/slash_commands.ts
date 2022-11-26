@@ -13,11 +13,7 @@ import {
     CommandTrigger,
     TrelloIcon
 } from "../constant";
-import {
-    KVStoreClient, 
-    KVStoreOptions, 
-} from '../clients/kvstore';
-import {existsKvOauthToken, existsKvTrelloConfig, existsOauth2App, isUserSystemAdmin} from "../utils";
+import { existsOauth2App, existsToken, isUserSystemAdmin} from "../utils";
 import { AppContext, Oauth2App } from '../types/apps';
 import { configureI18n } from '../utils/translations';
 
@@ -39,19 +35,10 @@ const newCommandBindings = (context: AppContext, bindings: AppBinding[], command
 };
 
 export const getCommandBindings = async (call: AppCallRequest): Promise<AppsState> => {
-    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
-    const botAccessToken: string | undefined = call.context.bot_access_token;
     const actingUser: AppActingUser | undefined = call.context.acting_user;
-    const actingUserID: string | undefined = call.context.acting_user?.id; 
     const context = call.context as AppContext;
     const oauth2 = call.context.oauth2 as Oauth2App;
 
-    const options: KVStoreOptions = {
-        mattermostUrl: <string>mattermostUrl,
-        accessToken: <string>botAccessToken,
-    };
-    const kvClient = new KVStoreClient(options);
-    
     const bindings: AppBinding[] = [];
     const commands: string[] = [
         Commands.HELP
@@ -64,7 +51,7 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
         commands.push(Commands.CONFIGURE);
     }  
     if (existsOauth2App(oauth2)) {
-        if (await existsKvOauthToken(kvClient, <string>actingUserID)) {
+        if (existsToken(oauth2)) {
             commands.push(Commands.CARD);
             commands.push(Commands.SUBSCRIPTION);
             bindings.push(getCardBinding(context));

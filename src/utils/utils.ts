@@ -29,6 +29,11 @@ export async function existsKvOauthToken(kvClient: KVStoreClient, userId: string
     return Boolean(Object.keys(oauth2).length);
 };
 
+export function existsToken(oauth2App: Oauth2App): boolean {
+    const oauthUser = oauth2App.user;
+    return !!oauthUser?.token;
+}
+
 export function replace(value: string, searchValue: string, replaceValue: string): string {
     return value.replace(searchValue, replaceValue);
 }

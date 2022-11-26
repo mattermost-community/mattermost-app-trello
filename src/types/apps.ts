@@ -23,8 +23,12 @@ export type Oauth2App = {
   client_secret: string;
   connect_url?: string;
   complete_url?: string;
-  user?: any;
+  user?: Oauth2CurrentUser;
   data?: Oauth2Data;
+}
+
+export type Oauth2CurrentUser = {
+  token: string;
 }
 
 export interface Oauth2Data {

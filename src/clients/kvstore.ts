@@ -1,6 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import {AppsPluginName, Routes} from '../constant';
-import { Oauth2App } from '../types';
+import { Oauth2App, Oauth2CurrentUser } from '../types';
 
 export interface KVStoreOptions {
     mattermostUrl: string;
@@ -46,15 +46,6 @@ export class KVStoreClient {
         }).then((response: AxiosResponse<any>) => response.data);
     }
 
-    public storeOauth2User(key: string, token: StoredOauthUserToken) {
-        const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathKV}/${key}`;
-        return axios.post(url, token, {
-            headers: {
-                Authorization: `BEARER ${this.config.accessToken}`,
-                'content-type': 'application/json; charset=UTF-8',
-            },
-        }).then((response: AxiosResponse<any>) => response.data);
-    }
     
     public getOauth2User(key: string): Promise<StoredOauthUserToken> {
         const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathKV}/${key}`;
@@ -79,6 +70,16 @@ export class KVStoreClient {
     public storeOauth2App(data: Oauth2App): Promise<any> {
         const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathOAuth2App}`;
         return axios.post(url, data, {
+            headers: {
+                Authorization: `BEARER ${this.config.accessToken}`,
+                'content-type': 'application/json; charset=UTF-8',
+            },
+        }).then((response: AxiosResponse<any>) => response.data);
+    }
+
+    public storeOauth2User(currentUser: Oauth2CurrentUser | {}): Promise<any> {
+        const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}${Routes.Mattermost.ApiVersionV1}${Routes.Mattermost.PathOAuth2User}`;
+        return axios.post(url, currentUser, {
             headers: {
                 Authorization: `BEARER ${this.config.accessToken}`,
                 'content-type': 'application/json; charset=UTF-8',
