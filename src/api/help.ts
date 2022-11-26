@@ -1,12 +1,12 @@
 import {Request, Response} from 'express';
 import manifest from '../manifest.json';
 import {
-    existsKvOauthToken,
-    existsKvTrelloConfig,
+    existsOauth2App,
+    existsToken,
     isUserSystemAdmin, 
     newOKCallResponseWithMarkdown
 } from "../utils";
-import {AppActingUser, AppCallRequest, AppCallResponse, ExpandedBotActingUser} from "../types";
+import {AppActingUser, AppCallRequest, AppCallResponse, ExpandedBotActingUser, Oauth2App} from "../types";
 import {addBulletSlashCommand, h5, joinLines} from "../utils/markdown";
 import {Commands} from "../constant";
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
@@ -37,7 +37,8 @@ async function getCommands(call: AppCallRequest): Promise<string> {
     const actingUser: AppActingUser | undefined = context.acting_user;
     const actingUserID: string | undefined = actingUser.id;
     const commands: string[] = [];
-		const i18nObj = configureI18n(call.context);
+    const i18nObj = configureI18n(call.context);
+    const oauth2 = call.context.oauth2 as Oauth2App;
 
     const options: KVStoreOptions = {
         mattermostUrl: <string>mattermostUrl,
@@ -50,8 +51,8 @@ async function getCommands(call: AppCallRequest): Promise<string> {
     if (isUserSystemAdmin(<AppActingUser>actingUser)) {
         commands.push(addBulletSlashCommand(Commands.CONFIGURE, i18nObj.__('api.help.command_configure')));
     }
-    if (await existsKvTrelloConfig(kvClient)) {
-        if (await existsKvOauthToken(kvClient, <string>actingUserID)) {
+    if (existsOauth2App(oauth2)) {
+        if (existsToken(oauth2)) {
             commands.push(addBulletSlashCommand(`${Commands.CARD} create`, i18nObj.__('api.help.command_create_description.command_add_subcription')));
             commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} add`, i18nObj.__('api.help.command_add_subcription')));
             commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} list`, i18nObj.__('api.help.command_list_subcription')));
