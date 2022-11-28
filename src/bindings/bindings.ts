@@ -123,7 +123,7 @@ export const getAddSubBinding = (context: AppContext): any => {
             submit: {
                 path: Routes.App.CallSubscriptionAdd,
                 expand: {
-                    app: AppExpandLevels.EXPAND_SUMMARY,
+                    app: AppExpandLevels.EXPAND_ALL,
                     channel: AppExpandLevels.EXPAND_ALL,
                     admin_access_token: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_SUMMARY,
@@ -183,7 +183,7 @@ export const getRemoveSubBinding = (context: AppContext): any => {
             submit: {
                 path: Routes.App.CallSubscriptionRemove,
                 expand: {
-                    app: AppExpandLevels.EXPAND_SUMMARY,
+                    app: AppExpandLevels.EXPAND_ALL,
                     channel: AppExpandLevels.EXPAND_ALL,
                     admin_access_token: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_SUMMARY,
