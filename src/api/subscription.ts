@@ -9,7 +9,7 @@ import {
    AppContext,
    TrelloWebhook,
 } from "../types";
-import {addSubscriptionCall, removeWebhookCall} from '../forms/subscriptions';
+import {addSubscriptionCall, listWebhookCall, removeWebhookCall} from '../forms/subscriptions';
 import { callSubscriptionList } from '../forms/subscription-list';
 import { h6, joinLines } from '../utils/markdown';
 import { configureI18n } from "../utils/translations";
@@ -17,7 +17,7 @@ import { configureI18n } from "../utils/translations";
 export const addWebhookSubscription = async (request: Request, response: Response) => {
    const call: AppCallRequest = request.body;
    let callResponse: AppCallResponse;
-	 const i18nObj = configureI18n(call.context);
+   const i18nObj = configureI18n(call.context);
 
    try {
       await addSubscriptionCall(call);
@@ -32,7 +32,7 @@ export const addWebhookSubscription = async (request: Request, response: Respons
 export const removeWebhookSubscription = async (req: Request, res: Response) => {
    const call: AppCallRequest = req.body; 
    let callResponse: AppCallResponse;
-	 const i18nObj = configureI18n(call.context);
+   const i18nObj = configureI18n(call.context);
 
    try {
       await removeWebhookCall(call);
@@ -45,26 +45,14 @@ export const removeWebhookSubscription = async (req: Request, res: Response) => 
 }
 
 export const getWebhookSubscriptions = async (req: Request, res: Response) => {
+   const call: AppCallRequest = req.body;
    let callResponse: AppCallResponse;
-   const context = req.body.context as AppContext;
-	 const i18nObj = configureI18n(context);
 
    try {
-      const webhooks: TrelloWebhook[] = await callSubscriptionList(context);
-
-      const subscriptionsText: string = [
-         h6(i18nObj.__('api.subscription.response_get', { count: webhooks.length.toString() })),
-         `${joinLines(
-            webhooks.map((integration: TrelloWebhook) => {
-               return i18nObj.__('api.subscription.response_subcription', { id: integration.id, description: integration.description })
-            }).join('\n')
-         )}`
-      ].join('');
-   
-      callResponse = newOKCallResponseWithMarkdown(subscriptionsText);
-      res.json(callResponse);
+      const message = await listWebhookCall(call);
+      callResponse = newOKCallResponseWithMarkdown(message);
    } catch (error: any) {
       callResponse = showMessageToMattermost(error);
-      res.json(callResponse);
    }
+   res.json(callResponse);
 }

@@ -1,9 +1,8 @@
 import queryString from 'query-string';
-
-import { AppCallRequest, AppCallValues, AppForm, ExpandedBotActingUser } from '../types';
-import { Routes, TrelloIcon, AppFieldTypes, TRELLO_OAUTH, ExceptionType, StoreKeys } from '../constant';
-import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
-import { tryPromise } from '../utils';
+import { AppCallRequest, AppCallValues, AppForm, Oauth2App, Oauth2CurrentUser } from '../types';
+import { Routes, TrelloIcon, AppFieldTypes, TRELLO_OAUTH, ExceptionType, AppExpandLevels } from '../constant';
+import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import { existsOauth2App, existsToken, tryPromise } from '../utils';
 import { TrelloClient } from '../clients/trello';
 import { ConnectForm } from '../constant/forms';
 import config from '../config';
@@ -11,23 +10,11 @@ import { Exception } from '../utils/exception';
 import { configureI18n } from "../utils/translations";
 
 export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
-   const context = call.context as ExpandedBotActingUser;
-   const mattermostUrl: string | undefined =  context.mattermost_site_url;
-   const botAccessToken: string | undefined = context.bot_access_token;
-	 const i18nObj = configureI18n(call.context);
+   const i18nObj = configureI18n(call.context);
+   const oauth2 = call.context.oauth2 as Oauth2App;
+   const oauth2User = call.context.oauth2?.user;
 
-   const user_id = call.context.acting_user?.id;
-
-   const kvOpts: KVStoreOptions = {
-      mattermostUrl: <string>mattermostUrl,
-      accessToken: <string>botAccessToken
-   };
-   const kvClient = new KVStoreClient(kvOpts);
-
-   const user_oauth_token = await kvClient.getOauth2User(<string>user_id);
-
-   const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-   if (!Object.keys(trelloConfig).length) {
+   if (!existsOauth2App(oauth2)) {
       throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
    }
 
@@ -36,15 +23,16 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
       name: TRELLO_OAUTH.APP_NAME,
       scope: `${TRELLO_OAUTH.SCOPE.READ},${TRELLO_OAUTH.SCOPE.WRITE}`,
       response_type: TRELLO_OAUTH.RESPONSE_TYPE.TOKEN,
-      key: trelloConfig.trello_apikey
+      key: oauth2.client_id
    });
+
    const url: string = `${config.TRELLO.URL}${Routes.TP.authorize}?${queryParams}`;
    const fields = [
       {
          type: AppFieldTypes.TEXT,
          name: ConnectForm.TOKEN,
          modal_label: i18nObj.__('forms.connect.label_token'),
-         value: user_oauth_token?.oauth_token ? user_oauth_token.oauth_token : '',
+         value: oauth2User?.token,
          hint: i18nObj.__('forms.connect.hint_token'),
          description: i18nObj.__('forms.connect.description_token', { url: url }),
          is_required: true,
@@ -59,41 +47,62 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
       submit: {
          path: `${Routes.App.BindingPathConnect}${Routes.App.Submit}`,
          expand: {
-          acting_user: i18nObj.__('forms.connect.user_summary'),
-          acting_user_access_token: i18nObj.__('forms.connect.user_summary')
+            acting_user: AppExpandLevels.SUMMARY,
+            acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+            oauth2_app: AppExpandLevels.EXPAND_ALL,
+            oauth2_user: AppExpandLevels.EXPAND_ALL,
         }
       },
    } as AppForm;
 }
 
-export async function connectFormSaveToken(call: AppCallRequest) {
-   const userId: string | undefined = call.context.acting_user?.id;
-   const bot_token: string | undefined = call.context.bot_access_token;
+export async function connectFormSaveToken(call: AppCallRequest): Promise<string> {
+   const accessToken: string | undefined = call.context.acting_user_access_token;
    const mattermost_url: string | undefined = call.context.mattermost_site_url;
    const values: AppCallValues | undefined = call.values;
-	 const i18nObj = configureI18n(call.context);
+   const oauth2 = call.context.oauth2 as Oauth2App;
+   const i18nObj = configureI18n(call.context);
 
    const token: string = values?.[ConnectForm.TOKEN];
 
-   const kvOptions: KVStoreOptions = {
-      accessToken: <string>bot_token,
-      mattermostUrl: <string>mattermost_url
-   }
-    
-   const kvClient = new KVStoreClient(kvOptions);
-   const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-   if (!Object.keys(trelloConfig).length) {
-      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
-   }
-
    const trelloOptions = {
-      apiKey: trelloConfig.trello_apikey,
+      apiKey: oauth2.client_id,
       token: token,
-      workspace: trelloConfig.trello_workspace
+      workspace: <string>oauth2.data?.workspace
    }
    const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
    await tryPromise(trelloClient.validateToken(trelloOptions.workspace), ExceptionType.TEXT_ERROR, i18nObj.__('error.trello'));
-   
-   await kvClient.storeOauth2User(<string>userId, { oauth_token: token });
+
+   const oauth2User: Oauth2CurrentUser = {
+      token: token
+   }
+
+   const kvOptions: KVStoreOptions = {
+      accessToken: <string>accessToken,
+      mattermostUrl: <string>mattermost_url
+   }
+
+   const kvClient = new KVStoreClient(kvOptions);
+   await kvClient.storeOauth2User(oauth2User);
+
+   return i18nObj.__('api.connect.save');
 }
 
+export async function disconnectToken(call: AppCallRequest): Promise<string> {
+   const i18nObj = configureI18n(call.context);
+   const accessToken: string | undefined = call.context.acting_user_access_token;
+   const mattermostURL: string | undefined = call.context.mattermost_site_url;
+   const oauth2 = call.context.oauth2 as Oauth2App;
+   
+   if (!existsToken(oauth2))
+      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('api.connect.disconnect_exception'));
+
+   const kvOptions: KVStoreOptions = {
+      accessToken: <string>accessToken,
+      mattermostUrl: <string>mattermostURL
+   }
+   const kvClient: KVStoreClient = new KVStoreClient(kvOptions);
+   await kvClient.storeOauth2User({});
+
+   return i18nObj.__('api.connect.disconnect_success');
+}

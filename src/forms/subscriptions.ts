@@ -9,11 +9,12 @@ import {
    Routes, 
    SubscriptionRemoveForm
 } from "../constant";
-import {Board, SearchResponse, TrelloOrganization, TrelloWebhook, WebhookCreate} from "../types";
-import {getHTTPPath, tryPromise} from "../utils";
+import {Board, Oauth2App, SearchResponse, TrelloOrganization, TrelloWebhook, WebhookCreate} from "../types";
+import {existsToken, getHTTPPath, tryPromise} from "../utils";
 import {Exception} from "../utils/exception";
 import {AppCallRequest, AppCallValues} from "../types";
 import { configureI18n } from "../utils/translations";
+import { h6, joinLines } from '../utils/markdown';
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const mattermostUrl: string | undefined = call.context.mattermost_site_url;
@@ -21,7 +22,8 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const user_id: string | undefined = call.context.acting_user?.id;
    const whSecret: string | undefined = call.context.app?.webhook_secret;
    const values: AppCallValues | undefined = call.values;
-	 const i18nObj = configureI18n(call.context);
+   const i18nObj = configureI18n(call.context);
+   const oauth2 = call.context.oauth2 as Oauth2App;
 
    const boardName: string = values?.[SubscriptionCreateForm.BOARD_NAME];
    const channelId: string = values?.[SubscriptionCreateForm.CHANNEL_ID].value;
@@ -34,7 +36,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
    const kvClient: KVStoreClient = new KVStoreClient(kvOpts);
 
    const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>user_id);
-   if (!Object.keys(user_oauth_token).length) {
+   if (!existsToken(oauth2)) {
      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
    }
 
@@ -83,7 +85,8 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
    const user_id: string | undefined = call.context.acting_user?.id;
    const values: AppCallValues | undefined = call.values;
    const subscriptionID: string = values?.[SubscriptionRemoveForm.SUBSCRIPTION];
-	 const i18nObj = configureI18n(call.context);
+   const i18nObj = configureI18n(call.context);
+   const oauth2 = call.context.oauth2 as Oauth2App;
 
    const kvOpts: KVStoreOptions = {
       mattermostUrl: <string>mattermostUrl,
@@ -92,7 +95,7 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
    const kvClient: KVStoreClient = new KVStoreClient(kvOpts);
 
    const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>user_id);
-   if (!Object.keys(user_oauth_token).length) {
+   if (!existsToken(oauth2)) {
      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
    }
 
@@ -113,4 +116,31 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
    const trelloOauthClient: TrelloClient = new TrelloClient(trelloOAuthOptions);
    await tryPromise(trelloOauthClient.getBoardById(<string>subParams.get('idModel')), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
    await tryPromise(trelloClient.deleteTrelloWebhook(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+}
+
+export async function listWebhookCall(call: AppCallRequest): Promise<string> {
+   const i18nObj = configureI18n(call.context);
+   const oauth2 = call.context.oauth2 as Oauth2App;
+
+   if (!existsToken(oauth2)) {
+      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
+   }
+
+   const trelloOptions: TrelloOptions = {
+      apiKey: oauth2.client_id,
+      token: oauth2.user?.token as string
+   }
+   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
+   const webhooks: TrelloWebhook[] = await tryPromise(trelloClient.getTrelloActiveWebhooks(), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+
+   const subscriptionsText: string = [
+      h6(i18nObj.__('api.subscription.response_get', { count: webhooks.length.toString() })),
+      `${joinLines(
+         webhooks.map((integration: TrelloWebhook) => {
+            return i18nObj.__('api.subscription.response_subcription', { id: integration.id, description: integration.description })
+         }).join('\n')
+      )}`
+   ].join('');
+
+   return subscriptionsText;
 }
