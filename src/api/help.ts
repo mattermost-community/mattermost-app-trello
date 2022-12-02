@@ -32,21 +32,12 @@ function getHeader(call: AppCallRequest): string {
 async function getCommands(call: AppCallRequest): Promise<string> {
     const homepageUrl: string = manifest.homepage_url;
     const context = call.context as ExpandedBotActingUser;
-    const mattermostUrl: string | undefined = context.mattermost_site_url;
-    const botAccessToken: string | undefined = context.bot_access_token;
     const actingUser: AppActingUser | undefined = context.acting_user;
-    const actingUserID: string | undefined = actingUser.id;
     const commands: string[] = [];
     const i18nObj = configureI18n(call.context);
     const oauth2 = call.context.oauth2 as Oauth2App;
-
-    const options: KVStoreOptions = {
-        mattermostUrl: <string>mattermostUrl,
-        accessToken: <string>botAccessToken,
-    };
-    const kvClient = new KVStoreClient(options);
     
-    commands.push(addBulletSlashCommand(Commands.HELP, i18nObj.__('api.help.')));
+    commands.push(addBulletSlashCommand(Commands.HELP, i18nObj.__('api.help.command_help', { homepageUrl })));
 
     if (isUserSystemAdmin(<AppActingUser>actingUser)) {
         commands.push(addBulletSlashCommand(Commands.CONFIGURE, i18nObj.__('api.help.command_configure')));
