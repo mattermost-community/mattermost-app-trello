@@ -123,37 +123,28 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppConte
   return form;
 }
 
-export async function addFromCommand(call: AppCallRequest) {
-  const mattermostUrl: string | undefined = call.context.mattermost_site_url;
-  const botAccessToken: string | undefined = call.context.bot_access_token;
-  const user_id: string | undefined = call.context.acting_user?.id;
+export async function addFromCommand(call: AppCallRequest): Promise<string>  {
   const values: AppCallValues | undefined = call.values;
-	const i18nObj = configureI18n(call.context);
+  const i18nObj = configureI18n(call.context);
+  const oauth2 = call.context.oauth2 as Oauth2App;
+  const oauth2_token = oauth2.user?.token as string;
 
   const board_name: string = values?.board_name;
   const card_name: string = values?.card_name;
   const list_name: string = values?.list_name;
 
-  const options: KVStoreOptions = {
-    mattermostUrl: <string>mattermostUrl,
-    accessToken: <string>botAccessToken,
-  };
-  
-  const kvClient = new KVStoreClient(options);
-  const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-  if (!Object.keys(trelloConfig).length) {
+  if (!existsOauth2App(oauth2)) {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
   }
 
-  const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>user_id);
-  if (!Object.keys(user_oauth_token).length) {
+  if (!existsToken(oauth2)) {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
   }
 
   const trelloOptions: TrelloOptions = {
-    apiKey: trelloConfig.trello_apikey,
-    token: user_oauth_token.oauth_token,
-    workspace: trelloConfig.trello_workspace
+    apiKey: oauth2.client_id,
+    token: oauth2_token,
+    workspace: oauth2.data?.workspace
   }
 
   const boards = await getBoardOptionList(trelloOptions, call.context);
@@ -170,9 +161,11 @@ export async function addFromCommand(call: AppCallRequest) {
   } else {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add.board_not_found', { nbame: board_name }));
   }
+
+  return i18nObj.__('api.add');
 }
 
-export async function submitCreateCard(call: AppCallRequest) {
+export async function submitCreateCard(call: AppCallRequest): Promise<string> {
   const i18nObj = configureI18n(call.context);
   const list = call.values?.list_select;
   const oauth2 = call.context.oauth2 as Oauth2App;

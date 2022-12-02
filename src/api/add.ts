@@ -15,13 +15,12 @@ import { configureI18n } from "../utils/translations";
 
 export const getAdd = async (request: Request, response: Response) => {
   const call: AppCallRequest = request.body;
-  const i18nObj = configureI18n(call.context);
 
   let callResponse: AppCallResponse;
   try {
     if (call.values?.card_name && call.values?.board_name && call.values?.list_name) {
-      await addFromCommand(call);
-      callResponse = newOKCallResponseWithMarkdown(i18nObj.__('api.add'))
+      const message = await addFromCommand(call);
+      callResponse = newOKCallResponseWithMarkdown(message)
     }
     else {
       const form = await cardAddFromStepOne(call);
