@@ -1,6 +1,6 @@
 {
   "error": {
-    "trello": "Trello failed "
+    "trello": "Trello failed: "
   },
   "api": {
     "add": "Card created",

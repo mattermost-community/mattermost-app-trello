@@ -10,8 +10,6 @@ import {
    TrelloWebhook,
 } from "../types";
 import {addSubscriptionCall, listWebhookCall, removeWebhookCall} from '../forms/subscriptions';
-import { callSubscriptionList } from '../forms/subscription-list';
-import { h6, joinLines } from '../utils/markdown';
 import { configureI18n } from "../utils/translations";
 
 export const addWebhookSubscription = async (request: Request, response: Response) => {
