@@ -1,76 +1,64 @@
 import { ConfigStoreProps, KVStoreClient, KVStoreOptions, StoredOauthUserToken } from "../clients/kvstore";
 import { TrelloClient, TrelloOptions } from "../clients/trello";
-import { AppFieldTypes, ExceptionType, Routes, StoreKeys, TrelloIcon } from "../constant";
-import {AppCallRequest, AppCallValues, AppContext, AppField, AppForm, AppSelectOption} from "../types";
-import { tryPromise } from "../utils";
+import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, StoreKeys, TrelloIcon } from "../constant";
+import {AppCallRequest, AppCallValues, AppContext, AppField, AppForm, AppSelectOption, Oauth2App} from "../types";
+import { existsOauth2App, existsToken, tryPromise } from "../utils";
 import { Exception } from "../utils/exception";
 import { configureI18n } from "../utils/translations";
+import { getBoardOptionList, getListOptionList } from "./trello-options";
 
 export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm> {
-  const mattermostUrl: string | undefined = call.context.mattermost_site_url;
-  const botAccessToken: string | undefined = call.context.bot_access_token;
-  const user_id = call.context.acting_user?.id;
-	const i18nObj = configureI18n(call.context);
+  const i18nObj = configureI18n(call.context);
+  const oauth2 = call.context.oauth2 as Oauth2App;
+  const oauth2_token = oauth2.user?.token as string;
+  const workspace = oauth2.data?.workspace as string;
 
-  const options: KVStoreOptions = {
-    mattermostUrl: <string>mattermostUrl,
-    accessToken: <string>botAccessToken,
-  };
-  
-  const kvClient = new KVStoreClient(options);
-  const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-  if (!Object.keys(trelloConfig).length) {
+  if (!existsOauth2App(oauth2)) {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
   }
 
-  const user_oauth_token = await kvClient.getOauth2User(<string>user_id);
-  if (!Object.keys(user_oauth_token).length) {
+  if (!existsToken(oauth2)) {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
   }
 
   const trelloOptions: TrelloOptions = {
-    apiKey: trelloConfig.trello_apikey,
-    token: user_oauth_token.oauth_token
+    apiKey: oauth2.client_id,
+    token: oauth2_token,
+    workspace: workspace
   };
-  return await getCreateCardForm(trelloOptions, trelloConfig.trello_workspace, call.context);
+  return await getCreateCardForm(trelloOptions, call.context);
 }
 
 export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm> {
-  const mattermostUrl: string | undefined = call.context.mattermost_site_url;
-  const botAccessToken: string | undefined = call.context.bot_access_token;
   const board = call.values?.board;
   const card_name = call.values?.card_name;
-  const user_id = call.context.acting_user?.id;
-	const i18nObj = configureI18n(call.context);
-
-  const options: KVStoreOptions = {
-    mattermostUrl: <string>mattermostUrl,
-    accessToken: <string>botAccessToken,
-  };
+  const i18nObj = configureI18n(call.context);
+  const oauth2 = call.context.oauth2 as Oauth2App;
+  const oauth2_token = oauth2.user?.token as string;
+  const workspace = oauth2.data?.workspace as string;
   
-  const kvClient = new KVStoreClient(options);
-  const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-  if (!Object.keys(trelloConfig).length) {
+  if (!existsOauth2App(oauth2)) {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
   }
 
-  const user_oauth_token = await kvClient.getOauth2User(<string>user_id);
-  if (!Object.keys(user_oauth_token).length) {
+  if (!existsToken(oauth2)) {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
   }
 
   const trelloOptions = {
-    apiKey: trelloConfig.trello_apikey,
-    token: user_oauth_token.oauth_token
+    apiKey: oauth2.client_id,
+    token: oauth2_token,
+    workspace: workspace
   }
 
-  return await getCreateCardForm(trelloOptions, trelloConfig.trello_workspace, call.context, card_name, board);
+  return await getCreateCardForm(trelloOptions, call.context, card_name, board);
 }
 
-async function getCreateCardForm(trelloOptions: TrelloOptions, workspace: string, context: AppContext, card_name?: string, board?: AppSelectOption): Promise<AppForm> {
-  const board_options: AppSelectOption[] = await getBoardOptionList(trelloOptions, workspace, context);
+async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppContext, card_name?: string, board?: AppSelectOption): Promise<AppForm> {
+  const board_options: AppSelectOption[] = await getBoardOptionList(trelloOptions, context);
   let list_options: AppSelectOption[] = [];
 	const i18nObj = configureI18n(context);
+  
   if (board) {
     list_options = await getListOptionList(board?.value, trelloOptions, context);
   }
@@ -94,6 +82,7 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, workspace: string
       is_required: true,
     }
   ]
+
   if (board) {
     fields.push({
       name: "list_select",
@@ -112,51 +101,53 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, workspace: string
     fields: fields,
     submit_label: 'next',
     submit: {
-        path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Submit}`,
-        expand: {
-        }
+      path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Submit}`,
+      expand: {
+        acting_user: AppExpandLevels.EXPAND_ALL,
+        acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+        oauth2_app: AppExpandLevels.EXPAND_ALL,
+        oauth2_user: AppExpandLevels.EXPAND_ALL,
+      }
     },
     source: {
       path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Form}`,
+      expand: {
+        acting_user: AppExpandLevels.EXPAND_ALL,
+        acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+        oauth2_app: AppExpandLevels.EXPAND_ALL,
+        oauth2_user: AppExpandLevels.EXPAND_ALL,
+      }
     }
   };
 
   return form;
 }
 
-export async function addFromCommand(call: AppCallRequest) {
-  const mattermostUrl: string | undefined = call.context.mattermost_site_url;
-  const botAccessToken: string | undefined = call.context.bot_access_token;
-  const user_id: string | undefined = call.context.acting_user?.id;
+export async function addFromCommand(call: AppCallRequest): Promise<string>  {
   const values: AppCallValues | undefined = call.values;
-	const i18nObj = configureI18n(call.context);
+  const i18nObj = configureI18n(call.context);
+  const oauth2 = call.context.oauth2 as Oauth2App;
+  const oauth2_token = oauth2.user?.token as string;
 
   const board_name: string = values?.board_name;
   const card_name: string = values?.card_name;
   const list_name: string = values?.list_name;
 
-  const options: KVStoreOptions = {
-    mattermostUrl: <string>mattermostUrl,
-    accessToken: <string>botAccessToken,
-  };
-  
-  const kvClient = new KVStoreClient(options);
-  const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
-  if (!Object.keys(trelloConfig).length) {
+  if (!existsOauth2App(oauth2)) {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
   }
 
-  const user_oauth_token: StoredOauthUserToken = await kvClient.getOauth2User(<string>user_id);
-  if (!Object.keys(user_oauth_token).length) {
+  if (!existsToken(oauth2)) {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
   }
 
   const trelloOptions: TrelloOptions = {
-    apiKey: trelloConfig.trello_apikey,
-    token: user_oauth_token.oauth_token
+    apiKey: oauth2.client_id,
+    token: oauth2_token,
+    workspace: oauth2.data?.workspace
   }
 
-  const boards = await getBoardOptionList(trelloOptions, trelloConfig.trello_workspace, call.context);
+  const boards = await getBoardOptionList(trelloOptions, call.context);
   const board = boards.find((b) => b.label == board_name);
   if (board) {
     const lists = await getListOptionList(board.value, trelloOptions, call.context);
@@ -170,26 +161,31 @@ export async function addFromCommand(call: AppCallRequest) {
   } else {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add.board_not_found', { nbame: board_name }));
   }
+
+  return i18nObj.__('api.add');
 }
 
-export async function getBoardOptionList(trelloOptions: TrelloOptions, workspace: string, context: AppContext): Promise<AppSelectOption[]> {
-	const i18nObj = configureI18n(context);
+export async function submitCreateCard(call: AppCallRequest): Promise<string> {
+  const i18nObj = configureI18n(call.context);
+  const list = call.values?.list_select;
+  const oauth2 = call.context.oauth2 as Oauth2App;
+  const oauth2_token = oauth2.user?.token as string;
+
+  if (!list) {
+    throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('api.form_step_two_exception'));
+  }
+
+  const list_id = list.value as string;
+  const card_name = call.values?.card_name as string;
+
+  const trelloOptions = {
+    apiKey: oauth2.client_id,
+    token: oauth2_token,
+    workspace: oauth2.data?.workspace
+  }
+
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
-  const boards = await tryPromise(trelloClient.searchBoardsInOrganization(workspace), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
-
-  const options: AppSelectOption[] = [...boards.map((b: any) =>  { return { label: b.name, value: b.id}})];
-
-  return options;
-}
-
-export async function getListOptionList(boardId: string, trelloOptions: TrelloOptions, context: AppContext): Promise<AppSelectOption[]> {
-		const i18nObj = configureI18n(context);
-		const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-
-  const boards = await tryPromise(trelloClient.getListByBoard(boardId), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
-
-  const options: AppSelectOption[] = [...boards.map((b: any) =>  { return { label: b.name, value: b.id}})];
-
-  return options;
+  await tryPromise(trelloClient.sendCreateCardRequest(list_id, card_name), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+  return i18nObj.__('api.add');
 }

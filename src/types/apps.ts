@@ -23,7 +23,16 @@ export type Oauth2App = {
   client_secret: string;
   connect_url?: string;
   complete_url?: string;
-  user?: any
+  user?: Oauth2CurrentUser;
+  data?: Oauth2Data;
+}
+
+export type Oauth2CurrentUser = {
+  token: string;
+}
+
+export interface Oauth2Data {
+  workspace: string;
 }
 
 export type ExpandedOauth2App = AppContext & {
@@ -148,6 +157,7 @@ export type AppContext = {
   app?: AppAppContext;
   acting_user?: AppActingUser;
   acting_user_access_token?: string;
+  oauth2?: Oauth2App;
 };
 
 export type AppContextProps = {

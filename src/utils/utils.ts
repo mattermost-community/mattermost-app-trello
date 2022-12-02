@@ -7,23 +7,20 @@ import {
 } from "./call-responses";
 import {ExceptionType} from "../constant";
 import config from "../config";
-import {AppActingUser, AppCallResponse} from "../types";
+import {AppActingUser, AppCallResponse, Oauth2App} from "../types";
 
 export function isUserSystemAdmin(actingUser: AppActingUser): boolean {
     return Boolean(actingUser.roles && actingUser.roles.includes('system_admin'));
 }
 
-export async function existsKvTrelloConfig(kvClient: KVStoreClient): Promise<boolean> {
-    const trelloConfig: ConfigStoreProps = await kvClient.kvGet(StoreKeys.config);
+export function existsOauth2App(oauth2App: Oauth2App): boolean {
+    return !!oauth2App.client_id && !!oauth2App.client_secret;
+}
 
-    return Boolean(Object.keys(trelloConfig).length);
-};
-
-export async function existsKvOauthToken(kvClient: KVStoreClient, userId: string): Promise<boolean> {
-    const oauth2: StoredOauthUserToken = await kvClient.getOauth2User(<string>userId);
-
-    return Boolean(Object.keys(oauth2).length);
-};
+export function existsToken(oauth2App: Oauth2App): boolean {
+    const oauthUser = oauth2App.user;
+    return !!oauthUser?.token;
+}
 
 export function replace(value: string, searchValue: string, replaceValue: string): string {
     return value.replace(searchValue, replaceValue);
