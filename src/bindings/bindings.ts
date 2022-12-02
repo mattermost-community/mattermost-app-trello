@@ -44,7 +44,7 @@ export const getCardBinding = (context: AppContext) => {
 }
 
 export const getCardCreateBinding = (context: AppContext) => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -58,8 +58,6 @@ export const getCardCreateBinding = (context: AppContext) => {
                 expand: {
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
-                    channel: AppExpandLevels.EXPAND_ALL,
-                    user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
                 }

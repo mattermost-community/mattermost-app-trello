@@ -8,6 +8,7 @@ import {SearchResponse, WebhookCreate} from "../types/trello";
 export interface TrelloOptions {
   apiKey: string;
   token: string;
+  workspace?: string;
 }
 
 export class TrelloClient {
