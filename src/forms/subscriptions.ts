@@ -8,10 +8,18 @@ import {
    SubscriptionCreateForm,
    SubscriptionRemoveForm,
 } from '../constant';
-import { Board, Oauth2App, SearchResponse, TrelloOrganization, TrelloWebhook, WebhookCreate } from '../types';
+import {
+   AppCallRequest,
+   AppCallValues,
+   Board,
+   Oauth2App,
+   SearchResponse,
+   TrelloOrganization,
+   TrelloWebhook,
+   WebhookCreate,
+} from '../types';
 import { existsToken, getHTTPPath, tryPromise } from '../utils';
 import { Exception } from '../utils/exception';
-import { AppCallRequest, AppCallValues } from '../types';
 import { configureI18n } from '../utils/translations';
 import { h6, joinLines } from '../utils/markdown';
 

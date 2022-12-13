@@ -15,13 +15,34 @@ export type User = {
   last_picture_update: number;
   locale: string;
   timezone: {
-      automaticTimezone: string;
-      manualTimezone: string;
-      useAutomaticTimezone: string;
+    automaticTimezone: string;
+    manualTimezone: string;
+    useAutomaticTimezone: string;
   };
   is_bot: boolean;
   bot_description: string;
   disable_welcome_email: false;
+};
+
+export type UserNotifyProps = {
+  channel: string;
+  comments: string;
+  desktop: string;
+  desktop_sound: string;
+  desktop_threads: string;
+  email: string;
+  email_thread: string;
+  first_name: string;
+  mention_keys: string;
+  push: string;
+  push_status: string;
+  push_threads: string;
+}
+
+export type UserTimezone = {
+  useAutomaticTimezone: boolean | string;
+  automaticTimezone: string;
+  manualTimezone: string;
 };
 
 export type UserProfile = {
@@ -44,27 +65,6 @@ export type UserProfile = {
   locale: string;
   timezone?: UserTimezone;
 }
-
-export type UserNotifyProps = {
-  channel: string;
-  comments: string;
-  desktop: string;
-  desktop_sound: string;
-  desktop_threads: string;
-  email: string;
-  email_thread: string;
-  first_name: string;
-  mention_keys: string;
-  push: string;
-  push_status: string;
-  push_threads: string;
-}
-
-export type UserTimezone = {
-  useAutomaticTimezone: boolean | string;
-  automaticTimezone: string;
-  manualTimezone: string;
-};
 
 export type AttachmentOption = {
   text: string;

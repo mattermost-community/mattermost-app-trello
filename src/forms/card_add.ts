@@ -149,10 +149,10 @@ export async function addFromCommand(call: AppCallRequest): Promise<string> {
   };
 
   const boards = await getBoardOptionList(trelloOptions, call.context);
-  const board = boards.find((b) => b.label == board_name);
+  const board = boards.find((b) => b.label === board_name);
   if (board) {
     const lists = await getListOptionList(board.value, trelloOptions, call.context);
-    const list = lists.find((l) => l.label == list_name);
+    const list = lists.find((l) => l.label === list_name);
     if (list) {
       const trelloClient = new TrelloClient(trelloOptions);
       await tryPromise(trelloClient.sendCreateCardRequest(list.value, card_name), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));

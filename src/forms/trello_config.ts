@@ -1,8 +1,19 @@
-import { AppCallRequest, AppCallResponse, AppCallValues, AppForm, Oauth2App } from '../types';
-import { ExpandedBotActingUser } from '../types';
-import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, TrelloIcon } from '../constant';
+import {
+   AppCallRequest,
+   AppCallValues,
+   AppForm,
+   ExpandedBotActingUser,
+   Oauth2App,
+} from '../types';
+import {
+   AppExpandLevels,
+   AppFieldTypes,
+   ConfigureWorkspaceForm,
+   ExceptionType,
+   Routes,
+   TrelloIcon,
+} from '../constant';
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
-import { ConfigureWorkspaceForm } from '../constant/forms';
 import { configureI18n } from '../utils/translations';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { tryPromise } from '../utils';

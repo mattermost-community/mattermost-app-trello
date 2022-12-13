@@ -1,34 +1,4 @@
-export type TrelloWebhookResponse = {
-   model: TrelloModel,
-   action: TrelloAction
-}
-
-export type TrelloModel = {
-   id: string,
-   name: string,
-   desc: string,
-   descData: any,
-   closed: boolean,
-   idOrganization: string,
-   idEnterprise: any,
-   pinned: boolean,
-   url: string,
-   shortUrl: string,
-   prefs: TMPref,
-   labelNames: TMLabelNames
-}
-
-export type TrelloAction = {
-   id: string,
-   idMemberCreator: string,
-   data: TAData,
-   appCreator: any,
-   type: string,
-   date: string,
-   limits: any,
-   display: TADisplay,
-   memberCreator: TAMemberCreator
-}
+export type TMLabelNames = { [key: string]: any }
 
 export type TMPref = {
    permissionLevel: string,
@@ -58,15 +28,32 @@ export type TMPref = {
    canInvite: boolean
 }
 
-export type TMLabelNames = { [key: string]: any }
+export type TAMemberCreator = {
+   id: string,
+   activityBlocked: boolean,
+   avatarHash: string,
+   avatarUrl: string,
+   fullName: string,
+   idMemberReferrer: any,
+   initials: string,
+   nonPublic: any,
+   nonPublicAvailable: boolean,
+   username: string,
+}
 
-export type TAData = {
-   card: TADCard,
-   list: TADList,
-   old: TADOld,
-   board: TADBoard,
-   listBefore: TADList,
-   listAfter: TADList
+export type TrelloModel = {
+   id: string,
+   name: string,
+   desc: string,
+   descData: any,
+   closed: boolean,
+   idOrganization: string,
+   idEnterprise: any,
+   pinned: boolean,
+   url: string,
+   shortUrl: string,
+   prefs: TMPref,
+   labelNames: TMLabelNames
 }
 
 export type TADCard = {
@@ -92,17 +79,30 @@ export type TADisplay = {
    entities: any[]
 }
 
-export type TAMemberCreator = {
+export type TAData = {
+   card: TADCard,
+   list: TADList,
+   old: TADOld,
+   board: TADBoard,
+   listBefore: TADList,
+   listAfter: TADList
+}
+
+export type TrelloAction = {
    id: string,
-   activityBlocked: boolean,
-   avatarHash: string,
-   avatarUrl: string,
-   fullName: string,
-   idMemberReferrer: any,
-   initials: string,
-   nonPublic: any,
-   nonPublicAvailable: boolean,
-   username: string,
+   idMemberCreator: string,
+   data: TAData,
+   appCreator: any,
+   type: string,
+   date: string,
+   limits: any,
+   display: TADisplay,
+   memberCreator: TAMemberCreator
+}
+
+export type TrelloWebhookResponse = {
+   model: TrelloModel,
+   action: TrelloAction
 }
 
 export type TrelloWebhook = {
@@ -154,14 +154,14 @@ export type TrelloOrganization = {
 export type WebhookRequest<T> = {
    data: any,
    headers: {
-       Accept: string;
-       'Accept-Encoding': string;
-       'Content-Length': string;
-       'Content-Type': string;
-       'Mattermost-Session-Id': string;
-       'User-Agent': string;
-       'X-Forwarded-For': string;
-       'X-Forwarded-Proto': string;
+      Accept: string;
+      'Accept-Encoding': string;
+      'Content-Length': string;
+      'Content-Type': string;
+      'Mattermost-Session-Id': string;
+      'User-Agent': string;
+      'X-Forwarded-For': string;
+      'X-Forwarded-Proto': string;
    }
    httpMethod: string;
    rawQuery: string;
