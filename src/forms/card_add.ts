@@ -1,6 +1,5 @@
-import { ConfigStoreProps, KVStoreClient, KVStoreOptions, StoredOauthUserToken } from '../clients/kvstore';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
-import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, StoreKeys, TrelloIcon } from '../constant';
+import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, TrelloIcon } from '../constant';
 import { AppCallRequest, AppCallValues, AppContext, AppField, AppForm, AppSelectOption, Oauth2App } from '../types';
 import { existsOauth2App, existsToken, tryPromise } from '../utils';
 import { Exception } from '../utils/exception';
@@ -27,7 +26,7 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
     token: oauth2_token,
     workspace,
   };
-  return await getCreateCardForm(trelloOptions, call.context);
+  return getCreateCardForm(trelloOptions, call.context);
 }
 
 export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm> {
@@ -52,7 +51,7 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
     workspace,
   };
 
-  return await getCreateCardForm(trelloOptions, call.context, card_name, board);
+  return getCreateCardForm(trelloOptions, call.context, card_name, board);
 }
 
 async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppContext, card_name?: string, board?: AppSelectOption): Promise<AppForm> {
@@ -94,7 +93,7 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppConte
     });
   }
 
-  const extra_text = !board_options.length ? i18nObj.__('forms.card_add.create.extra_text') : '';
+  const extra_text = Boolean(board_options.length) ? '' : i18nObj.__('forms.card_add.create.extra_text');
   const form: AppForm = {
     title: i18nObj.__('forms.card_add.create.new_card'),
     header: i18nObj.__('forms.card_add.create.header_card') + extra_text,
