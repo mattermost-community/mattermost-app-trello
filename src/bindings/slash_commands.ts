@@ -1,21 +1,23 @@
-import {AppActingUser, AppBinding, AppCallRequest, AppsState} from '../types';
-import {
-    getHelpBinding,
-    getSubscriptionBinding,
-    getConfigureBinding,
-    getCardBinding,
-    getAccountConnectBinding,
-    getAccountDisconnectBinding
-} from "./bindings";
+import { AppActingUser, AppBinding, AppCallRequest, AppsState } from '../types';
+
 import {
     AppBindingLocations,
-    Commands,
     CommandTrigger,
-    TrelloIcon
-} from "../constant";
-import { existsOauth2App, existsToken, isUserSystemAdmin} from "../utils";
+    Commands,
+    TrelloIcon,
+} from '../constant';
+import { existsOauth2App, existsToken, isUserSystemAdmin } from '../utils';
 import { AppContext, Oauth2App } from '../types/apps';
 import { configureI18n } from '../utils/translations';
+
+import {
+    getAccountConnectBinding,
+    getAccountDisconnectBinding,
+    getCardBinding,
+    getConfigureBinding,
+    getHelpBinding,
+    getSubscriptionBinding,
+} from './bindings';
 
 const newCommandBindings = (context: AppContext, bindings: AppBinding[], commands: string[]): AppsState => {
     const i18nObj = configureI18n(context);
@@ -41,7 +43,7 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
 
     const bindings: AppBinding[] = [];
     const commands: string[] = [
-        Commands.HELP
+        Commands.HELP,
     ];
 
     bindings.push(getHelpBinding(context));
@@ -49,7 +51,7 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
     if (isUserSystemAdmin(<AppActingUser>actingUser)) {
         bindings.push(getConfigureBinding(context));
         commands.push(Commands.CONFIGURE);
-    }  
+    }
     if (existsOauth2App(oauth2)) {
         if (existsToken(oauth2)) {
             commands.push(Commands.CARD);

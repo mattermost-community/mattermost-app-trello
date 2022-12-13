@@ -1,20 +1,20 @@
-import { 
-   AppCallRequestWithValues, 
+import {
+   AppCallRequestWithValues,
    AppCallResponse,
-   AppCallValues
+   AppCallValues,
 } from '../types';
 import { newConfigForm, submitConfigForm } from '../forms/trello_config';
-import { 
-   CallResponseHandler, 
-   newFormCallResponse, 
-   newOKCallResponseWithMarkdown, 
-   showMessageToMattermost, 
-   tryPromise
+import {
+   CallResponseHandler,
+   newFormCallResponse,
+   newOKCallResponseWithMarkdown,
+   showMessageToMattermost,
+   tryPromise,
 } from '../utils';
-import {TrelloClient, TrelloOptions} from '../clients/trello';
-import {ConfigStoreProps, KVStoreClient, KVStoreOptions} from '../clients/kvstore';
-import {ConfigureWorkspaceForm, ExceptionType, StoreKeys} from '../constant';
-import { configureI18n } from "../utils/translations";
+import { TrelloClient, TrelloOptions } from '../clients/trello';
+import { ConfigStoreProps, KVStoreClient, KVStoreOptions } from '../clients/kvstore';
+import { ConfigureWorkspaceForm, ExceptionType, StoreKeys } from '../constant';
+import { configureI18n } from '../utils/translations';
 
 export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
    let callResponse: AppCallResponse;
@@ -40,5 +40,4 @@ export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
       callResponse = showMessageToMattermost(error);
       res.json(callResponse);
    }
-
 };

@@ -1,11 +1,12 @@
-import { ConfigStoreProps, KVStoreClient, KVStoreOptions, StoredOauthUserToken } from "../clients/kvstore";
-import { TrelloClient, TrelloOptions } from "../clients/trello";
-import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, StoreKeys, TrelloIcon } from "../constant";
-import {AppCallRequest, AppCallValues, AppContext, AppField, AppForm, AppSelectOption, Oauth2App} from "../types";
-import { existsOauth2App, existsToken, tryPromise } from "../utils";
-import { Exception } from "../utils/exception";
-import { configureI18n } from "../utils/translations";
-import { getBoardOptionList, getListOptionList } from "./trello-options";
+import { ConfigStoreProps, KVStoreClient, KVStoreOptions, StoredOauthUserToken } from '../clients/kvstore';
+import { TrelloClient, TrelloOptions } from '../clients/trello';
+import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, StoreKeys, TrelloIcon } from '../constant';
+import { AppCallRequest, AppCallValues, AppContext, AppField, AppForm, AppSelectOption, Oauth2App } from '../types';
+import { existsOauth2App, existsToken, tryPromise } from '../utils';
+import { Exception } from '../utils/exception';
+import { configureI18n } from '../utils/translations';
+
+import { getBoardOptionList, getListOptionList } from './trello-options';
 
 export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm> {
   const i18nObj = configureI18n(call.context);
@@ -24,7 +25,7 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
   const trelloOptions: TrelloOptions = {
     apiKey: oauth2.client_id,
     token: oauth2_token,
-    workspace: workspace
+    workspace,
   };
   return await getCreateCardForm(trelloOptions, call.context);
 }
@@ -36,7 +37,7 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
   const oauth2 = call.context.oauth2 as Oauth2App;
   const oauth2_token = oauth2.user?.token as string;
   const workspace = oauth2.data?.workspace as string;
-  
+
   if (!existsOauth2App(oauth2)) {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
   }
@@ -48,8 +49,8 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
   const trelloOptions = {
     apiKey: oauth2.client_id,
     token: oauth2_token,
-    workspace: workspace
-  }
+    workspace,
+  };
 
   return await getCreateCardForm(trelloOptions, call.context, card_name, board);
 }
@@ -58,7 +59,7 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppConte
   const board_options: AppSelectOption[] = await getBoardOptionList(trelloOptions, context);
   let list_options: AppSelectOption[] = [];
 	const i18nObj = configureI18n(context);
-  
+
   if (board) {
     list_options = await getListOptionList(board?.value, trelloOptions, context);
   }
@@ -68,29 +69,29 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppConte
       type: AppFieldTypes.TEXT,
       name: 'card_name',
       modal_label: i18nObj.__('forms.card_add.create.label_card'),
-      value: card_name? card_name : '',
+      value: card_name || '',
       description: i18nObj.__('forms.card_add.create.description_card'),
       is_required: true,
     },
     {
-      name: "board",
+      name: 'board',
       modal_label: i18nObj.__('forms.card_add.create.label_board'),
       refresh: true,
-      value: board ? board : null,
+      value: board || null,
       type: AppFieldTypes.STATIC_SELECT,
       options: board_options,
       is_required: true,
-    }
-  ]
+    },
+  ];
 
   if (board) {
     fields.push({
-      name: "list_select",
+      name: 'list_select',
       modal_label: i18nObj.__('forms.card_add.create.label_select'),
       type: AppFieldTypes.STATIC_SELECT,
       options: list_options,
       is_required: true,
-    })
+    });
   }
 
   const extra_text = !board_options.length ? i18nObj.__('forms.card_add.create.extra_text') : '';
@@ -98,7 +99,7 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppConte
     title: i18nObj.__('forms.card_add.create.new_card'),
     header: i18nObj.__('forms.card_add.create.header_card') + extra_text,
     icon: TrelloIcon,
-    fields: fields,
+    fields,
     submit_label: 'next',
     submit: {
       path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Submit}`,
@@ -107,7 +108,7 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppConte
         acting_user_access_token: AppExpandLevels.EXPAND_ALL,
         oauth2_app: AppExpandLevels.EXPAND_ALL,
         oauth2_user: AppExpandLevels.EXPAND_ALL,
-      }
+      },
     },
     source: {
       path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Form}`,
@@ -116,14 +117,14 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppConte
         acting_user_access_token: AppExpandLevels.EXPAND_ALL,
         oauth2_app: AppExpandLevels.EXPAND_ALL,
         oauth2_user: AppExpandLevels.EXPAND_ALL,
-      }
-    }
+      },
+    },
   };
 
   return form;
 }
 
-export async function addFromCommand(call: AppCallRequest): Promise<string>  {
+export async function addFromCommand(call: AppCallRequest): Promise<string> {
   const values: AppCallValues | undefined = call.values;
   const i18nObj = configureI18n(call.context);
   const oauth2 = call.context.oauth2 as Oauth2App;
@@ -144,8 +145,8 @@ export async function addFromCommand(call: AppCallRequest): Promise<string>  {
   const trelloOptions: TrelloOptions = {
     apiKey: oauth2.client_id,
     token: oauth2_token,
-    workspace: oauth2.data?.workspace
-  }
+    workspace: oauth2.data?.workspace,
+  };
 
   const boards = await getBoardOptionList(trelloOptions, call.context);
   const board = boards.find((b) => b.label == board_name);
@@ -153,10 +154,10 @@ export async function addFromCommand(call: AppCallRequest): Promise<string>  {
     const lists = await getListOptionList(board.value, trelloOptions, call.context);
     const list = lists.find((l) => l.label == list_name);
     if (list) {
-      const trelloClient =  new TrelloClient(trelloOptions);
+      const trelloClient = new TrelloClient(trelloOptions);
       await tryPromise(trelloClient.sendCreateCardRequest(list.value, card_name), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
     } else {
-      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add.list_not_found', { name: list_name}));
+      throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add.list_not_found', { name: list_name }));
     }
   } else {
     throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add.board_not_found', { nbame: board_name }));
@@ -181,8 +182,8 @@ export async function submitCreateCard(call: AppCallRequest): Promise<string> {
   const trelloOptions = {
     apiKey: oauth2.client_id,
     token: oauth2_token,
-    workspace: oauth2.data?.workspace
-  }
+    workspace: oauth2.data?.workspace,
+  };
 
   const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 

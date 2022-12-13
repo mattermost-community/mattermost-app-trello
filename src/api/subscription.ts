@@ -1,16 +1,17 @@
 import { Request, Response } from 'express';
+
 import {
    newOKCallResponseWithMarkdown,
    showMessageToMattermost,
-} from "../utils";
+} from '../utils';
 import {
    AppCallRequest,
    AppCallResponse,
    AppContext,
    TrelloWebhook,
-} from "../types";
-import {addSubscriptionCall, listWebhookCall, removeWebhookCall} from '../forms/subscriptions';
-import { configureI18n } from "../utils/translations";
+} from '../types';
+import { addSubscriptionCall, listWebhookCall, removeWebhookCall } from '../forms/subscriptions';
+import { configureI18n } from '../utils/translations';
 
 export const addWebhookSubscription = async (request: Request, response: Response) => {
    const call: AppCallRequest = request.body;
@@ -25,10 +26,10 @@ export const addWebhookSubscription = async (request: Request, response: Respons
       callResponse = showMessageToMattermost(error);
       response.json(callResponse);
    }
-}
+};
 
 export const removeWebhookSubscription = async (req: Request, res: Response) => {
-   const call: AppCallRequest = req.body; 
+   const call: AppCallRequest = req.body;
    let callResponse: AppCallResponse;
    const i18nObj = configureI18n(call.context);
 
@@ -39,8 +40,8 @@ export const removeWebhookSubscription = async (req: Request, res: Response) => 
    } catch (error: any) {
       callResponse = showMessageToMattermost(error);
       res.json(callResponse);
-   }   
-}
+   }
+};
 
 export const getWebhookSubscriptions = async (req: Request, res: Response) => {
    const call: AppCallRequest = req.body;
@@ -53,4 +54,4 @@ export const getWebhookSubscriptions = async (req: Request, res: Response) => {
       callResponse = showMessageToMattermost(error);
    }
    res.json(callResponse);
-}
+};

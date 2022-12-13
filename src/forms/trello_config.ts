@@ -1,10 +1,10 @@
 import { AppCallRequest, AppCallResponse, AppCallValues, AppForm, Oauth2App } from '../types';
 import { ExpandedBotActingUser } from '../types';
-import { Routes, TrelloIcon, AppFieldTypes, AppExpandLevels, ExceptionType } from '../constant';
+import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, TrelloIcon } from '../constant';
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { ConfigureWorkspaceForm } from '../constant/forms';
-import { configureI18n } from "../utils/translations";
-import { TrelloOptions, TrelloClient } from '../clients/trello';
+import { configureI18n } from '../utils/translations';
+import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { tryPromise } from '../utils';
 
 export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
@@ -38,7 +38,7 @@ export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
          value: oauth2?.client_secret,
          description: i18nObj.__('forms.config.token.description'),
          is_required: true,
-      }
+      },
    ];
 
    return {
@@ -53,7 +53,7 @@ export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
             acting_user_access_token: AppExpandLevels.EXPAND_ALL,
             oauth2_app: AppExpandLevels.EXPAND_ALL,
             oauth2_user: AppExpandLevels.EXPAND_ALL,
-         }
+         },
       },
    } as AppForm;
 }
@@ -72,7 +72,7 @@ export async function submitConfigForm(call: AppCallRequest): Promise<string> {
       mattermostUrl: <string>mattermostURL,
       accessToken: <string>accessToken,
    };
-   
+
    const kvStoreClient = new KVStoreClient(options);
 
    const trelloOptions: TrelloOptions = {
@@ -87,9 +87,9 @@ export async function submitConfigForm(call: AppCallRequest): Promise<string> {
       client_id: apiKey,
       client_secret: token,
       data: {
-         workspace: workspace
-      }
-   }
+         workspace,
+      },
+   };
 
    await kvStoreClient.storeOauth2App(oauth2App);
 

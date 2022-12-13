@@ -1,8 +1,8 @@
 export const AppsPluginName = 'com.mattermost.apps';
 
 const PathsVariable = {
-  Identifier: ':IDENTIFIER'
-}
+  Identifier: ':IDENTIFIER',
+};
 
 const AppPaths = {
   ManifestPath: '/manifest.json',
@@ -17,7 +17,7 @@ const AppPaths = {
   BindingPathCreateCard: '/create-card',
 
   Lookup: '/lookup',
-  Form:  '/form',
+  Form: '/form',
   Submit: '/submit',
   Forms: '/forms',
 
@@ -29,7 +29,7 @@ const AppPaths = {
 
   BindingPathConnect: '/connect',
   BindingPathDisconnect: '/disconnect',
-  
+
   CallPathConfigOpenForm: '/config/open-form',
   CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
 
@@ -40,8 +40,8 @@ const AppPaths = {
   CallSubscriptionListAppOpts: '/subscription/app-options/list',
   CallMattermostSubscription: '/subscription',
 
-  CallPathIncomingWebhookPath: '/webhook'
-}
+  CallPathIncomingWebhookPath: '/webhook',
+};
 
 const MattermostPaths = {
   PathKV: '/kv',
@@ -52,11 +52,11 @@ const MattermostPaths = {
   DialogsOpenPath: '/actions/dialogs/open',
   ApiVersionV4: '/api/v4',
   ApiVersionV1: '/api/v1',
-  Hooks:  '/hooks',
+  Hooks: '/hooks',
   HooksIncoming: '/hooks/incoming',
   PathOAuth2App: '/oauth2/app',
   PathOAuth2User: '/oauth2/user',
-}
+};
 
 const TrelloPaths = {
   getMembers: 'members/me',
@@ -67,7 +67,7 @@ const TrelloPaths = {
   boards: 'boards',
   search: 'search',
   lists: 'lists',
-  cards: 'cards'
+  cards: 'cards',
 
 };
 
@@ -75,6 +75,6 @@ export const Routes = {
   PathsVariable,
   App: AppPaths,
   Mattermost: MattermostPaths,
-  TP: TrelloPaths
+  TP: TrelloPaths,
 };
 

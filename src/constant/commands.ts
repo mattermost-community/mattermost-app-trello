@@ -10,4 +10,4 @@ export const Commands = {
   CREATE: 'create',
   CONNECT: 'connect',
   DISCONNECT: 'disconnect',
-}
+};

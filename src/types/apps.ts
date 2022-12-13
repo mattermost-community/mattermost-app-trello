@@ -1,4 +1,4 @@
-import {UserProfile} from "./mattermost";
+import { UserProfile } from './mattermost';
 
 export type AppManifest = {
   app_id: string;
@@ -276,8 +276,8 @@ export type AppAttachmentActionIntegration = {
   context: any;
 }
 
-export type AppAttachmentActionOptions = { 
-  text: string; 
+export type AppAttachmentActionOptions = {
+  text: string;
   value: string;
 }
 
