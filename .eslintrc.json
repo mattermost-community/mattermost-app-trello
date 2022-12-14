@@ -145,7 +145,7 @@
       }
     ],
     "indent": [
-      1,
+      2,
       4,
       {
         "SwitchCase": 0
@@ -516,7 +516,7 @@
         "@typescript-eslint/no-var-requires": 0,
         "@typescript-eslint/prefer-interface": 0,
         "@typescript-eslint/indent": [
-          1,
+          2,
           4,
           {
             "SwitchCase": 0

@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 import queryString, { ParsedQuery } from 'query-string';
 
 import {
-	AppCallRequest,
-	AppCallResponse,
-	AppContext,
-	PostCreate,
-	TrelloAction,
-	TrelloModel,
-	TrelloWebhookResponse,
-	WebhookRequest,
+    AppCallRequest,
+    AppCallResponse,
+    AppContext,
+    PostCreate,
+    TrelloAction,
+    TrelloModel,
+    TrelloWebhookResponse,
+    WebhookRequest,
 } from '../types';
 import { newErrorCallResponseWithMessage, newOKCallResponse } from '../utils';
 import { h5 } from '../utils/markdown';
@@ -116,8 +116,8 @@ export const incomingWebhook = async (request: Request, response: Response) => {
 
 export const notificationToMattermost = async (req: Request, res: Response) => {
     const pluginWebhook: ParsedQuery = queryString.parse(queryString.extract(req.url));
-	const call: AppCallRequest = req.body;
-	const i18nObj = configureI18n(call.context);
+    const call: AppCallRequest = req.body;
+    const i18nObj = configureI18n(call.context);
     let callResponse: AppCallResponse;
 
     try {

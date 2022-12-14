@@ -43,9 +43,12 @@ export function showMessageToMattermost(exception: Exception | Error): AppCallRe
     }
 
     switch (exception.type) {
-        case ExceptionType.TEXT_ERROR: return newErrorCallResponseWithMessage(exception.message);
-        case ExceptionType.MARKDOWN: return newOKCallResponseWithMarkdown(exception.message);
-        default: return newErrorCallResponseWithMessage(exception.message);
+    case ExceptionType.TEXT_ERROR:
+        return newErrorCallResponseWithMessage(exception.message);
+    case ExceptionType.MARKDOWN:
+        return newOKCallResponseWithMarkdown(exception.message);
+    default:
+        return newErrorCallResponseWithMessage(exception.message);
     }
 }
 

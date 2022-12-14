@@ -2,9 +2,8 @@ import { AppExpandLevels, AppFieldTypes, Commands, Routes, TrelloIcon } from '..
 import { AppBinding, AppContext } from '../types';
 import { SubscriptionCreateForm, SubscriptionRemoveForm } from '../constant/forms';
 import { configureI18n } from '../utils/translations';
-
 export const getHelpBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -26,7 +25,7 @@ export const getHelpBinding = (context: AppContext): any => {
 };
 
 export const getCardBinding = (context: AppContext) => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     const commands: string[] = [
         Commands.CREATE,
@@ -87,7 +86,7 @@ export const getCardCreateBinding = (context: AppContext) => {
 };
 
 export const getSubscriptionBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     const subCommands: string[] = [
         Commands.ADD,
@@ -111,7 +110,7 @@ export const getSubscriptionBinding = (context: AppContext): any => {
 };
 
 export const getAddSubBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -153,7 +152,7 @@ export const getAddSubBinding = (context: AppContext): any => {
 };
 
 export const getListSubBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -175,7 +174,7 @@ export const getListSubBinding = (context: AppContext): any => {
 };
 
 export const getRemoveSubBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -238,7 +237,7 @@ export const getConfigureBinding = (context: AppContext): any => {
 };
 
 export const getAccountConnectBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -261,7 +260,7 @@ export const getAccountConnectBinding = (context: AppContext): any => {
 };
 
 export const getAccountDisconnectBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,

@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({
 app.use(morgan('tiny'));
 app.use('/', apiRoutes);
 app.post('/ping', (req, res) => {
- res.json({});
+    res.json({});
 });
 
 // App released via HTTP and docker

@@ -14,7 +14,7 @@ import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { configureI18n } from '../utils/translations';
 
 export const getHelp = async (request: Request, response: Response) => {
-		const call = request.body as AppCallRequest;
+    const call = request.body as AppCallRequest;
 
     const helpText = [
         getHeader(call),
@@ -26,7 +26,7 @@ export const getHelp = async (request: Request, response: Response) => {
 };
 
 function getHeader(call: AppCallRequest): string {
-		const i18nObj = configureI18n(call.context);
+    const i18nObj = configureI18n(call.context);
     return h5(i18nObj.__('api.help.header'));
 }
 

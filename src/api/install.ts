@@ -30,7 +30,7 @@ export const getInstall = async (request: Request, response: Response) => {
 };
 
 function getCommands(call: AppCallRequest): string {
-	const i18nObj = configureI18n(call.context);
+    const i18nObj = configureI18n(call.context);
     const homepageUrl: string = manifest.homepage_url;
     return `${joinLines(
         i18nObj.__('api.install.description', { homepageUrl })
