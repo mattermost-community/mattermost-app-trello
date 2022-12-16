@@ -2,6 +2,7 @@ import { AppExpandLevels, AppFieldTypes, Commands, Routes, TrelloIcon } from '..
 import { AppBinding, AppContext } from '../types';
 import { SubscriptionCreateForm, SubscriptionRemoveForm } from '../constant/forms';
 import { configureI18n } from '../utils/translations';
+
 export const getHelpBinding = (context: AppContext): any => {
     const i18nObj = configureI18n(context);
 
@@ -225,7 +226,7 @@ export const getConfigureBinding = (context: AppContext): any => {
                 path: Routes.App.CallPathConfigOpenForm,
                 expand: {
                     app: AppExpandLevels.EXPAND_ALL,
-                    acting_user: AppExpandLevels.SUMMARY,
+                    acting_user: AppExpandLevels.EXPAND_ALL,
                     acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
