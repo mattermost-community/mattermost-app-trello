@@ -1,4 +1,5 @@
 import {
+    AppActingUser,
     AppCallRequest,
     AppCallValues,
     AppForm,
@@ -17,12 +18,18 @@ import {
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { configureI18n } from '../utils/translations';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
-import { tryPromise } from '../utils';
+import { isUserSystemAdmin, tryPromise } from '../utils';
+import { Exception } from '../utils/exception';
 
 export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
-    const context = call.context as ExpandedBotActingUser;
     const oauth2 = call.context.oauth2 as Oauth2App;
     const i18nObj = configureI18n(call.context);
+
+    const actingUser: AppActingUser = call.context.acting_user as AppActingUser;
+
+    if (!isUserSystemAdmin(actingUser)) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.config.error.system-admin'));
+    }
 
     const fields = [
         {
@@ -75,6 +82,12 @@ export async function submitConfigForm(call: AppCallRequest): Promise<string> {
     const accessToken: string | undefined = call.context.acting_user_access_token;
     const values: AppCallValues = call.values as AppCallValues;
     const i18nObj = configureI18n(call.context);
+
+    const actingUser: AppActingUser = call.context.acting_user as AppActingUser;
+
+    if (!isUserSystemAdmin(actingUser)) {
+        throw new Exception(ExceptionType.TEXT_ERROR, i18nObj.__('forms.config.error.system-admin'));
+    }
 
     const apiKey: string = values[ConfigureWorkspaceForm.TRELLO_APIKEY];
     const token: string = values[ConfigureWorkspaceForm.TRELLO_TOKEN];

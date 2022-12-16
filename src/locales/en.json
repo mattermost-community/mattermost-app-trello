@@ -140,6 +140,9 @@
       "token": {
         "label": "API Token",
         "description": "Developer API Token obtained from Trello https://trello.com/app-key"
+      },
+      "error": {
+        "system-admin": "Error: This command is only available for Mattermost System Admin"
       }
     }
   }
