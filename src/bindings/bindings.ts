@@ -2,6 +2,7 @@ import { AppExpandLevels, AppFieldTypes, Commands, Routes, TrelloIcon } from '..
 import { AppBinding, AppContext } from '../types';
 import { SubscriptionCreateForm, SubscriptionRemoveForm } from '../constant/forms';
 import { configureI18n } from '../utils/translations';
+
 export const getHelpBinding = (context: AppContext): any => {
     const i18nObj = configureI18n(context);
 

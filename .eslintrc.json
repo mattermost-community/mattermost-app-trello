@@ -43,7 +43,7 @@
       "always"
     ],
     "arrow-spacing": [
-      1,
+      2,
       {
         "before": true,
         "after": true
