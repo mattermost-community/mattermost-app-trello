@@ -2,15 +2,17 @@
 
 * [Feature summary](#feature-summary)
 * [Set up](#set-up)
-  * [Installation](#installation)
+  * [Installation HTTP](#installation-http)
+  * [Installation Mattermost Cloud](#installation-mattermost-cloud)
   * [Configuration](#configuration)
 * [Admin guide](#admin-guide)
   * [Slash commands](#slash-commands)
 * [End user guide](#end-user-guide)
   * [Get started](#get-started)
   * [Using /trello commands](#use-trello-commands)
-* [Development](#development)
+* [Development environment](#development-environment)
   * [Manual installation](#manual-installation)
+  * [Install dependencies](#install-dependencies)
   * [Run the local development environment](#run-the-local-development-environment)
   * [Run the local development environment with Docker](#run-the-local-development-environment-with-docker)
 
@@ -24,22 +26,26 @@ This application allows you to integrate Trello with your Mattermost instance. l
 
 # Set up
 
-## Installation
 
-This plugin requires that your Mattermost workspace has the ``/apps install`` command enabled.
+## Installation HTTP
 
-To install, as a super admin user, run the command ``/apps install http TRELLO_API_URL`` in any channel. The ``/trello`` command should be available after the configuration has been successfully installed.
+To install, as a Mattermost system admin user, run the command ``/apps install http TRELLO_API`` in any channel. The ``/trello`` command should be available after the configuration has been successfully installed.
 
-The ``TRELLO_API_URL`` should be replaced with the URL where the Trello API instance is running. Example: ``/apps install http https://mattermost-trello-dev.ancient.mx/manifest.json``
+The ``TRELLO_API`` should be replaced with the URL where the Trello API instance is running. Example: ``/apps install http https://myapp.com/manifest.json``
+
+## Installation Mattermost Cloud
+
+To install, as a Mattermost system admin user, run the command ``/apps install listed trello`` in any channel. The ``/trello`` command should be available after the configuration has been successfully installed.
+
 
 ## Configuration
 
-1. First, install the app in your current Mattermost instance (refer to [Installation](#installation)) so that the ``/trello`` command is available.
-2. Next, configure your Trello workspace. As a super admin user, run the ``/trello configure`` command.
-3. In the confirmation modal, enter your workspace, API key and API token which you can find at https://trello.com/app-key.
-4. When you've completed the configuration, the ``/trello account`` command will be enabled. 
-5. Next, for access to all the commands, log in to a Trello account using the command ``/trello account login``.
-6. Follow the link provided and eter the generated token where required.
+After [installing](#installation)) the app:
+1. Configure your Trello workspace. As a super admin user, run the ``/trello configure`` command.
+2. In the confirmation modal, enter your workspace, API key and API token which you can find at https://trello.com/app-key.
+3. When you've completed the configuration, the ``/trello account`` command will be enabled. 
+4. Next, for access to all the commands, log in to a Trello account using the command ``/trello account login``.
+5. Follow the link provided and eter the generated token where required.
 
 # Admin guide
 
@@ -61,7 +67,7 @@ The ``TRELLO_API_URL`` should be replaced with the URL where the Trello API inst
 - ``/trello subscription list``: Show the list of all subscriptions made in all of your channels.
 - ``/trello subscription remove``: Will allow you to remove a subscription. No more notifications from that board will be received.
 
-# Development
+# Development environment
 
 ## Manual installation
 
@@ -69,9 +75,10 @@ The ``TRELLO_API_URL`` should be replaced with the URL where the Trello API inst
 
 ### Run the local development environment
 
-* You need to have installed at least node version 12 and maximum version 18. You can download the latest lts version of node for the required operating system here https://nodejs.org/es/download/
+* You need to have installed at least node version 15 and maximum version 18. You can download the latest lts version of node for the required operating system here https://nodejs.org/es/download/
 
-*  Install libraries: ``cd`` to the project directory and execute ``npm install`` to download all dependency libraries.
+### Install dependencies
+* Move to the project directory or execute ``cd`` command to the project directory and execute ``npm install`` with a terminal to download all dependency libraries.
 
 ```
 $ npm install
@@ -82,21 +89,27 @@ $ npm install
 ```
 file: .env
 
-PROJECT=mattermost-trello-app
-PORT=4002
-HOST=https://mattermost-trello-dev.ancient.mx
+PROJECT=mattermost-app-trello
+PORT=4005
+HOST=http://localhost:4005
 ```
 
 Variable definition
 
 - PROJECT: In case of executing the project with Docker using the ``.build.sh`` file, this variable will be used for the name of the container
-- PORT: Port number on which the Trello integration is listening
+- PORT: Port number on which the OpsGenie integration is listening
 - HOST: Trello API usage URL
 
 * Finally, the project must be executed.
 
 ```
 $ npm run dev
+```
+
+Or, if you would like to use the Makefile command:
+
+```
+$ make watch
 ```
 
 ### Run the local development environment with Docker
@@ -107,10 +120,20 @@ $ npm run dev
 [Mac](https://docs.docker.com/desktop/mac/install/)
 [Windows](https://docs.docker.com/desktop/windows/install/)
 
-* Once you have Docker installed, the next step would be to run the ``./build.sh`` file to create the API container and expose it locally or on the server, depending on the case required.
+* Once you have Docker installed, the next step would be to run the ``make run-server`` command to create the API container and expose it locally or on the server, depending on the case required.
 
 ```
-$ ./build
+$ make run-server
 ```
 
-When the container is created correctly, the API will be running at the url http://127.0.0.1:4002 in such a way that the installation can be carried out in Mattermost.
+When the container is created correctly, the API will be running at the url http://127.0.0.1:4005. If Mattermost is running on the same machine, run this slash command in Mattermost to install the app:
+
+```
+/apps install http http://127.0.0.1:4005
+```
+
+To stop the container, execute:
+
+```
+$ make stop-server
+```
