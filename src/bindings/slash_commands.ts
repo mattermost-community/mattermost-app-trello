@@ -56,14 +56,14 @@ export const getCommandBindings = async (call: AppCallRequest): Promise<AppsStat
         if (existsToken(oauth2)) {
             commands.push(Commands.CARD);
             commands.push(Commands.SUBSCRIPTION);
+            commands.push(Commands.DISCONNECT);
             bindings.push(getCardBinding(context));
             bindings.push(getSubscriptionBinding(context));
+            bindings.push(getAccountDisconnectBinding(context));
+        } else {
+            commands.push(Commands.CONNECT);
+            bindings.push(getAccountConnectBinding(context));
         }
-
-        commands.push(Commands.CONNECT);
-        commands.push(Commands.DISCONNECT);
-        bindings.push(getAccountConnectBinding(context));
-        bindings.push(getAccountDisconnectBinding(context));
     }
 
     return newCommandBindings(context, bindings, commands);

@@ -49,10 +49,10 @@ async function getCommands(call: AppCallRequest): Promise<string> {
             commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} add`, i18nObj.__('api.help.command_add_subcription')));
             commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} list`, i18nObj.__('api.help.command_list_subcription')));
             commands.push(addBulletSlashCommand(`${Commands.SUBSCRIPTION} remove`, i18nObj.__('api.help.command_stop_subcription')));
+            commands.push(addBulletSlashCommand(`${Commands.DISCONNECT}`, i18nObj.__('api.help.command_disconnect')));
+        } else {
+            commands.push(addBulletSlashCommand(`${Commands.CONNECT}`, i18nObj.__('api.help.command_connect')));
         }
-
-        commands.push(addBulletSlashCommand(`${Commands.CONNECT}`, i18nObj.__('api.help.command_connect')));
-        commands.push(addBulletSlashCommand(`${Commands.DISCONNECT}`, i18nObj.__('api.help.command_disconnect')));
     }
 
     return `${joinLines(...commands)}`;
