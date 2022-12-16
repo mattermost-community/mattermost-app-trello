@@ -1,6 +1,7 @@
-import {Request} from 'express';
-import {AppCallResponse, AppForm} from '../types';
-import {AppCallResponseTypes} from '../constant';
+import { Request } from 'express';
+
+import { AppCallResponse, AppForm } from '../types';
+import { AppCallResponseTypes } from '../constant';
 
 export type FieldValidationErrors = {[name: string]: string};
 
