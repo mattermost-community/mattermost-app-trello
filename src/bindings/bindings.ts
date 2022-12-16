@@ -1,10 +1,10 @@
-import {AppExpandLevels, TrelloIcon, Routes, Commands, AppFieldTypes} from '../constant';
-import {AppBinding, AppContext} from '../types';
-import {SubscriptionCreateForm, SubscriptionRemoveForm} from "../constant/forms";
-import { configureI18n } from "../utils/translations";
+import { AppExpandLevels, AppFieldTypes, Commands, Routes, TrelloIcon } from '../constant';
+import { AppBinding, AppContext } from '../types';
+import { SubscriptionCreateForm, SubscriptionRemoveForm } from '../constant/forms';
+import { configureI18n } from '../utils/translations';
 
 export const getHelpBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -19,17 +19,17 @@ export const getHelpBinding = (context: AppContext): any => {
                     acting_user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                }
-            }
-        }
+                },
+            },
+        },
     };
 };
 
 export const getCardBinding = (context: AppContext) => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     const commands: string[] = [
-        Commands.CREATE
+        Commands.CREATE,
     ];
 
     return {
@@ -39,9 +39,9 @@ export const getCardBinding = (context: AppContext) => {
         hint: `[${commands.join(' | ')}]`,
         bindings: [
             getCardCreateBinding(context),
-        ]
-    }
-}
+        ],
+    };
+};
 
 export const getCardCreateBinding = (context: AppContext) => {
     const i18nObj = configureI18n(context);
@@ -57,10 +57,10 @@ export const getCardCreateBinding = (context: AppContext) => {
                 path: `${Routes.App.Forms}${Routes.App.BindingPathCreateCard}`,
                 expand: {
                     acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                }
+                },
             },
             fields: [
                 {
@@ -81,24 +81,24 @@ export const getCardCreateBinding = (context: AppContext) => {
                     modal_label: i18nObj.__('binding.create.list_name'),
                     description: i18nObj.__('binding.create.list_description'),
                 },
-            ]
-        }
+            ],
+        },
     };
-}
+};
 
 export const getSubscriptionBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     const subCommands: string[] = [
         Commands.ADD,
         Commands.LIST,
-        Commands.REMOVE
+        Commands.REMOVE,
     ];
 
     const bindings: AppBinding[] = [
         getAddSubBinding(context),
         getListSubBinding(context),
-        getRemoveSubBinding(context)
+        getRemoveSubBinding(context),
     ];
 
     return {
@@ -106,12 +106,12 @@ export const getSubscriptionBinding = (context: AppContext): any => {
         label: Commands.SUBSCRIPTION,
         description: i18nObj.__('binding.subscription.get'),
         hint: `[${subCommands.join(' | ')}]`,
-        bindings: bindings
-    }
-}
+        bindings,
+    };
+};
 
 export const getAddSubBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -138,22 +138,22 @@ export const getAddSubBinding = (context: AppContext): any => {
                     type: AppFieldTypes.TEXT,
                     is_required: true,
                     position: 1,
-                    max_length: 100
+                    max_length: 100,
                 },
                 {
                     modal_label: i18nObj.__('binding.add.channel'),
                     name: SubscriptionCreateForm.CHANNEL_ID,
                     type: AppFieldTypes.CHANNEL,
                     is_required: true,
-                    position: 2
-                }
-            ]
-        }
-    }
-}
+                    position: 2,
+                },
+            ],
+        },
+    };
+};
 
-export const  getListSubBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+export const getListSubBinding = (context: AppContext): any => {
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -168,14 +168,14 @@ export const  getListSubBinding = (context: AppContext): any => {
                     acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                }
-            }
+                },
+            },
         },
-    }
-}
+    };
+};
 
 export const getRemoveSubBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -195,8 +195,8 @@ export const getRemoveSubBinding = (context: AppContext): any => {
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
                 },
                 call: {
-                    path: Routes.App.CallSubscriptionListAppOpts
-                }
+                    path: Routes.App.CallSubscriptionListAppOpts,
+                },
             },
             fields: [
                 {
@@ -205,12 +205,12 @@ export const getRemoveSubBinding = (context: AppContext): any => {
                     type: AppFieldTypes.TEXT,
                     is_required: true,
                     position: 1,
-                    max_length: 100
+                    max_length: 100,
                 },
-            ]
-        }
-    }
-}
+            ],
+        },
+    };
+};
 
 export const getConfigureBinding = (context: AppContext): any => {
     const i18nObj = configureI18n(context);
@@ -230,15 +230,15 @@ export const getConfigureBinding = (context: AppContext): any => {
                     acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                    locale: AppExpandLevels.EXPAND_ALL
-                }
-            }
-        }
-    }
+                    locale: AppExpandLevels.EXPAND_ALL,
+                },
+            },
+        },
+    };
 };
 
 export const getAccountConnectBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -251,17 +251,17 @@ export const getAccountConnectBinding = (context: AppContext): any => {
                 path: `${Routes.App.BindingPathConnect}`,
                 expand: {
                     acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                }
-            }
-        }
+                },
+            },
+        },
     };
-}
+};
 
 export const getAccountDisconnectBinding = (context: AppContext): any => {
-		const i18nObj = configureI18n(context);
+    const i18nObj = configureI18n(context);
 
     return {
         icon: TrelloIcon,
@@ -274,13 +274,13 @@ export const getAccountDisconnectBinding = (context: AppContext): any => {
                 path: `${Routes.App.BindingPathDisconnect}`,
                 expand: {
                     acting_user: AppExpandLevels.EXPAND_ALL,
-                    acting_user_access_token:  AppExpandLevels.EXPAND_ALL,
+                    acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                     channel: AppExpandLevels.EXPAND_ALL,
                     user: AppExpandLevels.EXPAND_ALL,
                     oauth2_app: AppExpandLevels.EXPAND_ALL,
                     oauth2_user: AppExpandLevels.EXPAND_ALL,
-                }
-            }
-        }
+                },
+            },
+        },
     };
-}
+};

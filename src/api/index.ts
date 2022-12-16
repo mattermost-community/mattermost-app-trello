@@ -1,5 +1,7 @@
-import express, {Router} from 'express';
-import {Routes} from '../constant';
+import express, { Router } from 'express';
+
+import { Routes } from '../constant';
+
 import * as cManifest from './manifest';
 import * as cBindings from './bindings';
 import * as cHelp from './help';
@@ -23,8 +25,8 @@ router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.
 router.post(`${Routes.App.Forms}${Routes.App.BindingPathCreateCard}${Routes.App.Form}`, cAdd.formStepOne);
 
 router.post(`${Routes.App.BindingPathConnect}`, cConnect.getConnect);
-router.post(`${Routes.App.BindingPathConnect}${Routes.App.Submit}`, cConnect.saveToken)
-router.post(`${Routes.App.BindingPathDisconnect}`, cConnect.getDisconnect)
+router.post(`${Routes.App.BindingPathConnect}${Routes.App.Submit}`, cConnect.saveToken);
+router.post(`${Routes.App.BindingPathDisconnect}`, cConnect.getDisconnect);
 
 router.post(`${Routes.App.CallPathConfigOpenForm}`, cConfigure.openTrelloConfigForm);
 router.post(`${Routes.App.CallPathConfigSubmitOrUpdateForm}`, cConfigure.submitTrelloConfig);

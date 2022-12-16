@@ -1,4 +1,4 @@
 export const Locations = {
-  Help: 'help',
-  Configure: 'configure',
+    Help: 'help',
+    Configure: 'configure',
 };
