@@ -1,4 +1,4 @@
-import { AppSelectOption } from "../types";
+import { AppSelectOption } from '../types';
 
 export const ConfigureForm = {
     API_KEY: 'Trello_api_key',
