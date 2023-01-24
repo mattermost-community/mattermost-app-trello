@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { AppCallRequest, AppCallResponse } from '../types';
-import { newOKCallResponseWithMarkdown } from '../utils';
+import { newOKCallResponseWithMarkdown, showMessageToMattermost } from '../utils';
 import { MattermostClient, MattermostOptions } from '../clients/mattermost';
 import { joinLines } from '../utils/markdown';
 import manifest from '../manifest.json';
@@ -24,9 +24,15 @@ export const getInstall = async (request: Request, response: Response) => {
     const helpText: string = [
         getCommands(request.body),
     ].join('');
-    const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
+    let callResponse: AppCallResponse;
 
-    response.json(callResponse);
+    try {
+        callResponse = newOKCallResponseWithMarkdown(helpText);
+        response.json(callResponse);
+    } catch (error: any) {
+        callResponse = showMessageToMattermost(error);
+        response.json(callResponse);
+    }
 };
 
 function getCommands(call: AppCallRequest): string {

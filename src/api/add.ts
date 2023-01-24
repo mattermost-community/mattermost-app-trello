@@ -20,7 +20,6 @@ export const getAdd = async (request: Request, response: Response) => {
             const form = await cardAddFromStepOne(call);
             callResponse = newFormCallResponse(form);
         }
-
         return response.json(callResponse);
     } catch (error: any) {
         callResponse = showMessageToMattermost(error);
@@ -49,9 +48,9 @@ export const formStepTwo = async (request: Request, response: Response) => {
     try {
         const message = await submitCreateCard(call);
         callResponse = newOKCallResponseWithMarkdown(message);
+        return response.json(callResponse);
     } catch (error: any) {
         callResponse = showMessageToMattermost(error);
+        return response.json(callResponse);
     }
-
-    return response.json(callResponse);
 };

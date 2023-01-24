@@ -12,28 +12,28 @@ import {
     showMessageToMattermost,
 } from '../utils';
 
-export const openTrelloConfigForm: CallResponseHandler = async (req, res) => {
+export const openTrelloConfigForm: CallResponseHandler = async (request, response) => {
     let callResponse: AppCallResponse;
 
     try {
-        const form = await newConfigForm(req.body);
+        const form = await newConfigForm(request.body);
         callResponse = newFormCallResponse(form);
-        res.json(callResponse);
+        response.json(callResponse);
     } catch (error: any) {
         callResponse = showMessageToMattermost(error);
-        res.json(callResponse);
+        response.json(callResponse);
     }
 };
 
-export const submitTrelloConfig: CallResponseHandler = async (req, res) => {
+export const submitTrelloConfig: CallResponseHandler = async (request, response) => {
     let callResponse: AppCallResponse;
 
     try {
-        const message = await submitConfigForm(req.body);
+        const message = await submitConfigForm(request.body);
         callResponse = newOKCallResponseWithMarkdown(message);
-        res.json(callResponse);
+        response.json(callResponse);
     } catch (error: any) {
         callResponse = showMessageToMattermost(error);
-        res.json(callResponse);
+        response.json(callResponse);
     }
 };
