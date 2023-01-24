@@ -114,25 +114,3 @@ export const incomingWebhook = async (request: Request, response: Response) => {
     }
 };
 
-export const notificationToMattermost = async (req: Request, res: Response) => {
-    const pluginWebhook: ParsedQuery = queryString.parse(queryString.extract(req.url));
-    const call: AppCallRequest = req.body;
-    const i18nObj = configureI18n(call.context);
-    let callResponse: AppCallResponse;
-
-    try {
-        const mattermostOptions: MattermostOptions = {
-            accessToken: null,
-            mattermostUrl: <string>pluginWebhook.mattermostUrl,
-        };
-        const mattermostClient: MattermostClient = new MattermostClient(mattermostOptions);
-
-        await mattermostClient.createWebhook(<string>pluginWebhook.secret, <string>pluginWebhook.channelId, req.body);
-
-        callResponse = newOKCallResponse();
-        res.json(callResponse);
-    } catch (error: any) {
-        callResponse = newErrorCallResponseWithMessage(i18nObj.__('api.webhook.error', { error: error.message }));
-        res.json(callResponse);
-    }
-};
