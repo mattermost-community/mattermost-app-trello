@@ -146,6 +146,11 @@ export type AppForm = {
     submit_label?: string;
 };
 
+export type PostApp = {
+    id: string,
+    channel_id: string
+}
+
 export type AppContext = {
     app_id: string;
     location?: string;
@@ -165,6 +170,8 @@ export type AppContext = {
     acting_user?: AppActingUser;
     acting_user_access_token?: string;
     oauth2?: Oauth2App;
+    app_path?: string;
+    post?: PostApp;
 };
 
 export type AppCallRequest = AppCall & {

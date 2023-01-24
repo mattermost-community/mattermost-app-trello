@@ -97,7 +97,8 @@
     "card_add": {
       "add_form": {
         "step_exception_1": "No se realiza la configuración inicial.",
-        "step_exception_2": "Usted no se ha identificado."
+        "step_exception_2": "Usted no se ha identificado.",
+        "step_exception_3": "El objeto de valores esta vacío."
       },
       "create": {
         "label_card": "Nombre de tarjeta",

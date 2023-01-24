@@ -97,7 +97,8 @@
     "card_add": {
       "add_form": {
         "step_exception_1": "Initial configuration is not done.",
-        "step_exception_2": "You are not logged in."
+        "step_exception_2": "You are not logged in.",
+        "step_exception_3": "Value object not found."
       },
       "create": {
         "label_card": "Card Name",
