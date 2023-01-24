@@ -6,7 +6,7 @@ import {
     newErrorCallResponseWithMessage,
     newOKCallResponseWithMarkdown,
 } from './call-responses';
-import { Exception } from './exception';
+import Exception from './exception';
 
 export function isUserSystemAdmin(actingUser: AppActingUser): boolean {
     return Boolean(actingUser.roles && actingUser.roles.includes('system_admin'));

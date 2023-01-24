@@ -7,7 +7,7 @@ import { existsOauth2App, existsToken, tryPromise } from '../utils';
 import { TrelloClient } from '../clients/trello';
 import { ConnectForm } from '../constant/forms';
 import config from '../config';
-import { Exception } from '../utils/exception';
+import Exception from '../utils/exception';
 import { configureI18n } from '../utils/translations';
 
 export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {

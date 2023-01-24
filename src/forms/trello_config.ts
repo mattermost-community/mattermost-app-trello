@@ -3,7 +3,6 @@ import {
     AppCallRequest,
     AppCallValues,
     AppForm,
-    ExpandedBotActingUser,
     Oauth2App,
 } from '../types';
 
@@ -19,7 +18,7 @@ import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { configureI18n } from '../utils/translations';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { isUserSystemAdmin, tryPromise } from '../utils';
-import { Exception } from '../utils/exception';
+import Exception from '../utils/exception';
 
 export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
     const oauth2 = call.context.oauth2 as Oauth2App;

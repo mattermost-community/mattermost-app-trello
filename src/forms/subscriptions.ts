@@ -20,7 +20,7 @@ import {
     WebhookCreate,
 } from '../types';
 import { existsToken, getHTTPPath, tryPromise } from '../utils';
-import { Exception } from '../utils/exception';
+import Exception from '../utils/exception';
 import { configureI18n } from '../utils/translations';
 import { h6, joinLines } from '../utils/markdown';
 

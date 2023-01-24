@@ -1,7 +1,5 @@
 import {
-    AppCallRequestWithValues,
     AppCallResponse,
-    AppCallValues,
 } from '../types';
 
 import { newConfigForm, submitConfigForm } from '../forms/trello_config';
