@@ -5,6 +5,7 @@ import { TrelloClient, TrelloOptions } from '../clients/trello';
 import {
     ExceptionType,
     Routes,
+    SubscriptionAddValuesForm,
     SubscriptionCreateForm,
     SubscriptionRemoveForm,
 } from '../constant';
@@ -27,14 +28,19 @@ import { h6, joinLines } from '../utils/markdown';
 export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
     const mattermostUrl: string | undefined = call.context.mattermost_site_url;
     const whSecret: string | undefined = call.context.app?.webhook_secret;
-    const values: AppCallValues | undefined = call.values;
+    const appPath: string | undefined = call.context.app_path;
+    const values: SubscriptionAddValuesForm | undefined = call.values as SubscriptionAddValuesForm;
     const i18nObj = configureI18n(call.context);
     const oauth2 = call.context.oauth2 as Oauth2App;
     const oauth2_token = oauth2.user?.token as string;
 
-    const boardName: string = values?.[SubscriptionCreateForm.BOARD_NAME];
-    const channelId: string = values?.[SubscriptionCreateForm.CHANNEL_ID].value;
-    const channelName: string = values?.[SubscriptionCreateForm.CHANNEL_ID].label;
+    if (!values) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'));
+    }
+
+    const boardName: string = values.board_name;
+    const channelId: string = values.channel_id.value;
+    const channelName: any = values.channel_id.label;
 
     if (!existsToken(oauth2)) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
@@ -56,19 +62,14 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.subcription.board_not_found', { name: boardName }));
     }
 
-    const idModel: string = board.id;
-    const params: string = queryString.stringify({
-        secret: whSecret,
-        idModel,
-        channelId,
-        mattermostUrl,
-    });
-    const url = `${getHTTPPath()}${Routes.App.CallSubscriptionReceiveNotification}?${params}`;
+    const urlWithParams = new URL(`${mattermostUrl}${appPath}${Routes.App.CallPathIncomingWebhookPath}`);
+    urlWithParams.searchParams.append('secret', <string>whSecret);
+    urlWithParams.searchParams.append('channelId', channelId);
 
     const payload: WebhookCreate = {
         description: i18nObj.__('forms.subcription.description', { channel: channelName, board: board?.name }),
         idModel: board.id,
-        callbackURL: url,
+        callbackURL: urlWithParams.href,
     };
     await tryPromise(trelloOauthClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
 }

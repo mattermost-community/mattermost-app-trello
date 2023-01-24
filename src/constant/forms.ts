@@ -1,3 +1,5 @@
+import { AppSelectOption } from '../types';
+
 export const ConfigureForm = {
     API_KEY: 'Trello_api_key',
 };
@@ -6,6 +8,11 @@ export const SubscriptionCreateForm = {
     BOARD_NAME: 'board_name',
     CHANNEL_ID: 'channel_id',
 };
+
+export interface SubscriptionAddValuesForm {
+    board_name: string;
+    channel_id: AppSelectOption;
+}
 
 export const SubscriptionRemoveForm = {
     SUBSCRIPTION: 'subscription',
