@@ -42,15 +42,4 @@ export class MattermostClient {
             },
         }).then((response: AxiosResponse<any>) => response.data);
     }
-
-    public createWebhook(secret: string, channelId: string, eventData: any): Promise<string> {
-        const m: Manifest = manifest;
-        const params: string = queryString.stringify({
-            secret,
-            channelId,
-        });
-        const url = `${this.config.mattermostUrl}/plugins/${AppsPluginName}/apps/${m.app_id}${Routes.App.CallPathIncomingWebhookPath}?${params}`;
-        return axios.post(`${url}`, eventData).
-            then((response: AxiosResponse<any>) => response.data);
-    }
 }

@@ -34,7 +34,6 @@ const AppPaths = {
     CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
 
     CallSubscriptionAdd: '/subscription/add',
-    CallSubscriptionReceiveNotification: '/subscription/receive-data',
     CallSubscriptionList: '/subscription/list',
     CallSubscriptionRemove: '/subscription/remove',
     CallSubscriptionListAppOpts: '/subscription/app-options/list',

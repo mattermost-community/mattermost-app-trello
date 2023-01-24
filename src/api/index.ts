@@ -35,9 +35,6 @@ router.post(`${Routes.App.CallSubscriptionAdd}`, cSubscription.addWebhookSubscri
 router.post(`${Routes.App.CallSubscriptionList}`, cSubscription.getWebhookSubscriptions);
 router.post(`${Routes.App.CallSubscriptionRemove}`, cSubscription.removeWebhookSubscription);
 
-router.post(`${Routes.App.CallSubscriptionReceiveNotification}`, cWebhook.notificationToMattermost);
-router.get(`${Routes.App.CallSubscriptionReceiveNotification}`, cWebhook.notificationToMattermost);
-
 router.post(`${Routes.App.CallPathIncomingWebhookPath}`, cWebhook.incomingWebhook);
 
 const staticRouter = express.Router();

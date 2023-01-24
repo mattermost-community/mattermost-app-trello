@@ -1,6 +1,6 @@
 {
   "name": "mattermost-app-trello",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Connect with the Trello service through the Mattermost platform",
   "main": "src/index.js",
   "scripts": {
