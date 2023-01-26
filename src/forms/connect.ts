@@ -16,7 +16,7 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
     const oauth2User = call.context.oauth2?.user;
 
     if (!existsOauth2App(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const queryParams: string = queryString.stringify({
@@ -72,7 +72,7 @@ export async function connectFormSaveToken(call: AppCallRequest): Promise<string
         workspace: <string>oauth2.data?.workspace,
     };
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-    await tryPromise(trelloClient.validateToken(trelloOptions.workspace), ExceptionType.TEXT_ERROR, i18nObj.__('error.trello'));
+    await tryPromise(trelloClient.validateToken(trelloOptions.workspace), ExceptionType.TEXT_ERROR, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
 
     const oauth2User: Oauth2CurrentUser = {
         token,
@@ -96,7 +96,7 @@ export async function disconnectToken(call: AppCallRequest): Promise<string> {
     const oauth2 = call.context.oauth2 as Oauth2App;
 
     if (!existsToken(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('api.connect.disconnect_exception'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('api.connect.disconnect_exception'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const kvOptions: KVStoreOptions = {

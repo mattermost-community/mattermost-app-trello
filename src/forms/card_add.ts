@@ -14,11 +14,11 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
     const workspace = oauth2.data?.workspace as string;
 
     if (!existsOauth2App(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     if (!existsToken(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const trelloOptions: TrelloOptions = {
@@ -38,11 +38,11 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
     const workspace = oauth2.data?.workspace as string;
 
     if (!existsOauth2App(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     if (!existsToken(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const trelloOptions = {
@@ -134,11 +134,11 @@ export async function addFromCommand(call: AppCallRequest): Promise<string> {
     const list_name: string = values?.list_name;
 
     if (!existsOauth2App(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     if (!existsToken(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const trelloOptions: TrelloOptions = {
@@ -154,12 +154,12 @@ export async function addFromCommand(call: AppCallRequest): Promise<string> {
         const list = lists.find((l) => l.label === list_name);
         if (list) {
             const trelloClient = new TrelloClient(trelloOptions);
-            await tryPromise(trelloClient.sendCreateCardRequest(list.value, card_name), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+            await tryPromise(trelloClient.sendCreateCardRequest(list.value, card_name), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
         } else {
-            throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add.list_not_found', { name: list_name }));
+            throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add.list_not_found', { name: list_name }), call.context.mattermost_site_url, call.context.app_path);
         }
     } else {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add.board_not_found', { nbame: board_name }));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add.board_not_found', { nbame: board_name }), call.context.mattermost_site_url, call.context.app_path);
     }
 
     return i18nObj.__('api.add');
@@ -172,7 +172,7 @@ export async function submitCreateCard(call: AppCallRequest): Promise<string> {
     const oauth2_token = oauth2.user?.token as string;
 
     if (!list) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('api.form_step_two_exception'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('api.form_step_two_exception'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const list_id = list.value as string;
@@ -186,6 +186,6 @@ export async function submitCreateCard(call: AppCallRequest): Promise<string> {
 
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
-    await tryPromise(trelloClient.sendCreateCardRequest(list_id, card_name), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+    await tryPromise(trelloClient.sendCreateCardRequest(list_id, card_name), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
     return i18nObj.__('api.add');
 }

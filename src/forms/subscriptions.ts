@@ -35,7 +35,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
     const oauth2_token = oauth2.user?.token as string;
 
     if (!values) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const boardName: string = values.board_name;
@@ -43,7 +43,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
     const channelName: any = values.channel_id.label;
 
     if (!existsToken(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const trelloOAuthOptions: TrelloOptions = {
@@ -52,14 +52,14 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
     };
 
     const trelloOauthClient: TrelloClient = new TrelloClient(trelloOAuthOptions);
-    const organization: TrelloOrganization = await tryPromise(trelloOauthClient.getOrganizationId(<string>oauth2.data?.workspace), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+    const organization: TrelloOrganization = await tryPromise(trelloOauthClient.getOrganizationId(<string>oauth2.data?.workspace), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
     const idOrganization = organization?.id;
 
-    const searchResponse: SearchResponse = await tryPromise(trelloOauthClient.searchBoardByName(boardName, idOrganization), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+    const searchResponse: SearchResponse = await tryPromise(trelloOauthClient.searchBoardByName(boardName, idOrganization), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
     const board: Board | undefined = head(searchResponse.boards);
 
     if (!board) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.subcription.board_not_found', { name: boardName }));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.subcription.board_not_found', { name: boardName }), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const urlWithParams = new URL(`${mattermostUrl}${appPath}${Routes.App.CallPathIncomingWebhookPath}`);
@@ -71,7 +71,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
         idModel: board.id,
         callbackURL: urlWithParams.href,
     };
-    await tryPromise(trelloOauthClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+    await tryPromise(trelloOauthClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
 }
 
 export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
@@ -82,7 +82,7 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
     const oauth2_token = oauth2.user?.token as string;
 
     if (!existsToken(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const trelloOptions: TrelloOptions = {
@@ -91,11 +91,11 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
     };
 
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-    const subscription: TrelloWebhook = await tryPromise(trelloClient.getTrelloWebhookByID(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+    const subscription: TrelloWebhook = await tryPromise(trelloClient.getTrelloWebhookByID(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
     const subParams = new URL(<string>subscription.callbackURL)?.searchParams;
 
-    await tryPromise(trelloClient.getBoardById(<string>subParams.get('idModel')), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
-    await tryPromise(trelloClient.deleteTrelloWebhook(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+    await tryPromise(trelloClient.getBoardById(<string>subParams.get('idModel')), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
+    await tryPromise(trelloClient.deleteTrelloWebhook(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
 }
 
 export async function listWebhookCall(call: AppCallRequest): Promise<string> {
@@ -103,7 +103,7 @@ export async function listWebhookCall(call: AppCallRequest): Promise<string> {
     const oauth2 = call.context.oauth2 as Oauth2App;
 
     if (!existsToken(oauth2)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const trelloOptions: TrelloOptions = {
@@ -111,7 +111,7 @@ export async function listWebhookCall(call: AppCallRequest): Promise<string> {
         token: oauth2.user?.token as string,
     };
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
-    const webhooks: TrelloWebhook[] = await tryPromise(trelloClient.getTrelloActiveWebhooks(), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+    const webhooks: TrelloWebhook[] = await tryPromise(trelloClient.getTrelloActiveWebhooks(), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
 
     const subscriptionsText: string = [
         h6(i18nObj.__('api.subscription.response_get', { count: webhooks.length.toString() })),
