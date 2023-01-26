@@ -46,12 +46,3 @@ export function newErrorCallResponseWithMessage(message: string): AppCallRespons
         text: message,
     };
 }
-
-export function newErrorCallResponseWithFieldErrors(errors: FieldValidationErrors): AppCallResponse {
-    return {
-        type: AppCallResponseTypes.ERROR,
-        data: {
-            errors,
-        },
-    };
-}

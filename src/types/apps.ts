@@ -236,37 +236,10 @@ export type AppCallResponse<Res = unknown> = {
     props?: any;
 };
 
-export type AutocompleteSuggestion = {
-    suggestion: string;
-    complete?: string;
-    description?: string;
-    hint?: string;
-    iconData?: string;
-}
-
-export type AutocompleteSuggestionWithComplete = AutocompleteSuggestion & {
-    complete: string;
-}
-
-export type AutocompleteElement = AppField;
-export type AutocompleteStaticSelect = AutocompleteElement & {
-    options: AppSelectOption[];
-};
-
-export type AutocompleteDynamicSelect = AutocompleteElement;
-
-export type AutocompleteUserSelect = AutocompleteElement;
-
-export type AutocompleteChannelSelect = AutocompleteElement;
-
 export type FormResponseData = {
     errors?: {
         [field: string]: string;
     };
-}
-
-export type AppLookupResponse = {
-    items: AppSelectOption[];
 }
 
 export type AppAttachmentActionIntegration = {
@@ -308,13 +281,3 @@ export type ExpandedBot = AppContext & {
     bot_access_token: string,
 }
 
-export type ExpandedActingUserAccessToken = AppContext & {
-    acting_user_access_token: string
-}
-
-export type AppCallRequestWithValues = AppCall & {
-    values: AppCallValues
-    context: AppContext
-}
-
-export type CtxExpandedBotActingUserAccessToken = ExpandedActingUserAccessToken & ExpandedBot
