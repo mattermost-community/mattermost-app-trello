@@ -26,30 +26,31 @@ export const addWebhookSubscription = async (request: Request, response: Respons
     }
 };
 
-export const removeWebhookSubscription = async (req: Request, res: Response) => {
-    const call: AppCallRequest = req.body;
+export const removeWebhookSubscription = async (request: Request, response: Response) => {
+    const call: AppCallRequest = request.body;
     let callResponse: AppCallResponse;
     const i18nObj = configureI18n(call.context);
 
     try {
         await removeWebhookCall(call);
         callResponse = newOKCallResponseWithMarkdown(i18nObj.__('api.subscription.response_remove'));
-        res.json(callResponse);
+        response.json(callResponse);
     } catch (error: any) {
         callResponse = showMessageToMattermost(error);
-        res.json(callResponse);
+        response.json(callResponse);
     }
 };
 
-export const getWebhookSubscriptions = async (req: Request, res: Response) => {
-    const call: AppCallRequest = req.body;
+export const getWebhookSubscriptions = async (request: Request, response: Response) => {
+    const call: AppCallRequest = request.body;
     let callResponse: AppCallResponse;
 
     try {
         const message = await listWebhookCall(call);
         callResponse = newOKCallResponseWithMarkdown(message);
+        response.json(callResponse);
     } catch (error: any) {
         callResponse = showMessageToMattermost(error);
+        response.json(callResponse);
     }
-    res.json(callResponse);
 };

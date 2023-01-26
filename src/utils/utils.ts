@@ -1,6 +1,6 @@
 import { ExceptionType } from '../constant';
 import config from '../config';
-import { AppActingUser, AppCallResponse, Oauth2App } from '../types';
+import { AppActingUser, AppCallRequest, AppCallResponse, Oauth2App } from '../types';
 
 import {
     newErrorCallResponseWithMessage,
@@ -30,10 +30,10 @@ export function errorDataMessage(error: Exception | Error | any): string {
     return `${errorMessage}`;
 }
 
-export function tryPromise(p: Promise<any>, exceptionType: ExceptionType, message: string) {
+export function tryPromise(p: Promise<any>, exceptionType: ExceptionType, message: string, mattermostUrl: string | undefined, requestPath: string | undefined) {
     return p.catch((error) => {
         const errorMessage: string = errorDataMessage(error);
-        throw new Exception(exceptionType, `${message} ${errorMessage}`);
+        throw new Exception(exceptionType, `${message} ${errorMessage}`, mattermostUrl, requestPath);
     });
 }
 

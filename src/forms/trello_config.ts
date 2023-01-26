@@ -27,7 +27,7 @@ export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
     const actingUser: AppActingUser = call.context.acting_user as AppActingUser;
 
     if (!isUserSystemAdmin(actingUser)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.config.error.system-admin'));
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.config.error.system-admin'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const fields = [
@@ -85,7 +85,7 @@ export async function submitConfigForm(call: AppCallRequest): Promise<string> {
     const actingUser: AppActingUser = call.context.acting_user as AppActingUser;
 
     if (!isUserSystemAdmin(actingUser)) {
-        throw new Exception(ExceptionType.TEXT_ERROR, i18nObj.__('forms.config.error.system-admin'));
+        throw new Exception(ExceptionType.TEXT_ERROR, i18nObj.__('forms.config.error.system-admin'), call.context.mattermost_site_url, call.context.app_path);
     }
 
     const apiKey: string = values[ConfigureWorkspaceForm.TRELLO_APIKEY];
@@ -105,7 +105,7 @@ export async function submitConfigForm(call: AppCallRequest): Promise<string> {
     };
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
-    await tryPromise(trelloClient.validateToken(workspace), ExceptionType.TEXT_ERROR, i18nObj.__('api.configure.config_failed'));
+    await tryPromise(trelloClient.validateToken(workspace), ExceptionType.TEXT_ERROR, i18nObj.__('api.configure.config_failed'), call.context.mattermost_site_url, call.context.app_path);
 
     const oauth2App: Oauth2App = {
         client_id: apiKey,

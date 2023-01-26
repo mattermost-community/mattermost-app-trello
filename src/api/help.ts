@@ -6,6 +6,7 @@ import {
     existsToken,
     isUserSystemAdmin,
     newOKCallResponseWithMarkdown,
+    showMessageToMattermost,
 } from '../utils';
 import { AppActingUser, AppCallRequest, AppCallResponse, ExpandedBotActingUser, Oauth2App } from '../types';
 import { addBulletSlashCommand, h5, joinLines } from '../utils/markdown';
@@ -19,9 +20,15 @@ export const getHelp = async (request: Request, response: Response) => {
         getHeader(call),
         await getCommands(request.body),
     ].join('');
-    const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
+    let callResponse: AppCallResponse;
 
-    response.json(callResponse);
+    try {
+        callResponse = newOKCallResponseWithMarkdown(helpText);
+        response.json(callResponse);
+    } catch (error: any) {
+        callResponse = showMessageToMattermost(error);
+        response.json(callResponse);
+    }
 };
 
 function getHeader(call: AppCallRequest): string {

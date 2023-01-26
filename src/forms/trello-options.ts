@@ -1,6 +1,6 @@
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { ExceptionType } from '../constant';
-import { AppContext, AppSelectOption } from '../types';
+import { AppCallRequest, AppContext, AppSelectOption } from '../types';
 import { tryPromise } from '../utils';
 import { configureI18n } from '../utils/translations';
 
@@ -9,7 +9,7 @@ export async function getBoardOptionList(trelloOptions: TrelloOptions, context: 
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
     const workspace = trelloOptions.workspace as string;
 
-    const boards = await tryPromise(trelloClient.searchBoardsInOrganization(workspace), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+    const boards = await tryPromise(trelloClient.searchBoardsInOrganization(workspace), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), context.mattermost_site_url, context.app_path);
 
     const options: AppSelectOption[] = [...boards.map((b: any) => {
         return { label: b.name, value: b.id };
@@ -22,7 +22,7 @@ export async function getListOptionList(boardId: string, trelloOptions: TrelloOp
     const i18nObj = configureI18n(context);
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
 
-    const boards = await tryPromise(trelloClient.getListByBoard(boardId), ExceptionType.MARKDOWN, i18nObj.__('error.trello'));
+    const boards = await tryPromise(trelloClient.getListByBoard(boardId), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), context.mattermost_site_url, context.app_path);
 
     const options: AppSelectOption[] = [...boards.map((b: any) => {
         return { label: b.name, value: b.id };
