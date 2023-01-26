@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { routesJoin } from 'src/utils';
+import { routesJoin } from '../utils/utils';
 
 import { AppsPluginName, Routes } from '../constant';
 import { Oauth2App, Oauth2CurrentUser } from '../types';

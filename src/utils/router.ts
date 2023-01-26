@@ -1,4 +1,4 @@
-import { Routes } from 'src/constant';
+import { Routes } from '../constant/routes';
 
 import { routesJoin } from './utils';
 

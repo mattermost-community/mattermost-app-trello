@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 
-import { getRoutes } from 'src/utils/router';
+import { getRoutes } from '../utils/router';
 
 import * as cManifest from './manifest';
 import * as cBindings from './bindings';

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import queryString from 'query-string';
 
-import { routesJoin } from 'src/utils';
+import { routesJoin } from '../utils/utils';
 
 import { default as globalConfig } from '../config';
 import { Routes } from '../constant';
