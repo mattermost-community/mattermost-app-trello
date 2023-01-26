@@ -10,7 +10,6 @@ import {
 import { AppActingUser, AppCallRequest, AppCallResponse, ExpandedBotActingUser, Oauth2App } from '../types';
 import { addBulletSlashCommand, h5, joinLines } from '../utils/markdown';
 import { Commands } from '../constant';
-import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { configureI18n } from '../utils/translations';
 
 export const getHelp = async (request: Request, response: Response) => {

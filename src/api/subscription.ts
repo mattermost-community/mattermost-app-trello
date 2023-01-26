@@ -7,8 +7,6 @@ import {
 import {
     AppCallRequest,
     AppCallResponse,
-    AppContext,
-    TrelloWebhook,
 } from '../types';
 import { addSubscriptionCall, listWebhookCall, removeWebhookCall } from '../forms/subscriptions';
 import { configureI18n } from '../utils/translations';

@@ -2,7 +2,7 @@ import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, TrelloIcon } from '../constant';
 import { AppCallRequest, AppCallValues, AppContext, AppField, AppForm, AppSelectOption, Oauth2App } from '../types';
 import { existsOauth2App, existsToken, tryPromise } from '../utils';
-import { Exception } from '../utils/exception';
+import Exception from '../utils/exception';
 import { configureI18n } from '../utils/translations';
 
 import { getBoardOptionList, getListOptionList } from './trello-options';
