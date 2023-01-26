@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 import queryString from 'query-string';
 
+import { routesJoin } from 'src/utils';
+
 import { default as globalConfig } from '../config';
 import { Routes } from '../constant';
 import {
@@ -30,8 +32,7 @@ export class TrelloClient {
             key: this.config.apiKey,
             token: this.config.token,
         });
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.boards}/${boardId}/${Routes.TP.lists}?${queryParams}`;
-
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.boards, '/', boardId, '/', Routes.TP.lists, '?', queryParams]);
         return axios.get(url).
             then((response: AxiosResponse<any>) => response.data);
     }
@@ -41,8 +42,7 @@ export class TrelloClient {
             key: this.config.apiKey,
             token: this.config.token,
         });
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.boards}/${boardId}?${queryParams}`;
-
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.boards, '/', boardId, '?', queryParams]);
         return axios.get(url).
             then((response: AxiosResponse<any>) => response.data);
     }
@@ -55,8 +55,7 @@ export class TrelloClient {
             modelTypes: Routes.TP.boards,
             idOrganizations,
         });
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.search}?${queryParams}`;
-
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.boards, '?', queryParams]);
         return axios.get(url).
             then((response: AxiosResponse<any>) => response.data);
     }
@@ -66,8 +65,7 @@ export class TrelloClient {
             key: this.config.apiKey,
             token: this.config.token,
         });
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.organizations}/${workspace}?${queryParams}`;
-
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.organizations, '/', workspace, '?', queryParams]);
         return axios.get(url).
             then((response: AxiosResponse<any>) => response.data);
     }
@@ -77,8 +75,7 @@ export class TrelloClient {
             key: this.config.apiKey,
             token: this.config.token,
         });
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.organizations}/${workspace}/${Routes.TP.boards}?${queryParams}`;
-
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.organizations, '/', workspace, '/', Routes.TP.boards, '?', queryParams]);
         return axios.get(url).
             then((response: AxiosResponse<any>) => response.data);
     }
@@ -90,8 +87,7 @@ export class TrelloClient {
             name: cardName,
             idList: listId,
         });
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.cards}?${queryParams}`;
-
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.cards, '?', queryParams]);
         return axios.post(url).
             then((response: AxiosResponse<any>) => response.data);
     }
@@ -101,9 +97,8 @@ export class TrelloClient {
             key: this.config.apiKey,
             token: this.config.token,
         });
-        const verifyURL = `${globalConfig.TRELLO.URL}${Routes.TP.organizations}/${workspace}?${queryParams}`;
-
-        return axios.get(verifyURL).
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.organizations, '/', workspace, '?', queryParams]);
+        return axios.get(url).
             then((response: AxiosResponse<any>) => response.data);
     }
 
@@ -112,8 +107,7 @@ export class TrelloClient {
             key: this.config.apiKey,
             token: this.config.token,
         });
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.tokens}/${this.config.token}/${Routes.TP.webhooks}?${queryParams}`;
-
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.tokens, '/', this.config.token, '/', Routes.TP.webhooks, '?', queryParams]);
         return axios.post(url, payload).
             then((response: AxiosResponse<any>) => response.data);
     }
@@ -123,8 +117,7 @@ export class TrelloClient {
             key: this.config.apiKey,
             token: this.config.token,
         });
-        const token = this.config.token;
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.tokens}/${token}/${Routes.TP.webhooks}?${queryParams}`;
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.tokens, '/', this.config.token, '/', Routes.TP.webhooks, '?', queryParams]);
         return axios.get(url).
             then((response: AxiosResponse<TrelloWebhook[]>) => response.data);
     }
@@ -134,7 +127,7 @@ export class TrelloClient {
             key: this.config.apiKey,
             token: this.config.token,
         });
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.webhooks}/${hookId}?${queryParams}`;
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.webhooks, '/', hookId, '?', queryParams]);
         return axios.delete(url).
             then((response: AxiosResponse<TrelloWebhook[]>) => response.data);
     }
@@ -144,7 +137,7 @@ export class TrelloClient {
             key: this.config.apiKey,
             token: this.config.token,
         });
-        const url = `${globalConfig.TRELLO.URL}${Routes.TP.webhooks}/${hookId}?${queryParams}`;
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.webhooks, '/', hookId, '?', queryParams]);
         return axios.get(url).
             then((response: AxiosResponse<TrelloWebhook>) => response.data);
     }

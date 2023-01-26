@@ -6,7 +6,7 @@ import {
     PostCreate,
 } from '../types';
 import { AppsPluginName, Routes } from '../constant';
-import { replace } from '../utils';
+import { replace, routesJoin } from '../utils';
 import manifest from '../manifest.json';
 
 export interface MattermostOptions {
@@ -24,8 +24,7 @@ export class MattermostClient {
     }
 
     public updateRolesByUser(userId: string, roles: string): Promise<any> {
-        const url = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.UsersUpdateRolePath}`;
-
+        const url = routesJoin([this.config.mattermostUrl, Routes.Mattermost.ApiVersionV4, Routes.Mattermost.UsersUpdateRolePath]);
         return axios.put(replace(url, Routes.PathsVariable.Identifier, userId), { roles }, {
             headers: {
                 Authorization: `Bearer ${this.config.accessToken}`,
@@ -34,8 +33,7 @@ export class MattermostClient {
     }
 
     public createPost(post: PostCreate): Promise<any> {
-        const url = `${this.config.mattermostUrl}${Routes.Mattermost.ApiVersionV4}${Routes.Mattermost.PostsPath}`;
-
+        const url = routesJoin([this.config.mattermostUrl, Routes.Mattermost.ApiVersionV4, Routes.Mattermost.PostsPath]);
         return axios.post(url, post, {
             headers: {
                 Authorization: `Bearer ${this.config.accessToken}`,
