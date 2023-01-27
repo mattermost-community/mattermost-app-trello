@@ -1,4 +1,4 @@
-import { ExceptionType } from '../constant';
+import { ExceptionType, Routes } from '../constant';
 import config from '../config';
 import { AppActingUser, AppCallRequest, AppCallResponse, Oauth2App } from '../types';
 
@@ -61,4 +61,8 @@ export function getHTTPPath(): string {
     }
 
     return config.APP.HOST;
+}
+
+export function routesJoin(routes: Array<string>) {
+    return ''.concat(...routes);
 }
