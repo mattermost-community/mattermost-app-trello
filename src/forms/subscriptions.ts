@@ -74,7 +74,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
     await tryPromise(trelloOauthClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
 }
 
-export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
+export async function removeWebhookCall(call: AppCallRequest): Promise<string> {
     const values: AppCallValues | undefined = call.values;
     const subscriptionID: string = values?.[SubscriptionRemoveForm.SUBSCRIPTION];
     const i18nObj = configureI18n(call.context);
@@ -92,10 +92,11 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
 
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
     const subscription: TrelloWebhook = await tryPromise(trelloClient.getTrelloWebhookByID(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
-    const subParams = new URL(<string>subscription.callbackURL)?.searchParams;
 
-    await tryPromise(trelloClient.getBoardById(<string>subParams.get('idModel')), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
-    await tryPromise(trelloClient.deleteTrelloWebhook(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
+    await tryPromise(trelloClient.getBoardById(subscription.idModel), ExceptionType.MARKDOWN, i18nObj.__('error.trello'),call.context.mattermost_site_url, call.context.app_path);
+    await tryPromise(trelloClient.deleteTrelloWebhook(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'),call.context.mattermost_site_url, call.context.app_path);
+
+    return i18nObj.__('api.subscription.response_remove');
 }
 
 export async function listWebhookCall(call: AppCallRequest): Promise<string> {
