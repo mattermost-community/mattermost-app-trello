@@ -20,7 +20,7 @@ import {
     TrelloWebhook,
     WebhookCreate,
 } from '../types';
-import { existsToken, getHTTPPath, tryPromise } from '../utils';
+import { existsToken, getHTTPPath, isValidReqBody, tryPromise } from '../utils';
 import Exception from '../utils/exception';
 import { configureI18n } from '../utils/translations';
 import { h6, joinLines } from '../utils/markdown';
@@ -33,6 +33,10 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
     const i18nObj = configureI18n(call.context);
     const oauth2 = call.context.oauth2 as Oauth2App;
     const oauth2_token = oauth2.user?.token as string;
+
+    if (!isValidReqBody(call)) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
 
     if (!values) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
@@ -81,6 +85,10 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
     const oauth2 = call.context.oauth2 as Oauth2App;
     const oauth2_token = oauth2.user?.token as string;
 
+    if (!isValidReqBody(call)) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
+
     if (!existsToken(oauth2)) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'), call.context.mattermost_site_url, call.context.app_path);
     }
@@ -101,6 +109,10 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<void> {
 export async function listWebhookCall(call: AppCallRequest): Promise<string> {
     const i18nObj = configureI18n(call.context);
     const oauth2 = call.context.oauth2 as Oauth2App;
+
+    if (!isValidReqBody(call)) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
 
     if (!existsToken(oauth2)) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_2'), call.context.mattermost_site_url, call.context.app_path);

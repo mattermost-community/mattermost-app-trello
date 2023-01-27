@@ -1,7 +1,7 @@
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, TrelloIcon } from '../constant';
 import { AppCallRequest, AppCallValues, AppContext, AppField, AppForm, AppSelectOption, Oauth2App } from '../types';
-import { existsOauth2App, existsToken, tryPromise } from '../utils';
+import { existsOauth2App, existsToken, isValidReqBody, tryPromise } from '../utils';
 import Exception from '../utils/exception';
 import { configureI18n } from '../utils/translations';
 
@@ -12,6 +12,10 @@ export async function cardAddFromStepOne(call: AppCallRequest): Promise<AppForm>
     const oauth2 = call.context.oauth2 as Oauth2App;
     const oauth2_token = oauth2.user?.token as string;
     const workspace = oauth2.data?.workspace as string;
+
+    if (!isValidReqBody(call)) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
 
     if (!existsOauth2App(oauth2)) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'), call.context.mattermost_site_url, call.context.app_path);
@@ -36,6 +40,10 @@ export async function cardAddFromStepTwo(call: AppCallRequest): Promise<AppForm>
     const oauth2 = call.context.oauth2 as Oauth2App;
     const oauth2_token = oauth2.user?.token as string;
     const workspace = oauth2.data?.workspace as string;
+
+    if (!isValidReqBody(call)) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
 
     if (!existsOauth2App(oauth2)) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'), call.context.mattermost_site_url, call.context.app_path);
@@ -133,6 +141,10 @@ export async function addFromCommand(call: AppCallRequest): Promise<string> {
     const card_name: string = values?.card_name;
     const list_name: string = values?.list_name;
 
+    if (!isValidReqBody(call)) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
+
     if (!existsOauth2App(oauth2)) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'), call.context.mattermost_site_url, call.context.app_path);
     }
@@ -170,6 +182,10 @@ export async function submitCreateCard(call: AppCallRequest): Promise<string> {
     const list = call.values?.list_select;
     const oauth2 = call.context.oauth2 as Oauth2App;
     const oauth2_token = oauth2.user?.token as string;
+
+    if (!isValidReqBody(call)) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
 
     if (!list) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('api.form_step_two_exception'), call.context.mattermost_site_url, call.context.app_path);

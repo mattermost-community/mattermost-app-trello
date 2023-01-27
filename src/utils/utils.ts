@@ -66,3 +66,11 @@ export function getHTTPPath(): string {
 export function routesJoin(routes: Array<string>) {
     return ''.concat(...routes);
 }
+
+export function isValidReqBody(request:any): boolean {
+    if (Object.keys(request).length === 0) {
+        return false;
+    }
+
+    return true;
+}
