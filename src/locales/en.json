@@ -1,9 +1,9 @@
 {
   "general": {
     "validation-user": {
-			"system-admin": "Error: Este comando esta únicamente disponible a usuarios Mattermost System Admin",
-      "oauth-user": "Error: No has vinculado tu cuenta de Trello. La necesitas para realizar esta acción",
-			"not-provided": "El usuario no fue provisto"
+			"system-admin": "Error: This command is only available for Mattermost System Admin",
+			"oauth-user": "Error: You haven't linked your Trello account. You need it to perform this action",
+			"not-provided": "Not acting user provided"
 		}
   },
   "error": {
