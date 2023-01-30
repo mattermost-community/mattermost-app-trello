@@ -1,4 +1,3 @@
-import queryString from 'query-string';
 import { head } from 'lodash';
 
 import { TrelloClient, TrelloOptions } from '../clients/trello';
@@ -6,7 +5,6 @@ import {
     ExceptionType,
     Routes,
     SubscriptionAddValuesForm,
-    SubscriptionCreateForm,
     SubscriptionRemoveForm,
 } from '../constant';
 
@@ -20,12 +18,12 @@ import {
     TrelloWebhook,
     WebhookCreate,
 } from '../types';
-import { existsToken, getHTTPPath, tryPromise } from '../utils';
+import { existsToken, tryPromise } from '../utils';
 import Exception from '../utils/exception';
 import { configureI18n } from '../utils/translations';
 import { h6, joinLines } from '../utils/markdown';
 
-export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
+export async function addSubscriptionCall(call: AppCallRequest): Promise<string> {
     const mattermostUrl: string | undefined = call.context.mattermost_site_url;
     const whSecret: string | undefined = call.context.app?.webhook_secret;
     const appPath: string | undefined = call.context.app_path;
@@ -33,6 +31,10 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
     const i18nObj = configureI18n(call.context);
     const oauth2 = call.context.oauth2 as Oauth2App;
     const oauth2_token = oauth2.user?.token as string;
+
+    if (!whSecret) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_4'), call.context.mattermost_site_url, call.context.app_path);
+    }
 
     if (!values) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
@@ -63,7 +65,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
     }
 
     const urlWithParams = new URL(`${mattermostUrl}${appPath}${Routes.App.CallPathIncomingWebhookPath}`);
-    urlWithParams.searchParams.append('secret', <string>whSecret);
+    urlWithParams.searchParams.append('secret', whSecret);
     urlWithParams.searchParams.append('channelId', channelId);
 
     const payload: WebhookCreate = {
@@ -72,6 +74,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<void> {
         callbackURL: urlWithParams.href,
     };
     await tryPromise(trelloOauthClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
+    return i18nObj.__('api.subscription.response_add');
 }
 
 export async function removeWebhookCall(call: AppCallRequest): Promise<void> {

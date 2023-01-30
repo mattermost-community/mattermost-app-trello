@@ -3,6 +3,7 @@
     "validation-user": {
 			"system-admin": "Error: Este comando esta únicamente disponible a usuarios Mattermost System Admin",
       "oauth-user": "Error: No has vinculado tu cuenta de Trello. La necesitas para realizar esta acción",
+      "oauth-user-already": "Error: Ya tienes una cuenta de Trello vinculada. Necesitas desvincularla para realizar esta acción",
 			"not-provided": "El usuario no fue provisto"
 		}
   },
@@ -105,7 +106,8 @@
       "add_form": {
         "step_exception_1": "No se realiza la configuración inicial.",
         "step_exception_2": "Usted no se ha identificado.",
-        "step_exception_3": "El objeto de valores esta vacío."
+        "step_exception_3": "El objeto de valores esta vacío.",
+        "step_exception_4": "El valor webhook secret esta vacío."
       },
       "create": {
         "label_card": "Nombre de tarjeta",

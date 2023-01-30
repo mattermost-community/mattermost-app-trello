@@ -2,7 +2,7 @@ import express, { Router } from 'express';
 
 import { getRoutes } from '../utils/router';
 
-import { requireSystemAdmin, requireUserOAuthConnected } from '../restapi/middleware';
+import { requireSystemAdmin, requireUserOAuthConnected, requireUserOAuthDisconnected } from '../restapi/middleware';
 
 import * as cManifest from './manifest';
 import * as cBindings from './bindings';
@@ -27,8 +27,8 @@ router.post(routes.add, requireUserOAuthConnected, cAdd.getAdd);
 router.post(routes.formStepTwo, requireUserOAuthConnected, cAdd.formStepTwo);
 router.post(routes.formStepOne, requireUserOAuthConnected, cAdd.formStepOne);
 
-router.post(routes.getConnect, requireUserOAuthConnected, cConnect.getConnect);
-router.post(routes.saveToken, requireUserOAuthConnected, cConnect.saveToken);
+router.post(routes.getConnect, requireUserOAuthDisconnected, cConnect.getConnect);
+router.post(routes.saveToken, requireUserOAuthDisconnected, cConnect.saveToken);
 router.post(routes.getDisconnect, requireUserOAuthConnected, cConnect.getDisconnect);
 
 router.post(routes.openTrelloConfigForm, requireSystemAdmin, cConfigure.openTrelloConfigForm);
