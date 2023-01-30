@@ -28,11 +28,10 @@ export const addWebhookSubscription = async (request: Request, response: Respons
 export const removeWebhookSubscription = async (request: Request, response: Response) => {
     const call: AppCallRequest = request.body;
     let callResponse: AppCallResponse;
-    const i18nObj = configureI18n(call.context);
 
     try {
-        await removeWebhookCall(call);
-        callResponse = newOKCallResponseWithMarkdown(i18nObj.__('api.subscription.response_remove'));
+        const message = await removeWebhookCall(call);
+        callResponse = newOKCallResponseWithMarkdown(message);
         response.json(callResponse);
     } catch (error: any) {
         callResponse = showMessageToMattermost(error);
