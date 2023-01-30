@@ -55,7 +55,7 @@ export class TrelloClient {
             modelTypes: Routes.TP.boards,
             idOrganizations,
         });
-        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.boards, '?', queryParams]);
+        const url = routesJoin([globalConfig.TRELLO.URL, Routes.TP.search, '?', queryParams]);
         return axios.get(url).
             then((response: AxiosResponse<any>) => response.data);
     }
