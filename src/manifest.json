@@ -1,6 +1,6 @@
 {
     "app_id": "trello",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "homepage_url": "https://github.com/mattermost/mattermost-app-trello",
     "display_name": "Trello",
     "description": "Trello cloud app for Mattermost",

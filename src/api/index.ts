@@ -2,6 +2,8 @@ import express, { Router } from 'express';
 
 import { getRoutes } from '../utils/router';
 
+import { requireSystemAdmin, requireUserOAuthConnected, requireUserOAuthDisconnected } from '../restapi/middleware';
+
 import * as cManifest from './manifest';
 import * as cBindings from './bindings';
 import * as cHelp from './help';
@@ -21,20 +23,20 @@ router.post(routes.install, cInstall.getInstall);
 
 router.post(routes.help, cHelp.getHelp);
 
-router.post(routes.add, cAdd.getAdd);
-router.post(routes.formStepTwo, cAdd.formStepTwo);
-router.post(routes.formStepOne, cAdd.formStepOne);
+router.post(routes.add, requireUserOAuthConnected, cAdd.getAdd);
+router.post(routes.formStepTwo, requireUserOAuthConnected, cAdd.formStepTwo);
+router.post(routes.formStepOne, requireUserOAuthConnected, cAdd.formStepOne);
 
-router.post(routes.getConnect, cConnect.getConnect);
-router.post(routes.saveToken, cConnect.saveToken);
-router.post(routes.getDisconnect, cConnect.getDisconnect);
+router.post(routes.getConnect, requireUserOAuthDisconnected, cConnect.getConnect);
+router.post(routes.saveToken, requireUserOAuthDisconnected, cConnect.saveToken);
+router.post(routes.getDisconnect, requireUserOAuthConnected, cConnect.getDisconnect);
 
-router.post(routes.openTrelloConfigForm, cConfigure.openTrelloConfigForm);
-router.post(routes.submitTrelloConfig, cConfigure.submitTrelloConfig);
+router.post(routes.openTrelloConfigForm, requireSystemAdmin, cConfigure.openTrelloConfigForm);
+router.post(routes.submitTrelloConfig, requireSystemAdmin, cConfigure.submitTrelloConfig);
 
-router.post(routes.addWebhookSubscription, cSubscription.addWebhookSubscription);
-router.post(routes.getWebhookSubscriptions, cSubscription.getWebhookSubscriptions);
-router.post(routes.removeWebhookSubscription, cSubscription.removeWebhookSubscription);
+router.post(routes.addWebhookSubscription, requireUserOAuthConnected, cSubscription.addWebhookSubscription);
+router.post(routes.getWebhookSubscriptions, requireUserOAuthConnected, cSubscription.getWebhookSubscriptions);
+router.post(routes.removeWebhookSubscription, requireUserOAuthConnected, cSubscription.removeWebhookSubscription);
 
 router.post(routes.incomingWebhook, cWebhook.incomingWebhook);
 
