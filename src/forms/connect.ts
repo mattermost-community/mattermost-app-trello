@@ -5,6 +5,7 @@ import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, TRELLO_OAUTH, Tr
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { existsOauth2App, existsToken, isValidReqBody, tryPromise } from '../utils';
 import { TrelloClient } from '../clients/trello';
+import { ConnectFormValidator } from '../utils/validator';
 import { ConnectForm } from '../constant/forms';
 import config from '../config';
 import Exception from '../utils/exception';
@@ -44,7 +45,7 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
         },
     ];
 
-    return {
+    const form = {
         title: i18nObj.__('forms.connect.title_trello'),
         header: i18nObj.__('forms.connect.header_trello'),
         icon: TrelloIcon,
@@ -59,6 +60,12 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
             },
         },
     } as AppForm;
+
+    if (!ConnectFormValidator.safeParse(form).success) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
+
+    return form;
 }
 
 export async function connectFormSaveToken(call: AppCallRequest): Promise<string> {

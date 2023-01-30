@@ -1,3 +1,4 @@
+import { AddForm } from '../utils/validator';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, TrelloIcon } from '../constant';
 import { AppCallRequest, AppCallValues, AppContext, AppField, AppForm, AppSelectOption, Oauth2App } from '../types';
@@ -127,6 +128,10 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppConte
             },
         },
     };
+
+    if (!AddForm.safeParse(form).success) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), context.mattermost_site_url, context.app_path);
+    }
 
     return form;
 }

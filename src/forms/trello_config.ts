@@ -19,6 +19,7 @@ import { configureI18n } from '../utils/translations';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
 import { isUserSystemAdmin, isValidReqBody, tryPromise } from '../utils';
 import Exception from '../utils/exception';
+import { ConfigForm, Oauth2AppAuth } from '../utils/validator';
 
 export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
     const oauth2 = call.context.oauth2 as Oauth2App;
@@ -59,7 +60,7 @@ export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
         },
     ];
 
-    return {
+    const form = {
         title: i18nObj.__('forms.config.title'),
         header: i18nObj.__('forms.config.header'),
         icon: TrelloIcon,
@@ -74,6 +75,12 @@ export async function newConfigForm(call: AppCallRequest): Promise<AppForm> {
             },
         },
     } as AppForm;
+
+    if (!ConfigForm.safeParse(form).success) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
+
+    return form;
 }
 
 export async function submitConfigForm(call: AppCallRequest): Promise<string> {
@@ -118,6 +125,10 @@ export async function submitConfigForm(call: AppCallRequest): Promise<string> {
             workspace,
         },
     };
+
+    if (!Oauth2AppAuth.safeParse(oauth2App).success) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
 
     await kvStoreClient.storeOauth2App(oauth2App);
 
