@@ -17,7 +17,7 @@ import {
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
 import { configureI18n } from '../utils/translations';
 import { TrelloClient, TrelloOptions } from '../clients/trello';
-import { isUserSystemAdmin, isValidReqBody, tryPromise } from '../utils';
+import { isUserSystemAdmin, tryPromise } from '../utils';
 import Exception from '../utils/exception';
 import { ConfigForm, Oauth2AppAuth } from '../utils/validator';
 
@@ -90,10 +90,6 @@ export async function submitConfigForm(call: AppCallRequest): Promise<string> {
     const i18nObj = configureI18n(call.context);
 
     const actingUser: AppActingUser = call.context.acting_user as AppActingUser;
-
-    if (!isValidReqBody(call)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
-    }
 
     if (!isUserSystemAdmin(actingUser)) {
         throw new Exception(ExceptionType.TEXT_ERROR, i18nObj.__('forms.config.error.system-admin'), call.context.mattermost_site_url, call.context.app_path);

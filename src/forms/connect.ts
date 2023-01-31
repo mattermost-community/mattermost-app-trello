@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import { AppCallRequest, AppCallValues, AppForm, Oauth2App, Oauth2CurrentUser } from '../types';
 import { AppExpandLevels, AppFieldTypes, ExceptionType, Routes, TRELLO_OAUTH, TrelloIcon } from '../constant';
 import { KVStoreClient, KVStoreOptions } from '../clients/kvstore';
-import { existsOauth2App, existsToken, isValidReqBody, tryPromise } from '../utils';
+import { existsOauth2App, existsToken, tryPromise } from '../utils';
 import { TrelloClient } from '../clients/trello';
 import { ConnectFormValidator } from '../utils/validator';
 import { ConnectForm } from '../constant/forms';
@@ -15,10 +15,6 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
     const i18nObj = configureI18n(call.context);
     const oauth2 = call.context.oauth2 as Oauth2App;
     const oauth2User = call.context.oauth2?.user;
-
-    if (!isValidReqBody(call)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
-    }
 
     if (!existsOauth2App(oauth2)) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_1'), call.context.mattermost_site_url, call.context.app_path);
@@ -70,10 +66,6 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
 
 export async function connectFormSaveToken(call: AppCallRequest): Promise<string> {
     const i18nObj = configureI18n(call.context);
-    if (!isValidReqBody(call)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
-    }
-
     const accessToken: string | undefined = call.context.acting_user_access_token;
     const mattermost_url: string | undefined = call.context.mattermost_site_url;
     const values: AppCallValues | undefined = call.values;
@@ -106,9 +98,6 @@ export async function connectFormSaveToken(call: AppCallRequest): Promise<string
 
 export async function disconnectToken(call: AppCallRequest): Promise<string> {
     const i18nObj = configureI18n(call.context);
-    if (!isValidReqBody(call)) {
-        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
-    }
     const accessToken: string | undefined = call.context.acting_user_access_token;
     const mattermostURL: string | undefined = call.context.mattermost_site_url;
     const oauth2 = call.context.oauth2 as Oauth2App;
