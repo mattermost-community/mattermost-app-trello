@@ -22,6 +22,7 @@ import { existsToken, tryPromise } from '../utils';
 import Exception from '../utils/exception';
 import { configureI18n } from '../utils/translations';
 import { h6, joinLines } from '../utils/markdown';
+import { TrelloOptionsForm, WebhookCreation } from '../utils/validator';
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<string> {
     const mattermostUrl: string | undefined = call.context.mattermost_site_url;
@@ -73,6 +74,11 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<string>
         idModel: board.id,
         callbackURL: urlWithParams.href,
     };
+
+    if (!WebhookCreation.safeParse(payload).success) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
+
     await tryPromise(trelloOauthClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
     return i18nObj.__('api.subscription.response_add');
 }
@@ -93,11 +99,15 @@ export async function removeWebhookCall(call: AppCallRequest): Promise<string> {
         token: oauth2_token,
     };
 
+    if (!TrelloOptionsForm.safeParse(trelloOptions).success) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
+
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
     const subscription: TrelloWebhook = await tryPromise(trelloClient.getTrelloWebhookByID(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
 
-    await tryPromise(trelloClient.getBoardById(subscription.idModel), ExceptionType.MARKDOWN, i18nObj.__('error.trello'),call.context.mattermost_site_url, call.context.app_path);
-    await tryPromise(trelloClient.deleteTrelloWebhook(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'),call.context.mattermost_site_url, call.context.app_path);
+    await tryPromise(trelloClient.getBoardById(subscription.idModel), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
+    await tryPromise(trelloClient.deleteTrelloWebhook(subscriptionID), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
 
     return i18nObj.__('api.subscription.response_remove');
 }
@@ -114,6 +124,11 @@ export async function listWebhookCall(call: AppCallRequest): Promise<string> {
         apiKey: oauth2.client_id,
         token: oauth2.user?.token as string,
     };
+
+    if (!TrelloOptionsForm.safeParse(trelloOptions).success) {
+        throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), call.context.mattermost_site_url, call.context.app_path);
+    }
+
     const trelloClient: TrelloClient = new TrelloClient(trelloOptions);
     const webhooks: TrelloWebhook[] = await tryPromise(trelloClient.getTrelloActiveWebhooks(), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
 
