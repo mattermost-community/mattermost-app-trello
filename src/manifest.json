@@ -31,9 +31,6 @@
         "/command",
         "/in_post"
     ],
-    "http": {
-        "root_url": "https://mattermost-trello-dev.ancient.mx"
-    },
     "remote_webhook_auth_type": "secret",
     "on_remote_webhook": {
         "path": "/webhook",

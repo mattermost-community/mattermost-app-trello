@@ -3,22 +3,34 @@ import { Request, Response } from 'express';
 import config from '../config';
 import { Manifest } from '../types';
 import manifest from '../manifest.json';
+import { isEmpty } from 'lodash';
 
-export function getManifest(request: Request, response: Response): void {
-    const m: Manifest = manifest;
-
-    m.http.root_url = `${getHTTPPath()}`;
-
-    response.json(m);
-}
-
-function getPort(): number {
+export function getPort(): number {
     return Number(process.env.PORT) || config.APP.PORT;
 }
 
 export function getHTTPPath(): string {
-    if (!`${config.APP.HOST}`.includes('https')) {
-        return `${config.APP.HOST}:${getPort()}`;
+    const hostURL: string = config.APP.HOST;
+    if (isEmpty(hostURL)) {
+        return 'http://localhost:' + getPort();
     }
-    return config.APP.HOST;
+    return hostURL;
+}
+
+export function isRunningInHTTPMode(): boolean {
+    return config.APP.LOCAL === 'true';
+}
+
+export function getManifest(request: Request, response: Response): void {
+    let m: Manifest = manifest;
+    
+    if (isRunningInHTTPMode()) {
+        const http = {
+            root_url: getHTTPPath(),
+            use_jwt: false,
+        };
+        m = {...m, http};
+    }
+
+    response.json(m);
 }
