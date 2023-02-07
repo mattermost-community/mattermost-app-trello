@@ -1,16 +1,16 @@
 {
   "name": "mattermost-app-trello",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Connect with the Trello service through the Mattermost platform",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rm -rf dist node_modules",
+    "test": "echo \"Error: no test specified\"",
+    "clean": "rm -rf dist dist-ts node_modules",
     "build": "tsc -p .",
-    "start": "tsc -p . && cp -r src/locales dist/ && node dist/index.js",
-    "dev": "ts-node-dev src/index.ts",
-    "lint": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --cache",
-    "fix": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --fix --cache",
+    "start": "tsc -p . && cp -r src/locales dist-ts/ && node dist-ts/index.js",
+    "dev": "LOCAL=true ts-node-dev src/index.ts",
+    "lint": "eslint --ignore-pattern node_modules --ignore-pattern dist-ts --ignore-pattern dist  --ext ts . --quiet --cache",
+    "fix": "eslint --ignore-pattern node_modules --ignore-pattern dist-ts --ignore-pattern dist --ext ts . --quiet --fix --cache",
     "check-types": "tsc -p . --skipLibCheck"
   },
   "repository": {

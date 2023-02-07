@@ -49,7 +49,7 @@ export async function getConnectForm(call: AppCallRequest): Promise<AppForm> {
         submit: {
             path: `${Routes.App.BindingPathConnect}${Routes.App.Submit}`,
             expand: {
-                acting_user: AppExpandLevels.SUMMARY,
+                acting_user: AppExpandLevels.EXPAND_ALL,
                 acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                 oauth2_app: AppExpandLevels.EXPAND_ALL,
                 oauth2_user: AppExpandLevels.EXPAND_ALL,

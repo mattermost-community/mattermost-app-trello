@@ -52,17 +52,6 @@ export function showMessageToMattermost(exception: Exception | Error): AppCallRe
     }
 }
 
-export function getHTTPPath(): string {
-    const host: string = config.APP.HOST;
-    const ip: string = host.replace(/^(http:\/\/|https:\/\/|)/g, '');
-
-    if ((/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/).test(ip)) {
-        return `${config.APP.HOST}:${config.APP.PORT}`;
-    }
-
-    return config.APP.HOST;
-}
-
 export function routesJoin(routes: Array<string>) {
     return ''.concat(...routes);
 }
