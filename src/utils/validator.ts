@@ -1,34 +1,36 @@
 import { z } from 'zod';
 
+export const AppFormFieldValidator = z.object({
+    name: z.string(),
+    type: z.string(),
+    is_required: z.boolean().optional(),
+    readonly: z.boolean().optional(),
+    value: z.any().optional(),
+    description: z.string().optional(),
+    label: z.string().optional(),
+    hint: z.string().optional(),
+    position: z.number().int().optional(),
+    modal_label: z.string().optional(),
+    refresh: z.boolean().optional(),
+    options: z.array(
+        z.object({
+            label: z.string(),
+            value: z.string(),
+            icon_data: z.string().optional(),
+        }),
+    ).optional(),
+    multiselect: z.boolean().optional(),
+    lookup: z.any().optional(),
+    subtype: z.string().optional(),
+    min_length: z.number().int().optional(),
+    max_length: z.number().int().optional(),
+}).optional();
+
 export const AddForm = z.object({
     title: z.string(),
     header: z.string(),
     icon: z.string(),
-    fields: z.tuple([
-        z.object({
-            type: z.string(),
-            name: z.string(),
-            modal_label: z.string(),
-            value: z.string(),
-            description: z.string(),
-            is_required: z.boolean(),
-        }),
-        z.object({
-            name: z.string(),
-            modal_label: z.string(),
-            refresh: z.boolean(),
-            value: z.string(),
-            type: z.string(),
-            options: z.tuple([
-                z.object({
-                    label: z.string(),
-                    value: z.string(),
-                    icon_data: z.string().optional(),
-                }),
-            ]).optional(),
-            is_required: z.boolean(),
-        }),
-    ]),
+    fields: z.union([z.array(AppFormFieldValidator), z.tuple([])]),
     submit_label: z.string(),
     submit: z.object({
         path: z.string(),
@@ -54,17 +56,7 @@ export const ConnectFormValidator = z.object({
     title: z.string(),
     header: z.string(),
     icon: z.string(),
-    fields: z.tuple([
-        z.object({
-            type: z.string(),
-            name: z.string(),
-            modal_label: z.string(),
-            value: z.string(),
-            hint: z.string(),
-            description: z.string(),
-            is_required: z.boolean(),
-        }),
-    ]).optional(),
+    fields: z.union([z.array(AppFormFieldValidator), z.tuple([])]),
     submit: z.object({
         path: z.string(),
         expand: z.object({
@@ -88,34 +80,7 @@ export const ConfigForm = z.object({
     title: z.string(),
     header: z.string(),
     icon: z.string(),
-    fields: z.tuple([
-        z.object({
-            type: z.string(),
-            name: z.string(),
-            label: z.string(),
-            value: z.string(),
-            hint: z.string().optional(),
-            description: z.string(),
-            is_required: z.boolean(),
-        }),
-        z.object({
-            type: z.string(),
-            name: z.string(),
-            modal_label: z.string(),
-            value: z.string(),
-            description: z.string(),
-            is_required: z.boolean(),
-        }),
-        z.object({
-            type: z.string(),
-            subtype: z.string().optional(),
-            name: z.string(),
-            modal_label: z.string(),
-            value: z.string(),
-            description: z.string(),
-            is_required: z.boolean(),
-        }),
-    ]).optional(),
+    fields: z.union([z.array(AppFormFieldValidator), z.tuple([])]),
     submit: z.object({
         path: z.string(),
         expand: z.object({
