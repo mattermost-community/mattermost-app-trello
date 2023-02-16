@@ -5,6 +5,7 @@ import morgan from 'morgan';
 
 import config from './config';
 import apiRoutes from './api';
+import { getHTTPPath, getPort, isRunningInHTTPMode } from './api/manifest';
 
 const serverless = require('serverless-http');
 const app: Express = express();
@@ -20,8 +21,8 @@ app.post('/ping', (req, res) => {
 });
 
 // App released via HTTP and docker
-if (config.APP.HOST) {
-    const port: number = config.APP.PORT;
+if (isRunningInHTTPMode()) {
+    const port: number = getPort();
     app.listen(port, () => console.log('Listening on ' + port));
 } else {
     // App released via AWS Lambda

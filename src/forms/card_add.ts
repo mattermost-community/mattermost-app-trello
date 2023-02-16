@@ -121,6 +121,7 @@ async function getCreateCardForm(trelloOptions: TrelloOptions, context: AppConte
         },
     };
 
+    console.log(AddForm.safeParse(form));
     if (!AddForm.safeParse(form).success) {
         throw new Exception(ExceptionType.MARKDOWN, i18nObj.__('forms.card_add.add_form.step_exception_3'), context.mattermost_site_url, context.app_path);
     }

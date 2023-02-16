@@ -1,6 +1,6 @@
 {
     "app_id": "trello",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "homepage_url": "https://github.com/mattermost/mattermost-app-trello",
     "display_name": "Trello",
     "description": "Trello cloud app for Mattermost",
@@ -31,9 +31,6 @@
         "/command",
         "/in_post"
     ],
-    "http": {
-        "root_url": "https://mattermost-trello-dev.ancient.mx"
-    },
     "remote_webhook_auth_type": "secret",
     "on_remote_webhook": {
         "path": "/webhook",
