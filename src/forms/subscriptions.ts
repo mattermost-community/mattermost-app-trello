@@ -23,7 +23,7 @@ import Exception from '../utils/exception';
 import { configureI18n } from '../utils/translations';
 import { h6, joinLines } from '../utils/markdown';
 import { TrelloOptionsForm, WebhookCreation } from '../utils/validator';
-import { MattermostOptions, MattermostClient } from '../clients/mattermost';
+import { MattermostClient, MattermostOptions } from '../clients/mattermost';
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<string> {
     const mattermostUrl: string | undefined = call.context.mattermost_site_url;
@@ -87,7 +87,7 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<string>
 
     const mattermostOption: MattermostOptions = {
         mattermostUrl: <string>mattermostUrl,
-        accessToken: <string>accessToken
+        accessToken: <string>accessToken,
     };
 
     const mattermostClient: MattermostClient = new MattermostClient(mattermostOption);
