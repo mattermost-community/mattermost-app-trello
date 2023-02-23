@@ -55,6 +55,8 @@ const MattermostPaths = {
     HooksIncoming: '/hooks/incoming',
     PathOAuth2App: '/oauth2/app',
     PathOAuth2User: '/oauth2/user',
+    ChannelMemberPath: `/channels/${PathsVariable.Identifier}/members`,
+    TeamMemberPath: `/teams/${PathsVariable.Identifier}/members`,
 };
 
 const TrelloPaths = {

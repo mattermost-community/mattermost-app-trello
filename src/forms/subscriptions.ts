@@ -23,9 +23,13 @@ import Exception from '../utils/exception';
 import { configureI18n } from '../utils/translations';
 import { h6, joinLines } from '../utils/markdown';
 import { TrelloOptionsForm, WebhookCreation } from '../utils/validator';
+import { MattermostOptions, MattermostClient } from '../clients/mattermost';
 
 export async function addSubscriptionCall(call: AppCallRequest): Promise<string> {
     const mattermostUrl: string | undefined = call.context.mattermost_site_url;
+    const accessToken: string | undefined = call.context.acting_user_access_token;
+    const botUserID: string | undefined = call.context.bot_user_id;
+    const teamId:string = call.context.channel.team_id;
     const whSecret: string | undefined = call.context.app?.webhook_secret;
     const appPath: string | undefined = call.context.app_path;
     const values: SubscriptionAddValuesForm | undefined = call.values as SubscriptionAddValuesForm;
@@ -80,6 +84,16 @@ export async function addSubscriptionCall(call: AppCallRequest): Promise<string>
     }
 
     await tryPromise(trelloOauthClient.createTrelloWebhook(payload), ExceptionType.MARKDOWN, i18nObj.__('error.trello'), call.context.mattermost_site_url, call.context.app_path);
+
+    const mattermostOption: MattermostOptions = {
+        mattermostUrl: <string>mattermostUrl,
+        accessToken: <string>accessToken
+    };
+
+    const mattermostClient: MattermostClient = new MattermostClient(mattermostOption);
+    await mattermostClient.addUserToTeam(<string>teamId, <string>botUserID);
+    await mattermostClient.addUserToChannel(channelId, <string>botUserID);
+
     return i18nObj.__('api.subscription.response_add');
 }
 
