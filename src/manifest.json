@@ -1,0 +1,51 @@
+{
+    "app_id": "trello",
+    "version": "0.1.3",
+    "homepage_url": "https://github.com/mattermost/mattermost-app-trello",
+    "display_name": "Trello",
+    "description": "Trello cloud app for Mattermost",
+    "icon": "trello.png",
+    "on_install": {
+        "expand": {
+            "app": "all",
+            "acting_user_access_token": "all"
+        },
+        "path": "/install"
+    },
+    "bindings": {
+        "path": "/bindings",
+        "expand": {
+            "acting_user": "all",
+            "oauth2_app": "all",
+            "oauth2_user": "all",
+            "locale": "all"
+        }
+    },
+    "requested_permissions": [
+        "act_as_user",
+        "act_as_bot",
+        "remote_webhooks",
+        "remote_oauth2"
+    ],
+    "requested_locations": [
+        "/command",
+        "/in_post"
+    ],
+    "remote_webhook_auth_type": "secret",
+    "on_remote_webhook": {
+        "path": "/webhook",
+        "expand": {
+            "oauth2_app": "all"
+        }
+    },
+    "aws_lambda": {
+        "functions": [
+            {
+                "path": "/",
+                "name": "bundle",
+                "handler": "bundle/index.handler",
+                "runtime": "nodejs16.x"
+            }
+        ]
+    }
+}
